@@ -15,8 +15,9 @@ namespace DreamTech_Ecommerce.Models
         public DateTime OrderDate { get; set; }
         public int TotalAmount { get; set; }
         public string ShippingAddress { get; set; }
+        public int UserId { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Payment> Payment { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }
