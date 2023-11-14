@@ -21,15 +21,72 @@ namespace DreamTech_Ecommerce.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Carts)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+            // Declare relationship between table in EF
+            modelBuilder.Entity<Cart>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Carts)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired(false);
 
-            modelBuilder.Entity<Category>()
-                .HasMany(c => c.Products)
-                .WithOne(p => p.Category)
-                .HasForeignKey(p => p.CategoryId);
+            modelBuilder.Entity<Order>()
+                .HasOne(e => e.User)
+                .WithMany(e => e.Orders)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(e => e.Category)
+                .WithMany(e => e.Products)
+                .HasForeignKey(e => e.CategoryId)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Cart>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.Carts)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<ProductImage>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.ProductImages)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<Specification>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.Specifications)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<Promotion>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.Promotions)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(e => e.Product)
+                .WithMany(e => e.OrderDetails)
+                .HasForeignKey(e => e.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(e => e.Order)
+                .WithMany(e => e.OrderDetails)
+                .HasForeignKey(e => e.OrderId)
+                .IsRequired();
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(e => e.Order)
+                .WithMany(e => e.Payments)
+                .HasForeignKey(e => e.OrderId)
+                .IsRequired();
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(e => e.PaymentMethod)
+                .WithMany(e => e.Payments)
+                .HasForeignKey(e => e.PaymentMethodId)
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
         }
