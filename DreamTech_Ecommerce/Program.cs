@@ -1,8 +1,15 @@
+using DreamTech_Ecommerce.DAL;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<DreamAppContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("WebApiDatabase"));
+});
 
 var app = builder.Build();
 
@@ -17,7 +24,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    pattern: "{controller}/{action=Index}/{id?}"); 
 
 app.MapFallbackToFile("index.html"); ;
 
