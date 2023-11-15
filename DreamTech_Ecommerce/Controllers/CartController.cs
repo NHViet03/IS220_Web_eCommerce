@@ -1,12 +1,13 @@
 ﻿using DreamTech_Ecommerce.DAL;
 using DreamTech_Ecommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DreamTech_Ecommerce.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class CartController : Controller
     {
         private readonly DreamAppContext _context;
@@ -15,7 +16,7 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         public IActionResult Index()
         {
             var allCarts = _context.Carts.ToList();
@@ -23,14 +24,13 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Cart cart)
+        public IActionResult AddToCart([FromBody] Cart cart)
         {
             if (cart == null)
             {
                 return BadRequest("Invalid cart data");
             }
 
-            // Assuming you have a YourDbContext instance called _dbContext
             var user = _context.Users.Find(cart.UserId);
             var product = _context.Products.Find(cart.ProductId);
 
@@ -39,7 +39,6 @@ namespace DreamTech_Ecommerce.Controllers
                 return NotFound("User or product not found");
             }
 
-            // Associate the User and Product with the Cart
             cart.User = user;
             cart.Product = product;
 
@@ -54,6 +53,19 @@ namespace DreamTech_Ecommerce.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+
+        [HttpDelete("{Id}")]
+        public IActionResult RemoveFromCart([FromBody] int Id)
+        {
+            var cart = _context.Carts.Find(Id);
+
+            if (cart == null)
+            {
+                return NotFound("Không tìm thấy sản phẩm");
+            }
+
+           return Ok("Ok");
         }
     }
 }

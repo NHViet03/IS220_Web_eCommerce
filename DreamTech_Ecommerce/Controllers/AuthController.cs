@@ -6,7 +6,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -21,9 +20,11 @@ namespace DreamTech_Ecommerce.Controllers
     public class AuthController : Controller
     {
         private readonly DreamAppContext _context;
-        public AuthController(DreamAppContext context)
+        private readonly IConfiguration _configuration;
+        public AuthController(DreamAppContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("login")]
@@ -37,36 +38,40 @@ namespace DreamTech_Ecommerce.Controllers
             if (user.Length > 0)
             {
                 var resJson = new { Token = this.GenerateJwtToken(user[0]) };
-                return new JsonResult(resJson);
+                return Ok(resJson);
             }
 
             var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
-            return new JsonResult(errorJson);
+            return BadRequest(errorJson);
         }
 
         private string GenerateJwtToken(User user)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-
-            var key = Encoding.UTF8.GetBytes("DreamTech12345");
-
-            using (var hmac = new HMACSHA256())
-            {
-                key = hmac.Key;
-            }
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
+            var userRole = user.Role == Role.Customer ? "Customer" : "Admin";
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    new Claim("Id", Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, userRole),
                 }),
-                Expires = DateTime.UtcNow.AddHours(6),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha512Signature),
+                Expires = DateTime.UtcNow.AddMinutes(10000),
+                Issuer = issuer,
+                Audience = audience,
+                SigningCredentials = new SigningCredentials
+                (new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha512Signature)
             };
+
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
 
