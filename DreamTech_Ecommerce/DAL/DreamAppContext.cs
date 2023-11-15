@@ -5,6 +5,10 @@ namespace DreamTech_Ecommerce.DAL
 {
     public class DreamAppContext: DbContext
     {
+        public DreamAppContext()
+        {
+        }
+
         public DreamAppContext(DbContextOptions<DreamAppContext> options)
         : base(options) { }
 
@@ -18,6 +22,7 @@ namespace DreamTech_Ecommerce.DAL
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<LoginToken> LoginTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,6 +92,18 @@ namespace DreamTech_Ecommerce.DAL
                 .WithMany(e => e.Payments)
                 .HasForeignKey(e => e.PaymentMethodId)
                 .IsRequired();
+
+            modelBuilder.Entity<User>().HasData(
+            new User
+            {
+                Id = 1,
+                FirstName = "Admin",
+                LastName = "User",
+                Role = Role.Admin,
+                Email = "admin@test.com",
+                Phone = "123-456-7890",
+                Password = "adminvip123"
+            });
 
             base.OnModelCreating(modelBuilder);
         }
