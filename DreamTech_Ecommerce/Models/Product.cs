@@ -1,19 +1,23 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DreamTech_Ecommerce.Models
 {
     public class Product
     {
-        public int Id { get; set; }
+        [Key]
+        public string Id { get; set; }
         public string? Brand { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public int Price { get; set; }
-        public int Qty { get; set; }
-        public int? CategoryId { get; set; }
-        public virtual Category? Category { get; set; } = null;
-        public virtual ICollection<Specification> Specifications { get; set; } = null;
-        public virtual ICollection<ProductImage> ProductImages { get; set; } = null;
-        public virtual ICollection<Cart> Carts { get; set; } = null;
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = null;
-        public virtual ICollection<Promotion> Promotions { get; set; } = null;
+        public int QtyInStock { get; set; }
+
+        [ForeignKey("Category")]
+        public string? CategoryId { get; set; }
+        public Category? Category { get; set; }
+        public ICollection<ProductImage> ProductImages { get; } = new List<ProductImage>();
+        public ICollection<CartItem> Carts { get; } = new List<CartItem>();
+        public ICollection<OrderItem> OrderItems { get; } = new List<OrderItem>();
     }
 }

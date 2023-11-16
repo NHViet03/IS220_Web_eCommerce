@@ -3,15 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DreamTech_Ecommerce.Models
 {
-    public class ProductImage
+    public class OrderItem
     {
         [Key]
         public int Id { get; set; }
-        public string ImageUrl { get; set; }
+        public int Qty { get; set; }
+        public string ShippingAddress { get; set; }
 
         [Required]
         [ForeignKey("Product")]
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        [Required]
+        [ForeignKey("Order")]
+        public int OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }

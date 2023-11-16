@@ -16,6 +16,12 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
+        private class CartViewModel
+        {
+            public int ProductId {  get; set; }
+            public int UserId { get; set; } 
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -24,7 +30,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddToCart([FromBody] Cart cart)
+        public IActionResult AddToCart([FromBody] CartItem cart)
         {
             if (cart == null)
             {
@@ -47,7 +53,7 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Carts.Add(cart);
                 _context.SaveChanges();
 
-                return CreatedAtAction(nameof(Cart), new { id = cart.Id }, cart);
+                return CreatedAtAction(nameof(CartItem), new { id = cart.Id }, cart);
             }
             catch (Exception ex)
             {

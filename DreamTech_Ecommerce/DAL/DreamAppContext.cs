@@ -1,4 +1,5 @@
 ﻿using DreamTech_Ecommerce.Models;
+using DreamTech_Ecommerce.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace DreamTech_Ecommerce.DAL
@@ -14,20 +15,18 @@ namespace DreamTech_Ecommerce.DAL
 
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Specification> Specifications { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
-        public DbSet<LoginToken> LoginTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Declare relationship between table in EF
-            modelBuilder.Entity<Cart>()
+            modelBuilder.Entity<CartItem>()
                 .HasOne(e => e.User)
                 .WithMany(e => e.Carts)
                 .HasForeignKey(e => e.UserId)
@@ -45,7 +44,7 @@ namespace DreamTech_Ecommerce.DAL
                 .HasForeignKey(e => e.CategoryId)
                 .IsRequired(false);
 
-            modelBuilder.Entity<Cart>()
+            modelBuilder.Entity<CartItem>()
                 .HasOne(e => e.Product)
                 .WithMany(e => e.Carts)
                 .HasForeignKey(e => e.ProductId)
@@ -57,25 +56,19 @@ namespace DreamTech_Ecommerce.DAL
                 .HasForeignKey(e => e.ProductId)
                 .IsRequired();
 
-            modelBuilder.Entity<Specification>()
+            modelBuilder.Entity<Order>()
+                .HasOne(e => e.Discount)
+                .WithMany(e => e.Orders)
+                .HasForeignKey(e => e.DiscountId)
+                .IsRequired();
+
+            modelBuilder.Entity<OrderItem>()
                 .HasOne(e => e.Product)
-                .WithMany(e => e.Specifications)
+                .WithMany(e => e.OrderItems)
                 .HasForeignKey(e => e.ProductId)
                 .IsRequired();
 
-            modelBuilder.Entity<Promotion>()
-                .HasOne(e => e.Product)
-                .WithMany(e => e.Promotions)
-                .HasForeignKey(e => e.ProductId)
-                .IsRequired();
-
-            modelBuilder.Entity<OrderDetail>()
-                .HasOne(e => e.Product)
-                .WithMany(e => e.OrderDetails)
-                .HasForeignKey(e => e.ProductId)
-                .IsRequired();
-
-            modelBuilder.Entity<OrderDetail>()
+            modelBuilder.Entity<OrderItem>()
                 .HasOne(e => e.Order)
                 .WithMany(e => e.OrderDetails)
                 .HasForeignKey(e => e.OrderId)
@@ -93,6 +86,9 @@ namespace DreamTech_Ecommerce.DAL
                 .HasForeignKey(e => e.PaymentMethodId)
                 .IsRequired();
 
+
+            var salt = PasswordHasher.GenerateSalt();
+            var hashedPassword = PasswordHasher.HashPassword("adminvip123", salt);
             modelBuilder.Entity<User>().HasData(
             new User
             {
@@ -102,7 +98,8 @@ namespace DreamTech_Ecommerce.DAL
                 Role = Role.Admin,
                 Email = "admin@test.com",
                 Phone = "123-456-7890",
-                Password = "adminvip123"
+                HashedPassword = hashedPassword,
+                Salt = salt
             });
 
             base.OnModelCreating(modelBuilder);
