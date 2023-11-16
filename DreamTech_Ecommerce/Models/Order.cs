@@ -11,6 +11,8 @@ namespace DreamTech_Ecommerce.Models
     }
     public class Order
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int Qty { get; set; }
         public OrderStatus OrderStatus { get; set; }

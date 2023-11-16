@@ -2,6 +2,7 @@
 using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -19,20 +20,21 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAll")]
         public IActionResult Index()
         {
-            return Ok(_context.Categories.ToList());
+            var allCategories = _context.Categories.Include(c => c.Products).ToList();
+            return Ok(allCategories);
         }
 
-        [HttpGet("{categoryId}")]
+        [HttpGet("/GetById/{categoryId}")]
         public IActionResult Details(string categoryId)
         {
             var category = _context.Categories.Find(categoryId);
             return Ok(category);
         }
 
-        [HttpPost]
+        [HttpPost("/Create")]
         public IActionResult Create([FromBody]Category model)
         {
             var category = _context.Categories.Find(model.Id);
@@ -52,10 +54,10 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        [HttpDelete("/Delete/{categoryId}")]
+        public IActionResult Delete(string categoryId)
         {
-            var category = _context.Categories.Find(id);
+            var category = _context.Categories.Find(categoryId);
 
             if (category != null)
             {

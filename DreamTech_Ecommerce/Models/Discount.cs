@@ -6,6 +6,7 @@ namespace DreamTech_Ecommerce.Models
     public class Discount
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
         public string DiscountRate { get; set; }
