@@ -31,6 +31,40 @@ namespace DreamTech_Ecommerce.Controllers
             return Ok();
         }
 
+        [HttpGet("Get/{Id}")]
+        public IActionResult GetByID(string Id)
+        {
+            var product = _context.Products.Find(Id);
+            if (product == null)
+            {
+                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
+            }
+            return Ok(product);
+        }
+
+        [HttpDelete("Delete/{Id}")]
+        public IActionResult Delete(string Id)
+        {
+            var product = _context.Products.Find(Id);
+
+            try { 
+                if (product == null)
+                {
+                    return BadRequest(new { Message = "Không tìm thấy sản phẩm" });
+                }
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+
+                return Ok(new { Message = "Xóa thành công !" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { ErrorMessage = "Lỗi server" });
+            }
+
+            
+        }
+
         [HttpPost]
         public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
