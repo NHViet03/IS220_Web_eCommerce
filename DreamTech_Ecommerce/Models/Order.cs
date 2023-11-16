@@ -19,12 +19,12 @@ namespace DreamTech_Ecommerce.Models
         public string ShippingAddress { get; set; }
 
         [Required]
-        [ForeignKey("Discount")]
+        [ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; }
         
         [ForeignKey("Discount")]
-        public string? DiscountId { get; set; }
+        public int? DiscountId { get; set; }
         public Discount? Discount { get; set; }
         public ICollection<OrderItem> OrderDetails { get; } = new List<OrderItem>();
         public ICollection<Payment> Payments { get; } = new List<Payment>();
