@@ -22,6 +22,7 @@ namespace DreamTech_Ecommerce.Controllers
             public int UserId { get; set; } 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Index()
         {

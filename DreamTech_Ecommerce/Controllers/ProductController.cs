@@ -25,13 +25,14 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAll")]
         public IActionResult Index()
         {
-            return Ok();
+            var products = _context.Products.Include(e => e.ProductImages).ToList();
+            return Ok(products);
         }
 
-        [HttpPost]
+        [HttpPost("/Create")]
         public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
             try
