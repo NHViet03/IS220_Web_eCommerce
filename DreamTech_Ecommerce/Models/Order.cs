@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace DreamTech_Ecommerce.Models
 {
@@ -15,9 +17,16 @@ namespace DreamTech_Ecommerce.Models
         public DateTime OrderDate { get; set; }
         public int TotalAmount { get; set; }
         public string ShippingAddress { get; set; }
+
+        [Required]
+        [ForeignKey("Discount")]
         public int UserId { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
+        public User User { get; set; }
+        
+        [ForeignKey("Discount")]
+        public string? DiscountId { get; set; }
+        public Discount? Discount { get; set; }
+        public ICollection<OrderItem> OrderDetails { get; } = new List<OrderItem>();
+        public ICollection<Payment> Payments { get; } = new List<Payment>();
     }
 }

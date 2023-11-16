@@ -1,5 +1,6 @@
 ﻿using DreamTech_Ecommerce.DAL;
 using DreamTech_Ecommerce.Models;
+using DreamTech_Ecommerce.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,6 +13,15 @@ namespace DreamTech_Ecommerce.Controllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
+    }
+    public class SignUpViewModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string ConfirmationPassword { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string Phone { get; set; }
     }
 
     [ApiController]
@@ -31,17 +41,57 @@ namespace DreamTech_Ecommerce.Controllers
         {
             var user = _context
                 .Users
-                .Where(e => e.Email == model.Email && e.Password == model.Password)
-                .ToArray();
+                .Where(e => e.Email == model.Email && e.HashedPassword == PasswordHasher.HashPassword(model.Password, e.Salt))
+                .FirstOrDefault();
 
-            if (user.Length > 0)
+            if (user != null)
             {
-                var resJson = new { Token = this.GenerateJwtToken(user[0]) };
+                var resJson = new { Token = this.GenerateJwtToken(user) };
                 return Ok(resJson);
             }
 
             var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
             return BadRequest(errorJson);
+        }
+        [HttpPost("logout")]
+        public IActionResult Logout() {
+            // Optional: Delete token or set it to expired
+
+            return Ok(new { Message = "Đăng xuất thành công" });
+        }
+
+        [HttpPost("signup")]
+        public IActionResult SignUp([FromBody] SignUpViewModel model)
+        {
+            // Optional: Validate password
+            if (model.Password != model.ConfirmationPassword)
+            {
+                return BadRequest(new { ErrorMessage = "Password không trùng khớp" });
+            }
+
+            var user = _context
+                .Users
+                .Where(e => e.Email == model.Email || e.Phone == model.Phone)
+                .FirstOrDefault();
+
+            if (user != null)
+            {
+                return BadRequest(new { ErrorMessage = "Email hoặc số điện thoại đã được đăng ký!" });
+            }
+
+            try
+            {
+                var newUser = this.CreateUserFromViewModel(model);
+
+                _context.Users.Add(newUser);
+                _context.SaveChanges();
+
+                return Ok(new { Token = this.GenerateJwtToken(newUser) }); ;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }            
         }
 
         private string GenerateJwtToken(User user)
@@ -78,5 +128,19 @@ namespace DreamTech_Ecommerce.Controllers
 
             return jwtToken;
         }
-    } 
+
+        private User CreateUserFromViewModel(SignUpViewModel model)
+        {
+            var salt = PasswordHasher.GenerateSalt();
+            return new User
+            {
+                Email = model.Email,
+                HashedPassword = PasswordHasher.HashPassword(model.Password, salt),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Phone = model.Phone,
+                Role = Role.Customer
+            };
+        }
+    }
 }
