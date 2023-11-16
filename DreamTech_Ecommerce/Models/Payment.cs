@@ -6,6 +6,7 @@ namespace DreamTech_Ecommerce.Models
     public class Payment
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime PaymentDate { get; set; }
         public int Amount { get; set; }
@@ -15,7 +16,7 @@ namespace DreamTech_Ecommerce.Models
         public Order Order { get; set; }
 
         [ForeignKey("PaymentMethod")]
-        public int PaymentMethodId { get; set; }
+        public string PaymentMethodId { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
     }
 }

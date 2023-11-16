@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -31,7 +32,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct([FromForm] ProductInputViewModel model)
+        public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
             try
             {
@@ -44,6 +45,7 @@ namespace DreamTech_Ecommerce.Controllers
 
                 var newProduct = new Product
                 {
+                    Id = model.Id,
                     Brand = model.Brand,
                     Name = model.Name,
                     Description = model.Description,
@@ -52,23 +54,23 @@ namespace DreamTech_Ecommerce.Controllers
                     CategoryId = model.CategoryId
                 };
 
+                var newProductImage = new ProductImage
+                {
+                    ImageUrl = imagePath,
+                    ProductId = newProduct.Id
+                };
+                
+                if (model.CategoryId != null)
+                {
+                    var category = _context.Categories.Find(model.CategoryId);
+                    category.Products.Add(newProduct);
+                }
+
+                newProduct.ProductImages.Add(newProductImage);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
 
-                var outputModel = new ProductOutputViewModel
-                {
-                    Id = newProduct.Id,
-                    Brand = newProduct.Brand,
-                    Name = newProduct.Name,
-                    Description = newProduct.Description,
-                    Price = newProduct.Price,
-                    QtyInStock = newProduct.QtyInStock,
-                    CategoryId = newProduct.CategoryId,
-                    CategoryName = newProduct.Category?.Name,
-                    ImageUrl = imagePath
-                };
-
-                return Ok(outputModel);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -114,18 +116,8 @@ namespace DreamTech_Ecommerce.Controllers
             return Ok($"Product '{product.Name}' unassigned from any category");
         }
     }
-    public class ProductInputViewModel
-    {
-        public string? Brand { get; set; }
-        public string Name { get; set; }
-        public string? Description { get; set; }
-        public int Price { get; set; }
-        public int QtyInStock { get; set; }
-        public IFormFile Image { get; set; }
-        public string? CategoryId { get; set; }
-    }
 
-    public class ProductOutputViewModel
+    public class ProductViewModel
     {
         public string Id { get; set; }
         public string? Brand { get; set; }
@@ -134,7 +126,6 @@ namespace DreamTech_Ecommerce.Controllers
         public int Price { get; set; }
         public int QtyInStock { get; set; }
         public string? CategoryId { get; set; }
-        public string? CategoryName { get; set; }
-        public string? ImageUrl { get; set; }
+        public IFormFile Image { get; set; }
     }
 }
