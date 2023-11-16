@@ -25,7 +25,7 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var allCarts = _context.Carts.ToList();
+            var allCarts = _context.CartItems.ToList();
             return Ok(allCarts);
         }
 
@@ -50,7 +50,7 @@ namespace DreamTech_Ecommerce.Controllers
 
             try
             {
-                _context.Carts.Add(cart);
+                _context.CartItems.Add(cart);
                 _context.SaveChanges();
 
                 return CreatedAtAction(nameof(CartItem), new { id = cart.Id }, cart);
@@ -64,7 +64,7 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpDelete("{Id}")]
         public IActionResult RemoveFromCart([FromBody] int Id)
         {
-            var cart = _context.Carts.Find(Id);
+            var cart = _context.CartItems.Find(Id);
 
             if (cart == null)
             {

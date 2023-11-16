@@ -36,15 +36,15 @@ namespace DreamTech_Ecommerce.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginViewModel model)
         {
             var user = _context
                 .Users
-                .Where(e => e.Email == model.Email && e.HashedPassword == PasswordHasher.HashPassword(model.Password, e.Salt))
+                .Where(e => e.Email == model.Email)
                 .FirstOrDefault();
 
-            if (user != null)
+            if (user != null && user.HashedPassword == PasswordHasher.HashPassword(model.Password, user.Salt))
             {
                 var resJson = new { Token = this.GenerateJwtToken(user) };
                 return Ok(resJson);
@@ -53,14 +53,15 @@ namespace DreamTech_Ecommerce.Controllers
             var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
             return BadRequest(errorJson);
         }
-        [HttpPost("logout")]
+
+        [HttpPost("LogOut")]
         public IActionResult Logout() {
             // Optional: Delete token or set it to expired
 
             return Ok(new { Message = "Đăng xuất thành công" });
         }
 
-        [HttpPost("signup")]
+        [HttpPost("SignUp")]
         public IActionResult SignUp([FromBody] SignUpViewModel model)
         {
             // Optional: Validate password

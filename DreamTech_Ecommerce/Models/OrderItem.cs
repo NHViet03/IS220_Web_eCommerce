@@ -12,7 +12,7 @@ namespace DreamTech_Ecommerce.Models
 
         [Required]
         [ForeignKey("Product")]
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         public Product Product { get; set; }
 
         [Required]
