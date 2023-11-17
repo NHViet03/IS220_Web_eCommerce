@@ -3,16 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DreamTech_Ecommerce.Models
 {
-    public class ProductImage
+    public class Discount
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string ImageUrl { get; set; }
-
-        [Required]
-        [ForeignKey("Product")]
-        public string ProductId { get; set; }
-        public Product Product { get; set; }
+        public string Name { get; set; }
+        public string DiscountRate { get; set; }
+        public ICollection<Order> Orders { get; } = new List<Order>();
     }
 }

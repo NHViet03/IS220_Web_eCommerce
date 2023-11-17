@@ -3,20 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DreamTech_Ecommerce.Models
 {
-    public class Payment
+    public class OrderItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime PaymentDate { get; set; }
-        public int Amount { get; set; }
+        public int Qty { get; set; }
+        public string ShippingAddress { get; set; }
 
+        [Required]
+        [ForeignKey("Product")]
+        public string ProductId { get; set; }
+        public Product Product { get; set; }
+
+        [Required]
         [ForeignKey("Order")]
         public int OrderId { get; set; }
         public Order Order { get; set; }
-
-        [ForeignKey("PaymentMethod")]
-        public string PaymentMethodId { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
     }
 }
