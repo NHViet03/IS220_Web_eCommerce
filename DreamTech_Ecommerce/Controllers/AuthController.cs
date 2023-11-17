@@ -87,7 +87,7 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
-                return Ok(new { Token = this.GenerateJwtToken(newUser) }); ;
+                return Ok(new { Token = this.GenerateJwtToken(newUser), user = newUser }); ;
             }
             catch (Exception ex)
             {
