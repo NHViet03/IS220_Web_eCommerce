@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { GLOBAL_TYPES } from "../../redux/actions/globalTypes";
+import { login } from "../../redux/actions/authAction";
 
 function ModalAuth({ setIsLogin }) {
   const dispatch = useDispatch();
@@ -19,20 +20,13 @@ function ModalAuth({ setIsLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-
-    const fakeUser = {
-      ...userData,
-      fullname: "Nguyễn Hoàng Việt",
-      cart: [],
-    };
-    dispatch({
-      type: GLOBAL_TYPES.AUTH,
-      payload: fakeUser,
-    });
-    handleCloseModal();
+  
+    const res= await dispatch(login(userData));
+    if(res){
+      handleCloseModal();
+    }
   };
 
   const handleCloseModal = () => {

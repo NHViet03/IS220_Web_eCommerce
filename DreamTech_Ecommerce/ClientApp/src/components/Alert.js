@@ -16,7 +16,7 @@ function Alert() {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleClose();
-    }, alert.duration);
+    }, alert.duration ? alert.duration : 3000);
 
     return () => clearTimeout(timer);
   }, [alert, handleClose]);

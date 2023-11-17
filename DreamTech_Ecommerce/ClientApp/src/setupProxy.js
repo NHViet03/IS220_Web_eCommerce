@@ -15,7 +15,8 @@ module.exports = function(app) {
     secure: false,
     headers: {
       Connection: 'Keep-Alive'
-    }
+    },
+    
   });
 
   app.use(appProxy);

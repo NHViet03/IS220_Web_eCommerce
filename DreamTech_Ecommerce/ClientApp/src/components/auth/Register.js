@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { GLOBAL_TYPES } from "../../redux/actions/globalTypes";
+import { register } from "../../redux/actions/authAction";
 
 function ModalAuth({ setIsLogin }) {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function ModalAuth({ setIsLogin }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let err = {};
     if (!email) err.email = "*Email không được để trống.";
@@ -33,6 +34,11 @@ function ModalAuth({ setIsLogin }) {
     if (password.length < 6) err.password = "*Mật khẩu ít nhất 6 kí tự.";
 
     if (Object.keys(err).length > 0) return setError(err);
+
+    const res=await dispatch(register(userData))
+    if(res){
+      handleCloseModal();
+    }
   };
 
   const validateEmail = useCallback((email) => {

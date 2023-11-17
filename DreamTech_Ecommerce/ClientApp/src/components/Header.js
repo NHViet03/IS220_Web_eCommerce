@@ -44,7 +44,7 @@ const fakeSearchResult = [
 ];
 
 function Header() {
-  const auth = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [isShowDropdown, setIsShowDropdown] = useState(false);
@@ -58,10 +58,10 @@ function Header() {
     dispatch({ type: GLOBAL_TYPES.MODAL_LOGOUT, payload: true });
   };
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
+  const handleSearch = (value) => {
+    setSearch(value);
 
-    if (e.target.value.length === 0) {
+    if (value.length === 0) {
       return setSearchResult([]);
     }
     // Fake API
@@ -83,14 +83,19 @@ function Header() {
             placeholder="Bạn cần tìm gì ?"
             className="form-control"
             value={search}
-            onChange={handleSearch}
+            onChange={(e)=>handleSearch(e.target.value)}
           />
           <i className="fa-solid fa-magnifying-glass" />
           {searchResult.length > 0 && (
             <div className="search_result">
               <div className="search_result_list">
                 {searchResult.map((result) => (
-                  <div key={result.id} className="search_result_item">
+                  <Link
+                    to={`/products/${result.id}`}
+                    key={result.id}
+                    className="search_result_item"
+                    onClick={()=>handleSearch("")}
+                  >
                     <div className="search_result_item_content">
                       <p>{result.name}</p>
                       <div className="search_result_item_price">
@@ -114,7 +119,7 @@ function Header() {
                       </div>
                     </div>
                     <img src={result.images[0]} alt="Product" />
-                  </div>
+                  </Link>
                 ))}
               </div>
               <Link>
@@ -153,14 +158,14 @@ function Header() {
             đơn hàng
           </p>
         </Link>
-        <Link className="header_item">
+        <Link to="/cart" className="header_item">
           <i
             className="fa-solid fa-cart-shopping"
             style={{
               position: "relative",
             }}
           >
-            {auth && auth.cart.length > 0 && (
+            {user && user.carts.length > 0 && (
               <small
                 style={{
                   position: "absolute",
@@ -179,7 +184,7 @@ function Header() {
                   border: "1px solid #fff",
                 }}
               >
-                {auth.cart.length}
+                {user.carts.length}
               </small>
             )}
           </i>
@@ -188,7 +193,7 @@ function Header() {
             hàng
           </p>
         </Link>
-        {auth ? (
+        {user ? (
           <div className="dropdown">
             <div
               className="header_item header_item_primary"
@@ -200,7 +205,7 @@ function Header() {
               <i className="fa-solid fa-user" />
               <p>
                 Xin chào <br />
-                {auth.fullname}
+                {user.firstName+" "+user.lastName}
               </p>
               {isShowDropdown && (
                 <ul className="dropdown-menu">
@@ -213,7 +218,7 @@ function Header() {
                       }}
                     >
                       <i className="fa-solid fa-hands-clapping"></i>
-                      <span>Xin chào, {auth.fullname}</span>
+                      <span>Xin chào, {user.fullname}</span>
                     </Link>
                   </li>
 

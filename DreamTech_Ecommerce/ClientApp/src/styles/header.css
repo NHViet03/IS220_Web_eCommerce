@@ -115,6 +115,7 @@
 .search_result_item_content p {
   font-size: 14px;
   font-weight: 500;
+  color:#000;
   overflow: hidden;
   display: block;
   display: -webkit-box;

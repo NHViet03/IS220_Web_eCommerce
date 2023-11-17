@@ -45,11 +45,11 @@ namespace DreamTech_Ecommerce.Controllers
 
             if (user != null && user.HashedPassword == PasswordHasher.HashPassword(model.Password, user.Salt))
             {
-                var resJson = new { Token = this.GenerateJwtToken(user) };
+                var resJson = new { Token = this.GenerateJwtToken(user) ,User=user};
                 return Ok(resJson);
             }
 
-            var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
+            var errorJson = new { ErrorMessage = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
             return BadRequest(errorJson);
         }
 
@@ -82,7 +82,7 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
-                return Ok(new { Token = this.GenerateJwtToken(newUser) }); ;
+                return Ok(new { Token = this.GenerateJwtToken(newUser),User=newUser}); ;
             }
             catch (Exception ex)
             {
@@ -107,7 +107,10 @@ namespace DreamTech_Ecommerce.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, userRole),
+                    
+                    
                 }),
+               
                 Expires = DateTime.UtcNow.AddMinutes(10000),
                 Issuer = issuer,
                 Audience = audience,

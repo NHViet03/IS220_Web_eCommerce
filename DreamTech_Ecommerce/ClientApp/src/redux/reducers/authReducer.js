@@ -9,7 +9,10 @@ const authReducer = (state = initialState, action) => {
     case GLOBAL_TYPES.ADD_CART:
       return {
         ...state,
-        cart: [...state.cart, action.payload],
+        user:{
+          ...state.user,
+          carts:[...state.user.carts,action.payload]
+        }
       };
     default:
       return state;

@@ -4,4 +4,5 @@ export const GLOBAL_TYPES={
     MODAL_LOGOUT:'MODAL_LOGOUT',
     ALERT:'ALERT',
     ADD_CART:'ADD_CART',
+  
 }
