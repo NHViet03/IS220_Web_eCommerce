@@ -5,7 +5,8 @@ module.exports = {
     "./src/**/*.{jsx,ts,tsx}",
     "./src/components/MyAccount/AccountPage.js",
     "./src/components/MyAccount/Sidebar.js",
-    "./src/components/MyAccount/ManageAddress.js"
+    "./src/components/MyAccount/ManageAddress.js",
+    "./src/components/Footer.js"
   ],
   theme: {
     extend: {},

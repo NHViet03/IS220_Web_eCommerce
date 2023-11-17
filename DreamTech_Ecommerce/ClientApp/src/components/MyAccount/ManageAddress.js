@@ -1,5 +1,4 @@
-// import Navigation from "../components/Navigation";
-// import Footer from "../components/Footer";
+import Footer from "../Footer";
 import Sidebar from "./Sidebar";
 
 
@@ -83,7 +82,7 @@ function ManageAddress() {
                     </div>
                 </div>
             </div>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     )
 }

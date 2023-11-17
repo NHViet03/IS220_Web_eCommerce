@@ -1,5 +1,4 @@
-// import Navigation from "../components/Navigation";
-// import Footer from "../components/Footer";
+import Footer from "../Footer";
 import Sidebar from "./Sidebar";
 
 function ChangePassword() {
@@ -85,7 +84,7 @@ function ChangePassword() {
                     </div>
                 </section>
             </section>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     )
 }

@@ -1,7 +1,4 @@
-// import Navigation from "../components/Navigation";
-// import Footer from "../components/Footer";
-// import Avatar from "../assets/images/avatar-photo.jpg";
-// import Sidebar from "../components/Sidebar";
+import Footer from "../Footer";
 import Sidebar from "./Sidebar";
 
 function AccountPage() {
@@ -106,7 +103,7 @@ function AccountPage() {
                     </div>
                 </section>
             </section>
-            {/* <Footer /> */}
+            <Footer />
         </div>
     )
 }

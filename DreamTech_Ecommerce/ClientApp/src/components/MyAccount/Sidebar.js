@@ -83,7 +83,7 @@ function Sidebar({ activePage }) {
                     <div className="flex w-full">
                         <div className="flex flex-col gap-2">
                             <a
-                                href="my-account/my-order-history"
+                                href="#"
                                 className="flex items-center gap-2 font-medium hover:text-red-600 active:text-violet-900"
                             >
                                 <svg
