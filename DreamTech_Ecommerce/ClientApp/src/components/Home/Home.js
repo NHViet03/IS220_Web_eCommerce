@@ -169,7 +169,7 @@ const Home = () => {
             <li className="Home_sidebar-sidebar-li">
               <a href="/product">
               <div>
-                <FontAwesomeIcon icon={faGift } fontSize={14} />
+                <FontAwesomeIcon icon={faGift} fontSize={14} />
                 <h5>Thủ thuật - Giải đáp</h5>
               </div>
               <FontAwesomeIcon icon={faAngleRight} />
