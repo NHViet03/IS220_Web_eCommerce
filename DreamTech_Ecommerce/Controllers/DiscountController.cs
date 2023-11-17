@@ -18,21 +18,21 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet("/GetAll")]
+        [HttpGet("GetAll")]
         public ActionResult Index()
         {
             var discounts = _context.Discounts.ToList();
             return Ok(discounts);
         }
 
-        [HttpGet("/GetById/{id}")]
+        [HttpGet("GetById/{id}")]
         public ActionResult Details(int id)
         {
             var discount = _context.Categories.Find(id);
             return Ok(discount);
         }
 
-        [HttpPost("/Create")]
+        [HttpPost("Create")]
         public ActionResult Create([FromBody] DiscountViewModel model)
         {
             var discount = new Discount()
@@ -53,7 +53,7 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpPut("/Edit/{id}")]
+        [HttpPut("Edit/{id}")]
         public ActionResult Edit(int id, [FromBody] DiscountViewModel model)
         {
             var discount = _context.Discounts.Find(id);
@@ -76,7 +76,7 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpDelete("/Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public ActionResult Delete(int id)
         {
             var discount = _context.Discounts.Find(id);

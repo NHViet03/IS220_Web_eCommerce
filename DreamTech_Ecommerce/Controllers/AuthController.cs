@@ -18,7 +18,6 @@ namespace DreamTech_Ecommerce.Controllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string ConfirmationPassword { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string Phone { get; set; }
@@ -65,10 +64,6 @@ namespace DreamTech_Ecommerce.Controllers
         public IActionResult SignUp([FromBody] SignUpViewModel model)
         {
             // Optional: Validate password
-            if (model.Password != model.ConfirmationPassword)
-            {
-                return BadRequest(new { ErrorMessage = "Password không trùng khớp" });
-            }
 
             var user = _context
                 .Users
@@ -140,7 +135,8 @@ namespace DreamTech_Ecommerce.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Phone = model.Phone,
-                Role = Role.Customer
+                Role = Role.Customer,
+                Salt = salt
             };
         }
     }

@@ -20,21 +20,21 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet("/GetAll")]
+        [HttpGet("GetAll")]
         public IActionResult Index()
         {
             var allCategories = _context.Categories.Include(c => c.Products).ToList();
             return Ok(allCategories);
         }
 
-        [HttpGet("/GetById/{categoryId}")]
+        [HttpGet("GetById/{categoryId}")]
         public IActionResult Details(string categoryId)
         {
             var category = _context.Categories.Find(categoryId);
             return Ok(category);
         }
 
-        [HttpPost("/Create")]
+        [HttpPost("Create")]
         public IActionResult Create([FromBody]Category model)
         {
             var category = _context.Categories.Find(model.Id);
@@ -54,7 +54,7 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpDelete("/Delete/{categoryId}")]
+        [HttpDelete("Delete/{categoryId}")]
         public IActionResult Delete(string categoryId)
         {
             var category = _context.Categories.Find(categoryId);
