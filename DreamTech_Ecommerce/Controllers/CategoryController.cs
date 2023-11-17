@@ -20,21 +20,21 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet("/GetAll")]
+        [HttpGet("GetAll")]
         public IActionResult Index()
         {
             var allCategories = _context.Categories.Include(c => c.Products).ToList();
             return Ok(allCategories);
         }
 
-        [HttpGet("/GetById/{categoryId}")]
+        [HttpGet("GetById/{categoryId}")]
         public IActionResult Details(string categoryId)
         {
             var category = _context.Categories.Find(categoryId);
             return Ok(category);
         }
 
-        [HttpPost("/Create")]
+        [HttpPost("Create")]
         public IActionResult Create([FromBody]Category model)
         {
             var category = _context.Categories.Find(model.Id);
@@ -54,7 +54,7 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpDelete("/Delete/{categoryId}")]
+        [HttpDelete("Delete/{categoryId}")]
         public IActionResult Delete(string categoryId)
         {
             var category = _context.Categories.Find(categoryId);
@@ -75,6 +75,30 @@ namespace DreamTech_Ecommerce.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPut("Edit/{Id}")]
+        public IActionResult Edit(string Id, [FromBody] Category model)
+        {
+            var category = _context.Categories.Find(Id);
+
+            if (category == null)
+            {
+                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
+            }
+
+            try
+            {
+                category.Name = model.Name;
+                _context.Categories.Update(category);
+                _context.SaveChanges();
+                return Ok(new { Message = "Đã cập nhật danh mục thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
+
 
         [HttpPost("AssignProductToCategory")]
         public IActionResult AssignedProductToCategory(string productId, string categoryId)

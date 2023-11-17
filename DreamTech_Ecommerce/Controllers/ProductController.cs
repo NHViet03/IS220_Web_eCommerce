@@ -25,10 +25,11 @@ namespace DreamTech_Ecommerce.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult Index()
         {
-            return Ok();
+            var allProducts = _context.Products.Include(p => p.ProductImages).ToList();
+            return Ok(allProducts);
         }
 
         [HttpGet("Get/{Id}")]
@@ -65,7 +66,48 @@ namespace DreamTech_Ecommerce.Controllers
             
         }
 
-        [HttpPost]
+        [HttpPut("Edit/{Id}")]
+        public IActionResult Edit(string Id, [FromForm] ProductViewModel model)
+        {
+            var product = _context.Products.Find(Id);
+
+            if (product == null)
+            {
+                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
+            }
+
+            try
+            {
+                if (model.Image != null)
+                {
+                    var imagePath = SaveImageToServer(model.Image);
+                    var newProductImage = new ProductImage
+                    {
+                        ImageUrl = imagePath,
+                        ProductId = product.Id
+                    };
+                    product.ProductImages.Add(newProductImage);
+                }
+
+                product.Brand = model.Brand;
+                product.Name = model.Name;
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.QtyInStock = model.QtyInStock;
+                product.CategoryId = model.CategoryId;
+
+                _context.SaveChanges();
+
+                return Ok(new { Message = "Sửa thành công !" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { ErrorMessage = "Lỗi server" });
+            }
+        }
+
+
+        [HttpPost("CreateProduct")]
         public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
             try
