@@ -9,7 +9,7 @@ namespace DreamTech_Ecommerce.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class DiscountController : Controller
     {
         private readonly DreamAppContext _context;
@@ -33,6 +33,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create([FromBody] DiscountViewModel model)
         {
             var discount = new Discount()
@@ -54,6 +55,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPut("Edit/{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, [FromBody] DiscountViewModel model)
         {
             var discount = _context.Discounts.Find(id);
@@ -77,6 +79,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
+         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             var discount = _context.Discounts.Find(id);
