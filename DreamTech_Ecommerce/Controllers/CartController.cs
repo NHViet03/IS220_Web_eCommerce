@@ -2,6 +2,7 @@
 using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -30,7 +31,22 @@ namespace DreamTech_Ecommerce.Controllers
             return Ok(allCarts);
         }
 
-        [HttpPost]
+        [HttpPost("GetByUser/{userId}")]
+        public IActionResult GetCartsByUser(int userId)
+        { 
+            try
+            {
+                var carts = _context.CartItems.Include(cart => cart.Product).Where(e => e.UserId == userId).ToList();
+                return Ok(carts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("AddToCart")]
         public IActionResult AddToCart([FromBody] CartItem cart)
         {
             if (cart == null)
@@ -43,7 +59,7 @@ namespace DreamTech_Ecommerce.Controllers
 
             if (user == null || product == null)
             {
-                return NotFound("User or product not found");
+                return NotFound("Không tìm sản phẩm hoặc user để thêm giỏ hàng");
             }
 
             cart.User = user;
@@ -62,17 +78,25 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [HttpDelete("{Id}")]
+        [HttpDelete("Delete/{Id}")]
         public IActionResult RemoveFromCart([FromBody] int Id)
         {
-            var cart = _context.CartItems.Find(Id);
-
-            if (cart == null)
+            try
             {
-                return NotFound("Không tìm thấy sản phẩm");
-            }
+                var cart = _context.CartItems.Find(Id);
 
-           return Ok("Ok");
+                if (cart == null)
+                {
+                    return NotFound("Không tìm thấy sản phẩm");
+                }
+
+                return Ok("Ok");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

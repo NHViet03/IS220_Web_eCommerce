@@ -33,6 +33,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
             try
@@ -102,6 +103,7 @@ namespace DreamTech_Ecommerce.Controllers
 
 
         [HttpPost("UnassignFromCategory")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UnassignProductFromCategory(string productId)
         {
             var product = _context.Products.Find(productId);
