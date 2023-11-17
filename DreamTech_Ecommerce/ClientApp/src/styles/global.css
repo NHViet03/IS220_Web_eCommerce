@@ -23,6 +23,10 @@
   margin: auto;
   position: relative;
 }
+.main_container{
+  background-color: #ececec;
+ 
+}
 
 a {
   text-decoration: none;
@@ -94,3 +98,6 @@ p {
 
 /* --------- PRODUCT -----------*/
 @import url("./product.css");
+
+/* --------- HOME -----------*/
+@import url("./home.css");
