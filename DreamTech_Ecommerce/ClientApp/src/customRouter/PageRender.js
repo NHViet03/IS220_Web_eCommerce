@@ -16,7 +16,7 @@ const PageRender = () => {
   let pageName = "";
 
   if (sub_page) {
-    if (page === "collections" || page === "products") {
+    if (page === "collections" || page === "products" ) {
       pageName = `${page}/[id]`;
     } else {
       pageName = `${page}/${sub_page}`;

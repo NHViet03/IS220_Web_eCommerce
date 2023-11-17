@@ -22,9 +22,10 @@
   min-height: 100vh;
   margin: auto;
   position: relative;
+  background-color: #ececec;
 }
 .main_container{
-  background-color: #ececec;
+
  
 }
 
