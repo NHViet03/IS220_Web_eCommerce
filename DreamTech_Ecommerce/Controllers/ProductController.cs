@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -28,7 +30,15 @@ namespace DreamTech_Ecommerce.Controllers
         public IActionResult Index()
         {
             var products = _context.Products.Include(e => e.ProductImages).ToList();
-            return Ok(products);
+
+            var jsonSerializerOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+            };
+
+            var json = JsonSerializer.Serialize(products, jsonSerializerOptions);
+
+            return Content(json, "application/json");
         }
 
         [HttpPost("Create")]
