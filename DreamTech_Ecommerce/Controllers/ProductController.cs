@@ -10,7 +10,6 @@ namespace DreamTech_Ecommerce.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
     public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
