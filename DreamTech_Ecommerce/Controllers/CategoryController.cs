@@ -9,7 +9,6 @@ namespace DreamTech_Ecommerce.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly IConfiguration _configuration;
