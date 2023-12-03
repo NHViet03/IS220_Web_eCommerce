@@ -8,28 +8,45 @@ function Header({ setShowSideBar }) {
   console.log(pathname);
 
   const path = useMemo(() => {
-    switch (pathname) {
-      case "/":
-        return "Trang chủ";
-      case "/products":
-        return "Sản phẩm";
-      case "/orders":
-        return "Đơn hàng";
-      case "/shipping":
-        return "Giao hàng";
-      case "/customers":
-        return "Khách hàng";
-      case "/revenue":
-        return "Doanh thu";
-      case "/profile":
-        return "Thông tin cá nhân";
+    const path = pathname.split("/");
+    console.log(path);
+    let navigate = "";
+    switch (path[1]) {
+      case "":
+        navigate = "Trang chủ";
+        break;
+      case "products":
+        navigate = "Sản phẩm";
+        break;
+      case "orders":
+        navigate = "Đơn hàng";
+        break;
+      case "shipping":
+        navigate = "Giao hàng";
+        break;
+      case "customers":
+        navigate = "Khách hàng";
+        break;
+      case "revenue":
+        navigate = "Doanh thu";
+        break;
+      case "profile":
+        navigate = "Thông tin cá nhân";
+        break;
       default:
-        return "Trang chủ";
+        navigate = "Trang chủ";
+        break;
     }
+
+    if (path[2]) {
+      navigate += " / " + path[2];
+    }
+
+    return navigate;
   }, [pathname]);
 
   return (
-    <div className="d-flex justify-content-between align-items-center header">
+    <div className="d-flex justify-content-between align-items-center  box_shadow header">
       <div className="d-flex align-items-center">
         <i
           className="fa-solid fa-bars me-4"

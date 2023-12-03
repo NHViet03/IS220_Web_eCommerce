@@ -2,7 +2,7 @@ import React from "react";
 
 function CardItem({ card }) {
   return (
-    <div className="card_item">
+    <div className=" box_shadow card_item">
       <div className="card_item_content">
         <h5 className="mb-1">{card.title}</h5>
         <div>

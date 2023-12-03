@@ -1,8 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useState,useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../images/logo.png";
 
 function SideBar({ showSideBar }) {
+  const [active, setActive] = useState(0);
   const MenuItems = useMemo(
     () => [
       {
@@ -53,7 +54,8 @@ function SideBar({ showSideBar }) {
             <li key={index} className="nav-item mb-3">
               <Link
                 to={item.link}
-                className={`nav-link ${pathname === item.link ? "active" : ""}`}
+                className={`nav-link ${active === index ? "active" : ""}`}
+                onClick={() => setActive(index)}
               >
                 <span className="icon_wrapper">
                   <i className={item.icon} />
@@ -82,6 +84,14 @@ function SideBar({ showSideBar }) {
               </span>
               <span>Thông tin cá nhân</span>
             </Link>
+          </li>
+          <li className="nav-item mb-3">
+            <button className={`nav-link`}>
+              <span className="icon_wrapper">
+                <i class="fa-solid fa-right-from-bracket" />
+              </span>
+              <span>Đăng xuất</span>
+            </button>
           </li>
         </ul>
       </nav>

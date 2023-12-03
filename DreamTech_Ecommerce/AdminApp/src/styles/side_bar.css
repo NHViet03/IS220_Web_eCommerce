@@ -37,13 +37,20 @@
   ) !important;
 }
 
+.side_bar .navbar{
+  display: block;
+  width:100%;
+}
 .side_bar .nav-link {
   font-size: 16px;
   color: rgb(103, 116, 142);
+  border-radius: 8px;
+  padding-left: 12px;
 }
 
 .side_bar .nav-link.active {
   color: var(--primary-color);
+  background-color: var(--primary-bg-color-20);
   font-weight: 500;
 }
 .side_bar .nav-link.active .icon_wrapper {
