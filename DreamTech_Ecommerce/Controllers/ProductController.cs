@@ -26,8 +26,20 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpGet("GetAll")]
         public IActionResult Index()
         {
-            var products = _context.Products.Include(e => e.ProductImages).ToList();
+            var products = _context.Products
+                .Include(e => e.ProductImages)
+                .ToList();
             return Ok(products);
+        }
+
+        [HttpGet("GetProductById/{Id}")]
+        public IActionResult GetById(String Id)
+        {
+            var product = _context.Products
+                .Include(e => e.ProductImages)
+                .Include(e => e.Gifts)
+                .FirstOrDefault(p => p.Id == Id);
+            return Ok(product);
         }
 
         [HttpPost("Create")]
