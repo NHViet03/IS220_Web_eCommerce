@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/home";
 import PageRender from "./customRouter/PageRender";
+import AddProduct from "./pages/products/add";
 
 function App() {
   const [showSideBar, setShowSideBar] = useState(true);
@@ -27,6 +28,8 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/products/add" element={<AddProduct />} />
+
               <Route path="/:page" element={<PageRender />} />
               <Route path="/:page/:id" element={<PageRender />} />
             </Routes>

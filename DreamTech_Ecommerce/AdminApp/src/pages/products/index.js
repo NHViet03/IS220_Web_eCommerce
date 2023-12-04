@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import ModalDeleteProduct from "../../components/ModalDeleteProduct";
 
 const fakeProduct = {
-  id: 4,
+  id: 'chuot-logitech-g102-lightsync-black',
   images: [
     "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
     "https://product.hstatic.net/200000722513/product/5.hinhanhsanpham1_d29de04024294f329e38332a99f2cb7c_f6f1e3c980974cd2b30dbc9e3438ae4c_1024x1024.jpg",
@@ -103,10 +103,15 @@ function Products() {
               />
               <i class="fa-solid fa-magnifying-glass" />
             </div>
-            <button className="btn btn_product btn_add">
+            <Link
+              to={{
+                pathname: "/products/add",
+              }}
+              className="btn btn_product btn_add"
+            >
               <i class="fa-solid fa-plus" />
               Thêm sản phẩm
-            </button>
+            </Link>
           </div>
         </div>
         <div className="mb-3">
@@ -153,7 +158,7 @@ function Products() {
             <tbody>
               {products.map((product, index) => (
                 <tr key={index}>
-                  <th scope="row">{index + 1}</th>
+                  <td scope="row">{index + 1}</td>
                   <td>
                     <img
                       src={product.images[0]}
@@ -174,10 +179,10 @@ function Products() {
                   <td colSpan="2">
                     <div className="d-flex align-items-center gap-3">
                       <Link to={`/products/${product.id}`}>
-                      <button className="btn btn_product btn_edit">
-                        <i className="fa-solid fa-pen-to-square" />
-                        Sửa
-                      </button>
+                        <button className="btn btn_product btn_edit">
+                          <i className="fa-solid fa-pen-to-square" />
+                          Sửa
+                        </button>
                       </Link>
                       <button
                         className="btn btn_product btn_delete"

@@ -22,10 +22,10 @@ const ModalDeleteProduct = ({ setModalDelete }) => {
           </p>
         </div>
         <div className="modal_footer">
-          <button className="btn btn_cancel" onClick={handleClose}>
+          <button className="btn btn_normal" onClick={handleClose}>
             Hủy
           </button>
-          <button className="btn btn_delete" onClick={handleDelete}>
+          <button className="btn btn_normal btn_accept" onClick={handleDelete}>
             Xóa
           </button>
         </div>

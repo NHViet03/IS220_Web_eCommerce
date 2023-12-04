@@ -1,0 +1,90 @@
+.product_edit {
+}
+
+.product_edit h5 {
+  font-size: 20px;
+}
+
+/* Carousel */
+.product_edit .carousel {
+  width: 60%;
+  margin-left: 48px;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.product_edit .carousel .carousel-indicators {
+  --height: 60px;
+  height: var(--height);
+}
+
+.product_edit .carousel .carousel-btn {
+  width: 60px;
+  height: 60px;
+  box-sizing: border-box;
+  opacity: 1;
+  border-radius: 4px;
+  border: solid 1px transparent;
+  box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 3px;
+  margin: 0 8px;
+}
+.product_edit .carousel .carousel-btn.active {
+  border-color: var(--primary-color);
+}
+
+.product_edit .carousel .carousel-control-prev,
+.product_edit .carousel .carousel-control-next {
+  color: #000;
+}
+
+.product_edit .carousel .carousel-control-prev-icon,
+.product_edit .carousel .carousel-control-next-icon {
+  background-image: none;
+  background-color: #fff;
+  box-shadow: rgba(9, 30, 66, 0.2) 0px 3px 6px -2px,
+    rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  justify-content: center;
+}
+
+.product_edit .carousel .carousel-item {
+  width: 100%;
+  height: 400px;
+}
+
+.product_edit .carousel .carousel-item img {
+  width: 100%;
+  height:100%;
+  object-fit: contain;
+  background-color: #fff;
+}
+
+.product_edit form {
+  width: 60%;
+  margin-left: 48px;
+}
+
+.product_edit_info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.product_edit_info_card {
+  flex: 1 1 40%;
+}
+
+.product_edit_info_card input,
+.product_edit_info_card select {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}

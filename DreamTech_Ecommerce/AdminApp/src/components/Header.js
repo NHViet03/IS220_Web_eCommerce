@@ -5,11 +5,9 @@ import { useLocation } from "react-router-dom";
 function Header({ setShowSideBar }) {
   const auth = useSelector((state) => state.auth);
   const { pathname } = useLocation();
-  console.log(pathname);
 
   const path = useMemo(() => {
     const path = pathname.split("/");
-    console.log(path);
     let navigate = "";
     switch (path[1]) {
       case "":
@@ -38,7 +36,9 @@ function Header({ setShowSideBar }) {
         break;
     }
 
-    if (path[2]) {
+    if (path[2] && path[2] === "add") {
+      navigate += " / Thêm";
+    } else if (path[2]) {
       navigate += " / " + path[2];
     }
 

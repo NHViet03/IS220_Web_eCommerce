@@ -17,7 +17,8 @@ body {
   box-sizing: border-box;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: unset !important;
   box-shadow: unset !important;
 }
@@ -41,6 +42,21 @@ body {
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
+
+.btn_normal {
+  padding: 8px 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: #fff;
+  font-weight: 500;
+}
+.btn_normal.btn_accept {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -85,29 +101,17 @@ body {
   font-size: 24px;
   cursor: pointer;
 }
-.modal_body{
-  padding:0 12px;
+.modal_body {
+  padding: 0 12px;
   margin: 24px 0;
 }
-.modal_footer{
+.modal_footer {
   display: flex;
   justify-content: flex-end;
-  gap:12px;
+  gap: 12px;
   margin-bottom: 12px;
 }
-.modal_footer button{
-  padding: 8px 36px;
-  border-radius: 8px;
-  border:1px solid var(--border-color);
-  background-color: #fff;
-  font-weight: 500;
-}
 
-.modal_footer .btn_delete{
-  background-color: var(--primary-color);
-  color: #fff;
-  border-color: var(--primary-color);
-}
 /* --------- SIDE BAR -----------*/
 @import url("./side_bar.css");
 
@@ -119,3 +123,9 @@ body {
 
 /* --------- PRODUCT -----------*/
 @import url("./products.css");
+
+/* ---------  ADD PRODUCT -----------*/
+@import url("./add_product.css");
+
+/* ---------  EDIT PRODUCT -----------*/
+@import url("./edit_product.css");
