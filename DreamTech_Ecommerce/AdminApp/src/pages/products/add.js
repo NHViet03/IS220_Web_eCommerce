@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {useNavigate} from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import Categories from "../../utils/categoryData";
 
 function AddProduct() {
   const [product, setProduct] = useState({
@@ -11,12 +11,12 @@ function AddProduct() {
     description: "",
     images: [],
     categoryId: "",
-    color:'',
-    weight:'',
-    size:'',
+    color: "",
+    weight: "",
+    size: "",
     quantity: "",
   });
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handlePickImages = (e) => {
     const files = [...e.target.files];
@@ -52,7 +52,7 @@ function AddProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(product);
-    navigate('/products')
+    navigate("/products");
   };
 
   return (
@@ -155,7 +155,7 @@ function AddProduct() {
               onChange={handleChange}
             />
           </div>
-          
+
           <div className="product_add_info_card">
             <h6>Màu sắc</h6>
             <input
@@ -192,9 +192,12 @@ function AddProduct() {
               onChange={handleChange}
             />
           </div>
-          <div className="product_add_info_card" style={{
-            flexBasis:'100%'
-          }}>
+          <div
+            className="product_add_info_card"
+            style={{
+              flexBasis: "100%",
+            }}
+          >
             <h6>Danh mục</h6>
             <select
               class="form-select"
@@ -203,20 +206,11 @@ function AddProduct() {
               value={product.categoryId}
               onChange={handleChange}
             >
-              <option selected disabled>
-                Chọn
-              </option>
-              <option value="apple">Apple</option>
-              <option value="ban-phim">Bàn phím</option>
-              <option value="chuot-lot-chuot">Chuột - Lót chuột</option>
-              <option value="laptop">Laptop</option>
-              <option value="laptop-gaming">Laptop Gaming</option>
-              <option value="mani-cpu-vga">Main - CPU - VGA</option>
-              <option value="man-hinh">Màn hình</option>
-              <option value="pc">PC</option>
-              <option value="phan-mem-mang">Phần mềm mạng</option>
-              <option value="phu-kien">Phụ kiện</option>
-              <option value="tai-nghe-loa">Tai nghe - Loa</option>
+              {Categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
             </select>
           </div>
           <div className="product_add_info_card">
@@ -232,18 +226,14 @@ function AddProduct() {
               onChange={handleChange}
             />
           </div>
-         
         </div>
         <div className="d-flex justify-content-center gap-3">
-          <button
-            className="btn btn_normal btn_accept "
-            type="submit"
-          >
-            Thêm 
+          <button className="btn btn_normal btn_accept " type="submit">
+            Thêm
           </button>
           <button
             className="btn btn_normal"
-            onClick={() => navigate('/products')}
+            onClick={() => navigate("/products")}
           >
             Hủy
           </button>

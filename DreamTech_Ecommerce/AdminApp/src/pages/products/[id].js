@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Categories from "../../utils/categoryData";
 
 const fakeProduct = {
   id: "chuot-logitech-g102-lightsync-black",
@@ -180,20 +181,11 @@ function EditProduct() {
               value={product.categoryId}
               onChange={handleChange}
             >
-              <option selected disabled>
-                Chọn
-              </option>
-              <option value="apple">Apple</option>
-              <option value="ban-phim">Bàn phím</option>
-              <option value="chuot-lot-chuot">Chuột - Lót chuột</option>
-              <option value="laptop">Laptop</option>
-              <option value="laptop-gaming">Laptop Gaming</option>
-              <option value="mani-cpu-vga">Main - CPU - VGA</option>
-              <option value="man-hinh">Màn hình</option>
-              <option value="pc">PC</option>
-              <option value="phan-mem-mang">Phần mềm mạng</option>
-              <option value="phu-kien">Phụ kiện</option>
-              <option value="tai-nghe-loa">Tai nghe - Loa</option>
+              {Categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.title}
+                </option>
+              ))}
             </select>
           </div>
           <div className="product_add_info_card">

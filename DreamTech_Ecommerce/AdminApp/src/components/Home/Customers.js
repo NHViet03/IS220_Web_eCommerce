@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
+import formatMoney from "../../utils/formatMoney";
+import ExportCSV from "../ExportCSV";
 
 function Customers({ customers }) {
   const customData = (data) => {
@@ -14,8 +16,7 @@ function Customers({ customers }) {
 
     newData.phone =
       data.phone.slice(0, 4) + data.phone.slice(4).replace(/./g, "*");
-    newData.total =
-      data.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " vnđ";
+    newData.total = formatMoney(data.total);
 
     if (data.total > 100000000) {
       newData.level = "Diamond";
@@ -48,25 +49,41 @@ function Customers({ customers }) {
     return res;
   };
 
+  const customExport = useCallback(() => {
+    return customers.map((customer) => ({
+      "Mã khách hàng": customer.id,
+      "Tên khách hàng": customer.name,
+      "Email": customer.email,
+      "Số điện thoại": customer.phone,
+      "Doanh số": customer.total,
+    }));
+  }, [customers]);
+
   return (
     <div className="mb-5 box_shadow home_customers">
-      <div className="mb-3 d-flex align-items-center">
-        <h5 className="mb-0 me-2">Danh sách khách hàng hàng đầu</h5>
-        <i
-          class="fa-solid fa-ranking-star ms-2"
-          style={{
-            fontSize: "28px",
-          }}
-        />
+      <div className="mb-3 d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center">
+          <h5 className="mb-0 me-2">Danh sách khách hàng hàng đầu</h5>
+
+          <i
+            class="fa-solid fa-ranking-star ms-2"
+            style={{
+              fontSize: "28px",
+            }}
+          />
+        </div>
+        <div>
+          <ExportCSV csvData={customExport()} filename="ds-kh-tiem-nang" />
+        </div>
       </div>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col">Mã khách hàng</th>
             <th scope="col">Họ tên</th>
             <th scope="col">Email</th>
             <th scope="col">Số điện thoại</th>
-            <th scope="col">Doanh số</th>
+            <th scope="col">Doanh số (VNĐ)</th>
             <th scope="col">Tích lũy</th>
           </tr>
         </thead>
@@ -77,7 +94,8 @@ function Customers({ customers }) {
             return (
               <tr key={index}>
                 <td>
-                  <i className="fa-solid fa-user" />
+                  <i className="fa-solid fa-user me-1" />
+                  {newData.id}
                 </td>
                 <td>{newData.name}</td>
                 <td>{newData.email}</td>

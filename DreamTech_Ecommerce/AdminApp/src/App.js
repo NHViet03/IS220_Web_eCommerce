@@ -7,6 +7,11 @@ import Home from "./pages/home";
 import PageRender from "./customRouter/PageRender";
 import AddProduct from "./pages/products/add";
 
+import moment from 'moment';
+import 'moment/locale/vi';
+moment.locale('vi');
+
+
 function App() {
   const [showSideBar, setShowSideBar] = useState(true);
 

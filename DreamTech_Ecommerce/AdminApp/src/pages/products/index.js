@@ -1,99 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import ModalDeleteProduct from "../../components/ModalDeleteProduct";
+import ExportCSV from "../../components/ExportCSV";
+import formatMoney from "../../utils/formatMoney";
+import Categories from "../../utils/categoryData";
+import Filter from "../../components/Product/Filter";
+import ProductList from "../../components/Product/ProductList";
 
-const fakeProduct = {
-  id: 'chuot-logitech-g102-lightsync-black',
-  images: [
-    "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
-    "https://product.hstatic.net/200000722513/product/5.hinhanhsanpham1_d29de04024294f329e38332a99f2cb7c_f6f1e3c980974cd2b30dbc9e3438ae4c_1024x1024.jpg",
-    "https://product.hstatic.net/200000722513/product/6.hinhanhsanpham3_9f2fbf6b901f4a83b85737612e957030_92ddadad61b14aa3a725c3924a3f8089_1024x1024.jpg",
-    "https://product.hstatic.net/200000722513/product/14z90rs-02-1-gram-style-design-mobile_d3807c71442c4235b9da6ffdcf597d04_999d52f9503749069407961b41b8e2e7_1024x1024.jpg",
-  ],
-  name: "Laptop LG Gram Style 14Z90RS GAH54A5",
-  price: "38.990.000",
-  sale_price: "35.990.000",
-  gifts: [
-    {
-      id: 123,
-      name: "Móc khóa Keycap DreamTech",
-    },
-    {
-      id: 124,
-      name: "Túi chống sốc DreamTech",
-    },
-  ],
-  description: [
-    {
-      tech: "CPU",
-      content:
-        "Intel Core i5-1340P (12 Cores: 4P + 8E, P: 1.9 up to 4.6 GHz / E: 1.4 up to 3.4 GHz) 12 MB Cache",
-    },
-    {
-      tech: "RAM",
-      content: "16GB LPDDR5 6000MHz (Dual Channel, Onboard, không nâng cấp)",
-    },
-    {
-      tech: "Ổ cứng",
-      content: "512GB PCIe NVMe M.2 SSD (2 slot, còn trống 1 khe M.2)",
-    },
-    {
-      tech: "Card đồ họa",
-      content: "Intel Iris Xe Graphics",
-    },
-    {
-      tech: "Màn hình",
-      content:
-        "14 inch WQXGA+ 2K8 (2880 x 1800), 16:10, OLED 90Hz 0.2ms, DCI-P3 100%, LGD, 500 nits, Anti-Glare Flow Refrection",
-    },
-    {
-      tech: "Hệ điều hành",
-      content: "Windows 11 Home",
-    },
-    {
-      tech: "Pin",
-      content: "72 Wh Li-Ion, Thời lượng pin lên đến 15 giờ (Video playback)",
-    },
-    {
-      tech: "Trọng lượng",
-      content: "999 gram",
-    },
-    {
-      tech: "Màu sắc",
-      content: "Trắng",
-    },
-    {
-      tech: "Kích thước",
-      content: "31.16 cm x 21.39 cm x 1.59  cm",
-    },
-  ],
-  category: "Laptop",
-  QtyInStock: 10,
-};
+const fakeProducts = [
+  {
+    id: "laptop-gaming-msi-gf63-12ucx-841vn",
+    images: [
+      "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
+      "https://product.hstatic.net/200000722513/product/5.hinhanhsanpham1_d29de04024294f329e38332a99f2cb7c_f6f1e3c980974cd2b30dbc9e3438ae4c_1024x1024.jpg",
+      "https://product.hstatic.net/200000722513/product/6.hinhanhsanpham3_9f2fbf6b901f4a83b85737612e957030_92ddadad61b14aa3a725c3924a3f8089_1024x1024.jpg",
+      "https://product.hstatic.net/200000722513/product/14z90rs-02-1-gram-style-design-mobile_d3807c71442c4235b9da6ffdcf597d04_999d52f9503749069407961b41b8e2e7_1024x1024.jpg",
+    ],
+    name: "Laptop LG Gram Style 14Z90RS GAH54A5",
+    price: 38990000,
+    sale_price: 35990000,
+    category: "Laptop",
+    QtyInStock: 10,
+  },
+  {
+    id: "chuot-logitech-g102-lightsync-black",
+    images: [
+      "https://product.hstatic.net/200000722513/product/thumbchuot_a405fadb92a34c429c3eed4d11a84fb5_medium.jpg",
+    ],
+    name: "Chuột Logitech G102 LightSync Black",
+    price: 599000,
+    sale_price: 399000,
+    category: "Chuột - Lót chuột",
+    QtyInStock: 10,
+  },
+  {
+    id: "pc-gvn-intel-i3-12100f-vga-gtx-1650",
+    images: [
+      "https://product.hstatic.net/200000722513/product/5000d_white_aero_61797e20d29a47ff9f7589071a5099da_medium.png",
+    ],
+    name: "PC GVN Intel i3-12100F/ VGA GTX 1650",
+    price: 11590000,
+    sale_price: 10890000,
+    category: "PC",
+    QtyInStock: 10,
+  },
+];
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [modalDelete, setModalDelete] = useState(false);
+  const [filter, setFilter] = useState({
+    sort: "default",
+    category: ["all"],
+    price: [0, 0],
+  });
 
   const pages = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     let newArr = [];
-    for (let i = 0; i < 10; i++) {
-      newArr.push(fakeProduct);
+    for (let i = 0; i < 3; i++) {
+      newArr.push(...fakeProducts);
     }
     setProducts(newArr);
   }, []);
 
+  const customData = useCallback(() => {
+    return products.map((product) => ({
+      "Mã sản phẩm": product.id,
+      "Tên sản phẩm": product.name,
+      "Hình ảnh": product.images.join("\n"),
+      "Giá gốc (VNĐ)": formatMoney(product.price),
+      "Giá giảm giá (VNĐ)": formatMoney(product.sale_price),
+      "Tồn kho": product.QtyInStock,
+      "Danh mục": product.category,
+    }));
+  }, [products]);
+
+  useEffect(() => {
+    if (products.length === 0) return;
+    let newProducts = [...products];
+    switch (filter.sort) {
+      case "price_high_to_low":
+        newProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "price_low_to_high":
+        newProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "name_z_to_a":
+        newProducts.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "name_a_to_z":
+        newProducts.sort((a, b) => -b.name.localeCompare(a.name));
+        break;
+      default:
+        let newArr = [];
+        for (let i = 0; i < 3; i++) {
+          newArr.push(...fakeProducts);
+          newProducts = newArr;
+        }
+    }
+    setProducts(newProducts);
+  }, [filter.sort]);
+
   return (
-    <div className="mb-3 products">
-      <div className="box_shadow mb-3 products_container">
+    <div className="mb-3 table">
+      <div className="box_shadow mb-3 table_container">
         <div className="d-flex justify-content-between align-items-center mb-3 ">
-          <h5>Danh sách sản phẩm</h5>
+          <h5>Danh sách Sản phẩm</h5>
           <div className="d-flex align-items-center gap-4">
-            <div className="d-flex justify-content-between align-items-center products_search">
+            <div className="d-flex justify-content-between align-items-center table_search">
               <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
@@ -107,96 +125,19 @@ function Products() {
               to={{
                 pathname: "/products/add",
               }}
-              className="btn btn_product btn_add"
+              className="btn btn_table btn_add"
             >
               <i class="fa-solid fa-plus" />
               Thêm sản phẩm
             </Link>
+            <ExportCSV csvData={customData()} filename={"danh-sach-san-pham"} />
           </div>
         </div>
+        <div className="d-flex justify-content-between mb-3 ">
+          <Filter filter={filter} setFilter={setFilter} />
+        </div>
         <div className="mb-3">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th
-                  scope="col"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Tên sản phẩm <i className="fa-solid fa-sort ms-1" />
-                </th>
-                <th
-                  scope="col"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Giá gốc (VNĐ) <i className="fa-solid fa-sort ms-1" />
-                </th>
-                <th
-                  scope="col"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Giá giảm giá (VNĐ) <i className="fa-solid fa-sort ms-1" />
-                </th>
-                <th
-                  scope="col"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Tồn kho <i className="fa-solid fa-sort ms-1" />
-                </th>
-                <th scope="col">Danh mục</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td scope="row">{index + 1}</td>
-                  <td>
-                    <img
-                      src={product.images[0]}
-                      alt="product"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        borderRadius: "8px",
-                        marginRight: "8px",
-                      }}
-                    />
-                    <span>{product.name}</span>
-                  </td>
-                  <td>{product.price}</td>
-                  <td>{product.sale_price}</td>
-                  <td>{product.QtyInStock}</td>
-                  <td>{product.category}</td>
-                  <td colSpan="2">
-                    <div className="d-flex align-items-center gap-3">
-                      <Link to={`/products/${product.id}`}>
-                        <button className="btn btn_product btn_edit">
-                          <i className="fa-solid fa-pen-to-square" />
-                          Sửa
-                        </button>
-                      </Link>
-                      <button
-                        className="btn btn_product btn_delete"
-                        onClick={() => setModalDelete(product)}
-                      >
-                        <i className="fa-solid fa-trash" />
-                        Xóa
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ProductList products={products} setModalDelete={setModalDelete} />
         </div>
       </div>
       <div className="d-flex justify-content-between align-items-center ">

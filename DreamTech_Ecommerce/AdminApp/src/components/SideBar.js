@@ -22,7 +22,7 @@ function SideBar({ showSideBar }) {
         link: "/orders",
       },
       {
-        title: "Giao hàng",
+        title: "Đang giao",
         icon: "fa-solid fa-truck-fast",
         link: "/shipping",
       },
