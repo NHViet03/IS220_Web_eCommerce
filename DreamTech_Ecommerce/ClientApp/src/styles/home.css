@@ -11,6 +11,10 @@
     height: 100%;
 }
 /* Home Sidebar */
+.Home_sidebar{
+    margin-left: 0;
+    margin-right: 0;
+}
 .Home_sidebar-sidebar{
     background-color: #fff;
     border-radius: 5px;
