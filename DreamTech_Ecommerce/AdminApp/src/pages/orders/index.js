@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import moment from "moment";
+import { Link } from "react-router-dom";
 import ExportCSV from "../../components/ExportCSV";
 import formatMoney from "../../utils/formatMoney";
 import OrderList from "../../components/Order/OrderList";
@@ -110,6 +111,15 @@ function Products() {
                 />
                 <i class="fa-solid fa-magnifying-glass" />
               </div>
+              <Link
+              to={{
+                pathname: "/orders/add",
+              }}
+              className="btn btn_table btn_add"
+            >
+              <i class="fa-solid fa-plus" />
+              Tạo đơn hàng
+            </Link>
               <ExportCSV
                 csvData={customData()}
                 filename={"danh-sach-don-hang"}

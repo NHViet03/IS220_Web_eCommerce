@@ -182,7 +182,7 @@ function Home() {
             <p>
               <span className="fw-medium">{"( +23% )"}</span> so với tuần trước
             </p>
-            <div className="home_charts_left_cards">
+            <div className="mt-3 home_charts_left_cards">
               <div className="home_charts_left_cards_item">
                 <div
                   style={{

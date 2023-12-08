@@ -196,3 +196,12 @@ body {
 
 /* ---------  ORDER DETAIL -----------*/
 @import url("./order_detail.css");
+
+/* ---------  ADD ORDER -----------*/
+@import url("./add_order.css");
+
+/* ---------  CUSTOMER DETAIL -----------*/
+@import url("./customer_detail.css");
+
+/* ---------  ADD CUSTOMER -----------*/
+@import url("./add_customer.css");

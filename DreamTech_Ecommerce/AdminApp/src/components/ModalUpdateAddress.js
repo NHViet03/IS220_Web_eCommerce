@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 
-const ModalUpdateAddress = ({ setShowModal, order, setOrder }) => {
+const ModalUpdateAddress = ({
+  setShowModal,
+  order,
+  setOrder,
+  customer,
+  setCustomer,
+}) => {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
-  const addressArr = order.address.split(", ");
+  const addressArr = order
+    ? order.address.split(", ")
+    : customer.shippingAddress.split(", ");
   const [address, setAddress] = useState({
     province: addressArr[addressArr.length - 1] || "",
     district: addressArr[addressArr.length - 2] || "",
@@ -68,10 +76,18 @@ const ModalUpdateAddress = ({ setShowModal, order, setOrder }) => {
       address.district,
       address.province,
     ];
-    setOrder({
-      ...order,
-      address: addressArr.join(", "),
-    });
+    if (order) {
+      setOrder({
+        ...order,
+        address: addressArr.join(", "),
+      });
+    } else {
+      setCustomer({
+        ...customer,
+        shippingAddress: addressArr.join(", "),
+      });
+    }
+
     setShowModal(false);
   };
 
@@ -89,7 +105,7 @@ const ModalUpdateAddress = ({ setShowModal, order, setOrder }) => {
             borderBottom: "1px solid var(--border-color)",
           }}
         >
-          <h5 className="fw-medium">Cập nhật địa chỉ giao hàng</h5>
+          <h5 className="fw-medium">{order ? "Cập nhật địa chỉ giao hàng" : "Thêm địa chỉ giao hàng"}</h5>
           <div className="modal_close" onClick={handleClose}>
             <i className="fa-solid fa-xmark" />
           </div>
@@ -153,11 +169,19 @@ const ModalUpdateAddress = ({ setShowModal, order, setOrder }) => {
           </div>
         </div>
         <div className="modal_footer px-3">
-          <button className="btn btn_normal" type="button" onClick={handleClose}>
+          <button
+            className="btn btn_normal"
+            type="button"
+            onClick={handleClose}
+          >
             Hủy
           </button>
-          <button className="btn btn_normal btn_accept" type="button" onClick={handleSave}>
-            Cập nhật
+          <button
+            className="btn btn_normal btn_accept"
+            type="button"
+            onClick={handleSave}
+          >
+           {order ? "Cập nhật" : "Lưu"}
           </button>
         </div>
       </div>

@@ -4,6 +4,10 @@ import moment from "moment";
 import formatMoney from "../../utils/formatMoney";
 import ModalUpdateAddress from "../../components/ModalUpdateAddress";
 
+import { usePDF } from "react-to-pdf";
+
+import Invoice from "../../components/Order/Invoice";
+
 const fakeOrder = {
   id: "HD-012",
   quantity: 10,
@@ -28,7 +32,7 @@ const fakeOrder = {
       name: "Laptop LG Gram Style 14Z90RS GAH54A5",
       price: 38990000,
       sale_price: 35990000,
-      quantity: 1,
+      quantity: 1,  
     },
     {
       id: "CTHD-02",
@@ -59,11 +63,16 @@ const fakeOrder = {
 function OrderDetail() {
   const [order, setOrder] = useState(fakeOrder);
   const [showModal, setShowModal] = useState(false);
+  const [exportPDF, setExportPDF] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     navigate("/orders");
+  };
+
+  const handleExportPDF = () => {
+    setExportPDF(true);
   };
 
   return (
@@ -94,9 +103,26 @@ function OrderDetail() {
             <i className="fa-solid fa-check me-1" />
             Lưu thay đổi
           </button>
-          <button className="btn btn_normal" type="button">
-            <i className="fa-solid fa-ellipsis" />
-          </button>
+          <div className="dropdown">
+            <button
+              className=" btn btn_normal "
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              <i className="fa-solid fa-ellipsis" />
+            </button>
+            <ul className="dropdown-menu">
+              <li>
+                <div
+                  className="dropdown-item fw-medium"
+                  onClick={handleExportPDF}
+                >
+                  <i className="fa-solid fa-receipt me-1 cursor-pointer" />
+                  Xuất hóa đơn
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </header>
       <div className=" d-flex align-items-start gap-4 order_detail_body">
@@ -272,6 +298,12 @@ function OrderDetail() {
           setOrder={setOrder}
         />
       )}
+
+      <Invoice
+        exportPDF={exportPDF}
+        setExportPDF={setExportPDF}
+        order={order}
+      />
     </form>
   );
 }
