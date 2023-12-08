@@ -1,84 +1,85 @@
-import  '../../styles/tailwind-style.css'
-import Footer from "../../components/Footer";
-import Sidebar from "../../components/MyAccount/Sidebar";
+import React, { useState } from 'react';
+import '../../styles/tailwind-style.css';
+import Sidebar from '../../components/MyAccount/Sidebar';
+import ModalUpdateAddress from '../../components/MyAccount/Modal/ModalUpdateAddress';
 
-function ManageAddress() {
+function Addresses() {
+    const [show, setShow] = useState(false);
     return (
-        <div className="bg-white mx-[100px] mb-3 rounded-md">
-            {/* <Navigation /> */}
-            {/* breadcrumbs */}
-            <nav className="mx-auto w-full mt-4 max-w-[1200px] px-5">
-                <ul className="flex items-center">
-                    <li className="cursor-pointer">
-                        <a href="/">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="h-5 w-5"
-                            >
-                                <path
-                                    d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z"
-                                />
-                                <path
-                                    d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"
-                                />
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <span className="mx-2 text-gray-500">&gt;</span>
-                    </li>
+        <div>
+            <div className='wrapbox-content-account'>
+                <div className='container-fluid max-w-screen-xl mx-auto px-2.5 pt-4 pb-2.5 pt-0 w-full block'>
+                    <div className='row -mr-2 -ml-2 flex flex-wrap border-box text-left'>
+                        <Sidebar activePage="addresses" />
+                        <div className='order-2 mb-6 px-2 grow-0 shrink-0 w-3/4 relative p-0 box-border block text-left colright'>
+                            <div className='right-main tab-content-container h-full m-0 p-0 text-left bg-white rounded box-border block'>
+                                <div class="right-main-box tab-content customers-address box-border" id="addresses">
+                                    <div class="box-heading py-4 px-6 box-border block">
+                                        <div>
+                                            <div class="line-title flex items-center justify-between box-border">
+                                                <h2 className='mb-0 text-2xl font-semibold'>Thông tin tài khoản</h2>
+                                                <button
+                                                    className="button add-new-address font-medium py-2 px-3 bgcolor-app-blue text-white text-center text-sm rounded"
+                                                    type="button"
+                                                    onClick={() => setShow(true)}
+                                                >
+                                                    + Thêm địa chỉ mới
+                                                </button>
 
-                    <li className="text-gray-500">Địa chỉ</li>
-                </ul>
-            </nav>
-            {/* breadcrumbs */}
-            <div
-                className="container flex-grow mx-auto max-w-[1200px] border-b py-5 lg:flex lg:flex-row lg:py-10"
-            >
-                <Sidebar activePage="address"/>
-                <div
-                    className="grid w-full max-w-[1200px] grid-cols-1 gap-3 px-5 pb-10"
-                >
-                    <div className="py-5">
-                        <div className="w-full"></div>
-                        <form className="flex w-full flex-col gap-3" action="">
-                            <div className="flex flex-col">
-                                <label className="mt-5">Địa chỉ</label>
-                                <div className="mt-7 control flex justify-between w-full py-2 lg:w-1/2">
-                                    <div className="select border">
-                                        <select>
-                                            <option>Tỉnh/TP</option>
-                                            <option>Hồ Chí Minh</option>
-                                            <option>Hà Nội</option>
-                                            <option>Hải Phòng</option>
-                                        </select>
+                                            </div>
+                                            <ModalUpdateAddress title="My Modal" onClose={() => setShow(false)} show={show}>
+                                                <p>This is modal body</p>
+                                            </ModalUpdateAddress>
+                                        </div>
                                     </div>
-                                    <div className="select border ml-2">
-                                        <select>
-                                            <option>Quận/Huyện</option>
-                                            <option>Thủ Đức</option>
-                                            <option>Quận 9</option> 
-                                            <option>Bình Thạnh</option>
-                                        </select>
-                                    </div>
-                                    <div className="select border ml-2">
-                                        <select>
-                                            <option>Phường/Xã</option>
-                                            <option>Linh Trung</option>
-                                            <option>Linh Xuân</option>
-                                        </select>
+                                    <div class="box-info-account py-2 px-6 box-border block text-left">
+                                        <div id="address_tables" class="address_table_list flex flex-col box-border">
+                                            <div class="address_table default order-none py-5 px-0 relative border-t-2 solid">
+                                                <div id="view_address_1139209403" class="customer_address block box-border">
+                                                    <div class="address_wrap flex space-between flex-row box-border">
+
+                                                        <div class="colright view_address grow-0 shrink-0 w-3/4 mb-0">
+                                                            <div class="line m-0 p-0 box-border block font-normal">
+                                                                <p className='mb-2'>
+                                                                    <span class="default_address note color-app-primary border-1 px-1 py-1 border-red-600 inline-flex items-center justify-center mr-2 text-sm font-semibold rounded">Mặc định</span>
+                                                                    <span class="name_address inline-block font-semibold">Linh Tran</span>
+                                                                </p>
+                                                            </div>
+                                                            <div class="line">
+                                                                <p>Vietnam</p>
+                                                            </div>
+                                                            <div class="line d-none"><p>Nhà riêng</p></div>
+                                                        </div>
+                                                        <div class="colleft grow-0 shrink-0 w-1/4 text-right mb-0 box-border block">
+                                                            <div class="address_actions flex justify-end flex-wrap">
+                                                                <div>
+                                                                    <div>
+                                                                        <span class="action_edit box-border text-right">
+                                                                            <a className='inline-block relative no-underline text-right' data-id="1139209403" data-default="1" data-first-name="" data-last-name="linhtran" data-phone="" data-province="" data-provinceid="" data-district="" data-districtid="" data-ward="" data-wardid="" data-address="" data-type="Nhà riêng" href="javascript:void(0);" class="js-edit-customer">
+                                                                                <button 
+                                                                                class="btn-edit box-border text-right text-sm not-italic font-semibold color-app-blue-nd"
+                                                                                type='button'
+                                                                                onClick={() => setShow(true)}
+                                                                                >
+                                                                                    Cập nhật
+                                                                                </button>
+                                                                            </a>
+                                                                        </span>
+                                                                    </div>
+                                                                    <ModalUpdateAddress title="My Modal" onClose={() => setShow(false)} show={show}>
+                                                                        <p>This is modal body</p>
+                                                                    </ModalUpdateAddress>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="control mt-3 font-light">
-                                <input className="input w-full border px-4 py-2 lg:w-1/2" type="text" placeholder="Số nhà/tên đường" />
-                            </div>
-                            <button className="mt-4 w-40 bg-red-600 px-4 py-2 text-white">
-                                Lưu thay đổi
-                            </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,4 +87,4 @@ function ManageAddress() {
     )
 }
 
-export default ManageAddress;
+export default Addresses;
