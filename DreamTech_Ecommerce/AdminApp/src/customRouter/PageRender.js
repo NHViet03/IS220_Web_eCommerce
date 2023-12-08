@@ -7,25 +7,22 @@ const generatePage = (pageName) => {
 
   try {
     return React.createElement(component());
-  } catch (err) {
+  } catch (error) {
     return <NotFound />;
   }
 };
 
-const PageRender = () => {
-  const { page, sub_page } = useParams();
+function PageRender() {
+  const { page, id } = useParams();
   let pageName = "";
 
-  if (sub_page) {
-    if (page === "collections" || page === "products" ) {
-      pageName = `${page}/[id]`;
-    } else {
-      pageName = `${page}/${sub_page}`;
-    }
+  if (id) {
+    pageName = `${page}/[id]`;
   } else {
     pageName = `${page}`;
   }
+
   return generatePage(pageName);
-};
+}
 
 export default PageRender;
