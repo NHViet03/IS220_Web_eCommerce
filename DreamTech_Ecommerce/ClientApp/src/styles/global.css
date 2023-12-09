@@ -22,6 +22,11 @@
   min-height: 100vh;
   margin: auto;
   position: relative;
+  background-color: #ececec;
+}
+.main_container{
+
+ 
 }
 
 a {
@@ -94,3 +99,6 @@ p {
 
 /* --------- PRODUCT -----------*/
 @import url("./product.css");
+
+/* --------- HOME -----------*/
+@import url("./home.css");

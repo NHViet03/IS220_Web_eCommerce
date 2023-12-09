@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import NotFound from "../components/NotFound";
+
 const generatePage = (pageName) => {
   const component = () => require(`../pages/${pageName}`).default;
 
@@ -16,7 +17,7 @@ const PageRender = () => {
   let pageName = "";
 
   if (sub_page) {
-    if (page === "collections" || page === "products") {
+    if (page === "collections" || page === "products" ) {
       pageName = `${page}/[id]`;
     } else {
       pageName = `${page}/${sub_page}`;

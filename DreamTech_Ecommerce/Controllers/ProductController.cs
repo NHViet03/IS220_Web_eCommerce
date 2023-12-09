@@ -3,14 +3,12 @@ using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using DreamTech_Ecommerce.Utils;
 
 namespace DreamTech_Ecommerce.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
     public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -28,8 +26,20 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpGet("GetAll")]
         public IActionResult Index()
         {
-            var products = _context.Products.Include(e => e.ProductImages).ToList();
+            var products = _context.Products
+                .Include(e => e.ProductImages)
+                .ToList();
             return Ok(products);
+        }
+
+        [HttpGet("GetProductById/{Id}")]
+        public IActionResult GetById(String Id)
+        {
+            var product = _context.Products
+                .Include(e => e.ProductImages)
+                .Include(e => e.Gifts)
+                .FirstOrDefault(p => p.Id == Id);
+            return Ok(product);
         }
 
         [HttpPost("Create")]
@@ -52,6 +62,16 @@ namespace DreamTech_Ecommerce.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     Price = model.Price,
+                    SalePrice = model.SalePrice,
+                    Cpu = model.Cpu,
+                    Ram = model.Ram,
+                    Disk = model.Disk,
+                    Vga = model.Vga,
+                    Screen = model.Screen,
+                    Battery = model.Battery,
+                    Weight = model.Weight,
+                    Size = model.Size,
+                    Color = model.Color,
                     QtyInStock = model.QtyInStock,
                     CategoryId = model.CategoryId
                 };
@@ -83,7 +103,7 @@ namespace DreamTech_Ecommerce.Controllers
         private string SaveImageToServer(IFormFile image)
         {
             var projectRootPath = Directory.GetCurrentDirectory();
-            var uploadFolder = Path.Combine(projectRootPath, "Uploads");
+            var uploadFolder = Path.Combine(projectRootPath, "wwwroot/images");
 
             if (!Directory.Exists(uploadFolder))
             {
@@ -98,7 +118,7 @@ namespace DreamTech_Ecommerce.Controllers
                 image.CopyTo(fileStream);
             }
 
-            return "/Uploads/" + fileName;
+            return "/wwwroot/images/" + fileName;
         }
 
 
@@ -127,6 +147,16 @@ namespace DreamTech_Ecommerce.Controllers
         public string Name { get; set; }
         public string? Description { get; set; }
         public int Price { get; set; }
+        public int? SalePrice { get; set; }
+        public String? Cpu { get; set; }
+        public String? Ram { get; set; }
+        public String? Disk { get; set; }
+        public String? Vga { get; set; }
+        public String? Screen { get; set; }
+        public String? Color { get; set; }
+        public String? Size { get; set; }
+        public String? Weight { get; set; }
+        public String? Battery { get; set; }
         public int QtyInStock { get; set; }
         public string? CategoryId { get; set; }
         public IFormFile Image { get; set; }
