@@ -5,11 +5,12 @@ import CusCard from "../../components/Customer/CusCard";
 import formatMoney from "../../utils/formatMoney";
 import OrderList from "../../components/Order/OrderList";
 import Filter from "../../components/Order/Filter";
+import ModalSendMail from "../../components/ModalSendMail";
 
 const cusData = {
   id: "KH01",
   name: "Nguyễn Hoàng Việt",
-  email: "Viet123@gmail.com",
+  email: "vietdota12@gmail.com",
   phone: "0848044777",
   total: 20000000,
   shippingAddress: "Quang Trung, Hà Đông, Hà Nội",
@@ -53,6 +54,7 @@ function Customer() {
     status: "all",
     date: [new Date(new Date().getFullYear(), 0, 1), new Date()],
   });
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setCustomer(cusData);
@@ -83,7 +85,7 @@ function Customer() {
     }
     setCustomer({
       ...customer,
-      orders:newOrders
+      orders: newOrders,
     });
   }, [filter.sort]);
 
@@ -182,8 +184,11 @@ function Customer() {
                 <p className="mt-1 fw-medium">{customer.shippingAddress}</p>
               </div>
             </div>
-            <button className="btn btn_normal btn_accept w-100">
-              Gửi email
+            <button
+              className="btn btn_normal btn_accept w-100"
+              onClick={() => setShowModal(true)}
+            >
+              Gửi Email
             </button>
           </div>
           <div className="customer_side_right">
@@ -191,12 +196,15 @@ function Customer() {
             <div className="mb-4 d-flex align-items-center justify-content-between">
               <Filter filter={filter} setFilter={setFilter} filterSmall />
             </div>
-           <div className="customer_orders">
-           <OrderList orders={customer.orders || []} orderSmall />
-           </div>
+            <div className="customer_orders">
+              <OrderList orders={customer.orders || []} orderSmall />
+            </div>
           </div>
         </div>
       </div>
+      {showModal && (
+        <ModalSendMail customer={customer} setShowModal={setShowModal} />
+      )}
     </div>
   );
 }

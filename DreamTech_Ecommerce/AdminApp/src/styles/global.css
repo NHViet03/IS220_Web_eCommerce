@@ -109,10 +109,41 @@ body {
   font-size: 24px;
   cursor: pointer;
 }
+.modal_header{
+  background-color: #333545;
+  padding: 4px 16px;
+  margin:-8px -12px 0 -12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  color:#fff;
+}
+.modal_header button{
+  font-size: 24px;
+  color:#fff;
+  line-height: 30px;
+  padding-right: 0;
+}
+
 .modal_body {
   padding: 0 12px;
   margin: 24px 0;
 }
+.modal_border_bottom{
+  margin-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.modal_border_bottom:last-child{
+}
+
+.modal_border_bottom > p{
+  min-width: 56px;
+}
+
+.modal_border_bottom input{
+  border:none;
+}
+
 .modal_footer {
   display: flex;
   justify-content: flex-end;
@@ -205,3 +236,7 @@ body {
 
 /* ---------  ADD CUSTOMER -----------*/
 @import url("./add_customer.css");
+
+
+/* ---------  LOADING -----------*/
+@import url("./loading.css");
