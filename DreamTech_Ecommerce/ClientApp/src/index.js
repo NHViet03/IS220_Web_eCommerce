@@ -11,19 +11,9 @@ const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 root.render(
-<<<<<<< HEAD
-  <BrowserRouter basename={baseUrl}>
-    <App />
-  </BrowserRouter>);
-
-serviceWorkerRegistration.unregister();
-
-reportWebVitals();
-=======
   <DataProvider>
     <BrowserRouter basename={baseUrl}>
       <App />
     </BrowserRouter>
   </DataProvider>
 );
->>>>>>> Master
