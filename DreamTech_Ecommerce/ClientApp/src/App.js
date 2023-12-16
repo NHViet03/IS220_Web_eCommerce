@@ -11,7 +11,7 @@ import Alert from "./components/Alert";
 import AccountPage from "./pages/account";
 import Addresses from "./pages/account/address";
 import OrdersHistory from "./pages/account/orders_history";
-
+import ProductLaptop from './pages/products/laptop'
 export default function App() {
   const modalAuth = useSelector(state => state.modalAuth);
   const modalLogout = useSelector(state => state.modalLogout);
@@ -28,6 +28,7 @@ export default function App() {
           <Route path="/:page" element={<PageRender />} />
           <Route path="/:page/:sub_page" element={<PageRender />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/product/laptop" element={<ProductLaptop/>} />
           <Route path="/account/addresses" element={<Addresses />} />
           <Route path="/account/orders-history" element={<OrdersHistory />} />
         </Routes>

@@ -4,7 +4,7 @@ import React from 'react'
 
 const SideBarItem = ({href, name, icon}) => {
   return (
-    <li className="Home_sidebar-sidebar-li">
+    <li className={`Home_sidebar-sidebar-li hover_${name}`}>
               <a href={href}>
                 <div>
                   <FontAwesomeIcon icon={icon} fontSize={14} />

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { listProduct } from "../components/Home/fetchData";
+import { listProduct } from "../components/Home/DataProductList";
 import "react-multi-carousel/lib/styles.css";
 import {
   faGift,
@@ -20,24 +20,24 @@ import SideBarItem from "../components/Home/SideBarItem";
 
 const Home = () => {
   // Multiple slide carousel
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 1024 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 1024, min: 800 },
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 800, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
+    const responsive = {
+      superLargeDesktop: {
+        breakpoint: { max: 4000, min: 1024 },
+        items: 5,
+      },
+      desktop: {
+        breakpoint: { max: 1024, min: 800 },
+        items: 3,
+      },
+      tablet: {
+        breakpoint: { max: 800, min: 464 },
+        items: 2,
+      },
+      mobile: {
+        breakpoint: { max: 464, min: 0 },
+        items: 1,
+      },
+    };
   return (
     <div className="mt-4 Home">
       {/* Begin Home SideNBar */}
@@ -221,7 +221,7 @@ const Home = () => {
       </div>
       {/* Home product */}
       {/* PC */}
-        <SlideProduct name="PC Bán Chạy" namedetail1 ="PC Gaming" namedetail2 ="PC Bán chạy" namedetail3="PC Doanh nghiệp" />
+      <SlideProduct name="PC Bán Chạy" namedetail1 ="PC Gaming" namedetail2 ="PC Bán chạy" namedetail3="PC Doanh nghiệp" />
       {/* Laptop */}
       <SlideProduct name="Laptop Bán Chạy" namedetail1 ="Laptop Gaming" namedetail2 ="Laptop Bán chạy" namedetail3="Laptop Doanh nghiệp" />
       {/* Banner 1 ảnh to - 2 ảnh nhỏ */}
@@ -253,7 +253,7 @@ const Home = () => {
         <div className="row">
           {listProduct.map((item) => (
             <div className="col-1">
-              <a href="/product">
+              <a href="/product/laptop">
                 <img src={item.imageUrl} />
                 <div>{item.name}</div>
               </a>

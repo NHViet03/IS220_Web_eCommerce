@@ -20,9 +20,9 @@ const CardItem = () => {
           <h5>Bán chạy</h5>
         </div>
       </div>
-      <div className="Home_list-product-pc-slide_slide_product_name mb-2">
+      <a className="Home_list-product-pc-slide_slide_product_name mb-2"  href="products/abc">
         PC GVN Intel i7-13700F/ VGA RTX 4070
-      </div>
+      </a>
       <div className="Home_list-product-pc-slide_slide_product_detail mb-2">
         <div className="Home_list-product-pc-slide_slide_product_detail_icon-name">
           <FontAwesomeIcon icon={faMicrochip} style={{ color: "#9197a1" }} />
