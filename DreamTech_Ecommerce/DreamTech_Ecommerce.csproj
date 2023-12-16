@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\components\admin\" />
+    <Folder Include="ClientApp\src\components\cart\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
