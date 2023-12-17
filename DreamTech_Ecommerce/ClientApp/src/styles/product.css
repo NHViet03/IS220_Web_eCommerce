@@ -177,6 +177,17 @@
   background-color: #f7f7f7;
 }
 /* -----PRODUCT LAPTOP------- */
+.product_link_home{
+  color: #1874de;
+  font-size: 15px;
+  font-weight: 500;
+}
+.product_link_laptop{
+  font-size:18px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #8f8d8d;
+}
 .main-content{
   background-color: #FFFFFF;
   min-height: 100vh;

@@ -3,8 +3,8 @@ import CardItem from "../../components/Home/CardItem";
 import ModalHang from "../../components/product/laptop/ModalHang";
 import ModalGia from "../../components/product/laptop/ModalGia";
 import ModalLoc from "../../components/product/laptop/ModalLoc";
-import { Laptop } from "../../utils/ProductData";
-const LaptopPage = () => {
+import { Chuot } from "../../utils/ProductData";
+const ChuotPage = () => {
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
   const [showHang, setShowHang] = useState(false); 
@@ -106,7 +106,7 @@ const LaptopPage = () => {
         </div>
         {/* Sản phẩm */}
         <div className="list-product my-2">
-         {Laptop.map(item=>{
+         {Chuot.map(item=>{
           return(
             <CardItem
             item={item}
@@ -124,4 +124,4 @@ const LaptopPage = () => {
   );
 };
 
-export default LaptopPage;
+export default ChuotPage;

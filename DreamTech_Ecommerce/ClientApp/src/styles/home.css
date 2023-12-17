@@ -173,6 +173,8 @@
     border-radius: 10px;
     border: 1px solid #ccc;
     width: 231px;
+    overflow: hidden;
+    height: 520px;
 }
 .Home_list-product-pc-slide_slide_product_header{
     display: flex;
@@ -242,6 +244,9 @@
     border-radius: 5px;
     gap: 10px;
     flex-wrap: wrap;
+    max-height: 70px;
+   overflow: auto;
+   align-items: center;
    
 }
 .Home_list-product-pc-slide_slide_product_detail_icon-name{

@@ -4,7 +4,8 @@ import Carousel from "react-multi-carousel";
 import React from 'react'
 import CardItem from './CardItem'
 
-const SlideProduct = ({name, namedetail1, namedetail2, namedetail3}) => {
+
+const SlideProduct = ({data,name, namedetail1, namedetail2, namedetail3, Xemtatca}) => {
     const responsive = {
         superLargeDesktop: {
           breakpoint: { max: 4000, min: 1024 },
@@ -45,7 +46,7 @@ const SlideProduct = ({name, namedetail1, namedetail2, namedetail3}) => {
             <a href="" className="Home_list-product-pc_right-topic">
             {namedetail3}
             </a>
-            <a href="" className="Home_list-product-pc_right-all">
+            <a href={`/product/${Xemtatca}`} className="Home_list-product-pc_right-all">
               Xem tất cả
             </a>
           </div>
@@ -53,14 +54,15 @@ const SlideProduct = ({name, namedetail1, namedetail2, namedetail3}) => {
         {/* Home card slide */}
         <div className="Home_list-product-pc-slide row">
           <Carousel responsive={responsive}>
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
+          {
+            data.map((item)=>{
+              return(
+                <CardItem
+                item={item}
+              />
+              )
+            })
+          }
           </Carousel>
         </div>
       </div>

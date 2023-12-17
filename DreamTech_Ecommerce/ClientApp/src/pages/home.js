@@ -14,7 +14,7 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import { faApple } from "@fortawesome/free-brands-svg-icons";
-
+import { Laptop, PC, Chuot} from "../utils/ProductData"
 import SlideProduct from "../components/Home/SlideProduct";
 import SideBarItem from "../components/Home/SideBarItem";
 
@@ -46,14 +46,14 @@ const Home = () => {
           <ul>
             <SideBarItem href ="/product/laptop" name="Laptop" icon ={faLaptop}  />
             <SideBarItem href ="/product/laptop" name="Laptop Gaming" icon ={faLaptop}  />
-            <SideBarItem href ="/product/laptop" name="PC GearnVN" icon ={faDesktop}  />
+            <SideBarItem href ="/product/pc" name="PC GearnVN" icon ={faDesktop}  />
             <SideBarItem href ="/product/laptop" name="Main- CPU - VGA" icon ={faDesktop}  />
             <SideBarItem href ="/product/laptop" name="Case - Nguồn - Phụ kiện" icon ={faDesktop}  />
             <SideBarItem href ="/product/laptop" name="SSD- RAM- HDD" icon ={faMicrochip}  />
             <SideBarItem href ="/product/laptop" name="Apple" icon ={faApple}  />
             <SideBarItem href ="/product/laptop" name="Màn hình" icon ={faDesktop}  />
             <SideBarItem href ="/product/laptop" name="Bàn phím" icon ={faKeyboard}  />
-            <SideBarItem href ="/product/laptop" name="Chuột + Lót chuột" icon ={faComputerMouse}  />
+            <SideBarItem href ="/product/chuot" name="Chuột + Lót chuột" icon ={faComputerMouse}  />
             <SideBarItem href ="/product/laptop" name="Tai nghe - Loa" icon ={faHeadphones}  />
             <SideBarItem href ="/product/laptop" name="Phần mềm + Mạng" icon ={faPrint}  />
             <SideBarItem href ="/product/laptop" name="Phụ kiện" icon ={faGamepad}  />
@@ -221,9 +221,9 @@ const Home = () => {
       </div>
       {/* Home product */}
       {/* PC */}
-      <SlideProduct name="PC Bán Chạy" namedetail1 ="PC Gaming" namedetail2 ="PC Bán chạy" namedetail3="PC Doanh nghiệp" />
+      <SlideProduct data={PC} name="PC Bán Chạy" namedetail1 ="PC Gaming" namedetail2 ="PC Bán chạy" namedetail3="PC Doanh nghiệp" Xemtatca="pc" />
       {/* Laptop */}
-      <SlideProduct name="Laptop Bán Chạy" namedetail1 ="Laptop Gaming" namedetail2 ="Laptop Bán chạy" namedetail3="Laptop Doanh nghiệp" />
+      <SlideProduct data={Laptop} name="Laptop Bán Chạy" namedetail1 ="Laptop Gaming" namedetail2 ="Laptop Bán chạy" namedetail3="Laptop Doanh nghiệp"  Xemtatca="laptop" />
       {/* Banner 1 ảnh to - 2 ảnh nhỏ */}
       <div className="home-banner row mb-4 mt-2">
         <div className="home-banner-8 col-8">
@@ -245,7 +245,7 @@ const Home = () => {
         </div>
       </div>
       {/* Chuột */}
-      <SlideProduct name="Chuột Bán Chạy" namedetail1 ="Chuột Gaming" namedetail2 ="Chuột Bán chạy" namedetail3="Chuột Doanh nghiệp" />
+      <SlideProduct data={Chuot} name="Chuột Bán Chạy" namedetail1 ="Chuột Gaming" namedetail2 ="Chuột Bán chạy" namedetail3="Chuột Doanh nghiệp"  Xemtatca="chuot" />
       {/* Home list product */}
       <div className="mb-4 Home_list-product row">
         <h4> Danh sách sản phẩm</h4>
