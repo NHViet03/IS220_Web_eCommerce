@@ -221,9 +221,9 @@ const Home = () => {
       </div>
       {/* Home product */}
       {/* PC */}
-      <SlideProduct data={PC} name="PC Bán Chạy" namedetail1 ="PC Gaming" namedetail2 ="PC Bán chạy" namedetail3="PC Doanh nghiệp" Xemtatca="pc" />
+      <SlideProduct data={PC} name="PC Bán Chạy" namedetail1 ="PC I5" namedetail2 ="PC I7" namedetail3="PC I9" Xemtatca="pc" />
       {/* Laptop */}
-      <SlideProduct data={Laptop} name="Laptop Bán Chạy" namedetail1 ="Laptop Gaming" namedetail2 ="Laptop Bán chạy" namedetail3="Laptop Doanh nghiệp"  Xemtatca="laptop" />
+      <SlideProduct data={Laptop} name="Laptop Bán Chạy" namedetail1 ="Laptop LENOVO" namedetail2 ="Laptop MSI" namedetail3="Laptop DELL"  Xemtatca="laptop" />
       {/* Banner 1 ảnh to - 2 ảnh nhỏ */}
       <div className="home-banner row mb-4 mt-2">
         <div className="home-banner-8 col-8">
@@ -245,7 +245,7 @@ const Home = () => {
         </div>
       </div>
       {/* Chuột */}
-      <SlideProduct data={Chuot} name="Chuột Bán Chạy" namedetail1 ="Chuột Gaming" namedetail2 ="Chuột Bán chạy" namedetail3="Chuột Doanh nghiệp"  Xemtatca="chuot" />
+      <SlideProduct data={Chuot} name="Chuột Bán Chạy" namedetail1 ="Chuột Logitech" namedetail2 ="Chuột Microsoft" namedetail3="Chuột Razor"  Xemtatca="chuot" />
       {/* Home list product */}
       <div className="mb-4 Home_list-product row">
         <h4> Danh sách sản phẩm</h4>

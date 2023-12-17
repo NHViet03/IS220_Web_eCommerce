@@ -23,7 +23,7 @@ const PCPage = () => {
           <a href="#">Trang chủ</a>
         </div>
         <div className="product_link_laptop align-items-center">/</div>
-        <div className="product_link_laptop align-items-center">Laptop</div>
+        <div className="product_link_laptop align-items-center">PC</div>
       </div>
       <div className="row my-4">
         <img
