@@ -1,0 +1,29 @@
+.order_state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  font-weight: 500;
+  padding: 8px;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.order_state.success {
+  border-color: var(--success-color);
+  color: var(--success-color);
+  background-color: var(--bg-success-color);
+}
+
+.order_state.shipping {
+  border-color: var(--waiting-color);
+  color: var(--waiting-color);
+  background-color: var(--bg-waiting-color);
+}
+
+.order_state.cancel {
+  border-color: var(--cancel-color);
+  color: var(--cancel-color);
+  background-color: var(--bg-cancel-color);
+}

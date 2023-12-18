@@ -1,9 +1,13 @@
 import React from 'react'
 
 function Profile() {
+  const user={
+    fullname:"Nguyễn Hoàng Việt",
+  }
+  
   return (
-    <div>
-      Profile
+    <div className="profile">
+      Profile {user.fullname} 
     </div>
   )
 }

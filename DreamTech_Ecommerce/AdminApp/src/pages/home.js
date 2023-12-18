@@ -48,35 +48,35 @@ const SalesStatistic = [
 
 const cusData = [
   {
-    id: 3,
+    id: "KH03",
     name: "Lê Văn An",
     email: "An789@gmail.com",
     phone: "0833333333",
     total: 300000000,
   },
   {
-    id: 5,
+    id: "KH05",
     name: "Trần Văn Tú",
     email: "Tu567@gmail.com",
     phone: "0866666666",
     total: 250000000,
   },
   {
-    id: 1,
+    id: "KH01",
     name: "Nguyễn Hoàng Việt",
     email: "Viet123@gmail.com",
     phone: "0848044777",
     total: 20000000,
   },
   {
-    id: 4,
+    id: "KH04",
     name: "Phạm Thị Hương",
     email: "Huong012@gmail.com",
     phone: "0844444444",
     total: 18000000,
   },
   {
-    id: 2,
+    id: "KH02",
     name: "Trần Thị Mai",
     email: "Mai456@gmail.com",
     phone: "0856789123",
@@ -182,7 +182,7 @@ function Home() {
             <p>
               <span className="fw-medium">{"( +23% )"}</span> so với tuần trước
             </p>
-            <div className="home_charts_left_cards">
+            <div className="mt-3 home_charts_left_cards">
               <div className="home_charts_left_cards_item">
                 <div
                   style={{

@@ -1,9 +1,16 @@
+@import "rsuite/dist/rsuite.css";
+
 :root {
   --primary-color: #e30019;
   --primary-bg-color: #be1529;
   --primary-bg-color-20: #ffd9d9;
   --text-secondary-color: #6d6e72;
-  --text-success-color: rgb(118, 168, 20);
+  --success-color: rgb(118, 168, 20);
+  --bg-success-color: #76a81433;
+  --waiting-color: #b16f13;
+  --bg-waiting-color: #b16f1333;
+  --cancel-color: #c02323;
+  --bg-cancel-color: #c0232333;
   --border-color: #cfcfcf;
 }
 
@@ -15,9 +22,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+  color:#000;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
   border-color: unset !important;
   box-shadow: unset !important;
 }
@@ -38,9 +48,23 @@ body {
   flex-direction: column;
 }
 .box_shadow {
-  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  box-shadow: rgba(0, 0, 0, 0.12) 1.5px 1.5px 2px;
 }
 
+.btn_normal {
+  padding: 8px 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: #fff;
+  font-weight: 500;
+}
+.btn_normal.btn_accept {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -85,29 +109,101 @@ body {
   font-size: 24px;
   cursor: pointer;
 }
-.modal_body{
-  padding:0 12px;
+.modal_header{
+  background-color: #333545;
+  padding: 4px 16px;
+  margin:-8px -12px 0 -12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  color:#fff;
+}
+.modal_header button{
+  font-size: 24px;
+  color:#fff;
+  line-height: 30px;
+  padding-right: 0;
+}
+
+.modal_body {
+  padding: 0 12px;
   margin: 24px 0;
 }
-.modal_footer{
+.modal_border_bottom{
+  margin-top: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.modal_border_bottom:last-child{
+}
+
+.modal_border_bottom > p{
+  min-width: 56px;
+}
+
+.modal_border_bottom input{
+  border:none;
+}
+
+.modal_footer {
   display: flex;
   justify-content: flex-end;
-  gap:12px;
+  gap: 12px;
   margin-bottom: 12px;
 }
-.modal_footer button{
-  padding: 8px 36px;
-  border-radius: 8px;
-  border:1px solid var(--border-color);
-  background-color: #fff;
+
+/* Custom Filter */
+
+.filter_menu {
+  min-width: 300px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+
+.filter_menu > div {
+  flex: 1 1 45%;
+}
+.filter_menu > div.active {
+  color: var(--primary-color);
   font-weight: 500;
 }
 
-.modal_footer .btn_delete{
+.filter_menu > div.active .form-check-input:checked {
   background-color: var(--primary-color);
-  color: #fff;
   border-color: var(--primary-color);
 }
+
+.filter_range {
+  min-width: 350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter_range > div {
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+.filter_range > div input {
+  border: none;
+  flex: 1;
+  padding-right: 8px;
+  text-align: right;
+}
+.filter_range > hr {
+  width: 60px;
+  background-color: var(--border-color);
+  height: 1px;
+  opacity: 1;
+}
+.filter_range > div span {
+  opacity: 0.5;
+}
+
 /* --------- SIDE BAR -----------*/
 @import url("./side_bar.css");
 
@@ -117,5 +213,34 @@ body {
 /* --------- HOME -----------*/
 @import url("./home.css");
 
-/* --------- PRODUCT -----------*/
-@import url("./products.css");
+/* --------- TABLE -----------*/
+@import url("./table.css");
+
+/* ---------  ADD PRODUCT -----------*/
+@import url("./add_product.css");
+
+/* ---------  EDIT PRODUCT -----------*/
+@import url("./edit_product.css");
+
+/* ---------  ORDER -----------*/
+@import url("./order.css");
+
+/* ---------  ORDER DETAIL -----------*/
+@import url("./order_detail.css");
+
+/* ---------  ADD ORDER -----------*/
+@import url("./add_order.css");
+
+/* ---------  CUSTOMER DETAIL -----------*/
+@import url("./customer_detail.css");
+
+/* ---------  ADD CUSTOMER -----------*/
+@import url("./add_customer.css");
+
+
+/* ---------  LOADING -----------*/
+@import url("./loading.css");
+
+
+/* ---------  PROFILE -----------*/
+@import url("./profile.css");

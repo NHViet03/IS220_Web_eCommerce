@@ -18,14 +18,14 @@ const ModalDeleteProduct = ({ setModalDelete }) => {
         <div className="modal_body">
           <h5>Bạn có chắc chắn muốn xóa sản phẩm này?</h5>
           <p>
-            Sản phẩm sẽ được xóa vĩnh viễn.Bạn không thể hoàn tác hành động này.
+            Sản phẩm sẽ được xóa vĩnh viễn. Bạn không thể hoàn tác hành động này.
           </p>
         </div>
         <div className="modal_footer">
-          <button className="btn btn_cancel" onClick={handleClose}>
+          <button className="btn btn_normal" onClick={handleClose}>
             Hủy
           </button>
-          <button className="btn btn_delete" onClick={handleDelete}>
+          <button className="btn btn_normal btn_accept" onClick={handleDelete}>
             Xóa
           </button>
         </div>

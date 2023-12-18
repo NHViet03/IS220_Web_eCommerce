@@ -19,7 +19,7 @@ function CardItem({ card }) {
             style={{
               fontSize: "18px",
               color: card.increase
-                ? "var(--text-success-color)"
+                ? "var(--success-color)"
                 : "var(--primary-color)",
               fontWeight: "500",
             }}

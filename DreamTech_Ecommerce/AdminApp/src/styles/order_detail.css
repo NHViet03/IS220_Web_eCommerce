@@ -1,0 +1,73 @@
+.order_detail{
+   
+}
+
+.order_detail header{
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding:16px;
+    border-radius: 4px;
+}
+
+.order_detail header span{
+    font-size: 20px;
+    font-weight: 500;
+}
+.order_detail header button{
+    padding-left:12px;
+    padding-right: 12px;
+}
+
+.order_detail_items{
+    flex:1 1 60%;
+    background-color: #fff;
+    border-radius: 4px;
+    padding:24px;
+}
+
+.order_detail_info{
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+}
+
+.order_detail_item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order_detail_item img{
+    width:64px;
+    height: 64px;
+    border-radius: 4px;
+    padding:4px;
+    border:1px solid var(--border-color);
+}
+
+.order_detail_ship-info{
+   flex-basis: 40%;
+    background-color: #fff;
+    border-radius: 4px;
+    padding:24px 0;
+}
+
+.order_detail_ship-info > div{
+    padding:0 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.order_detail_ship-info > div:last-child{
+    border-bottom: none;
+}
+
+
+/* Forms Address */
+.forms_address{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.forms_address > *{
+    flex: 1 1 40%;
+}
