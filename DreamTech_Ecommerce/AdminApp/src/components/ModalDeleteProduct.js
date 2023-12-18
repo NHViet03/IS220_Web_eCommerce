@@ -18,7 +18,7 @@ const ModalDeleteProduct = ({ setModalDelete }) => {
         <div className="modal_body">
           <h5>Bạn có chắc chắn muốn xóa sản phẩm này?</h5>
           <p>
-            Sản phẩm sẽ được xóa vĩnh viễn.Bạn không thể hoàn tác hành động này.
+            Sản phẩm sẽ được xóa vĩnh viễn. Bạn không thể hoàn tác hành động này.
           </p>
         </div>
         <div className="modal_footer">

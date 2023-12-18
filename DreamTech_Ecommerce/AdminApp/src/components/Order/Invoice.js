@@ -6,7 +6,7 @@ import formatMoney from "../../utils/formatMoney";
 
 const Invoice = ({ exportPDF, setExportPDF, order }) => {
   const { toPDF, targetRef } = usePDF({
-    filename: `hoa_don_${order.id}.pdf - ${order.user.name}}`,
+    filename: `hoa_don_${order.id}-${order.user.name}.pdf`,
     page: {
       format: "letter",
     },

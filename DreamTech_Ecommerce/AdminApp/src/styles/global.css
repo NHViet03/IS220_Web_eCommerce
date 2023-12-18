@@ -240,3 +240,7 @@ body {
 
 /* ---------  LOADING -----------*/
 @import url("./loading.css");
+
+
+/* ---------  PROFILE -----------*/
+@import url("./profile.css");

@@ -44,7 +44,7 @@ export const sendMail = (mail) => async (dispatch) => {
     dispatch({
       type: GLOBAL_TYPES.ALERT,
       payload: {
-        type: "failure",
+        type: "error",
         title: "Gửi Email thất bại.",
       },
     });
