@@ -2,7 +2,6 @@ import { GLOBAL_TYPES } from "./globalTypes";
 import { postDataAPI } from "../../utils/fetchData";
 
 export const login = (data) => async (dispatch) => {
-    console.log(data);
   try {
     const res=await postDataAPI("Auth/Login",data);
     const auth = {

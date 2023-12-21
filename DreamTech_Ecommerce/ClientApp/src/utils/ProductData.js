@@ -296,7 +296,8 @@ export const Chuot = [
         ],
         price_old: "1.500.000",
         price_new: "1.350.000",
-        percent: "-10"
+        percent: "-10",
+        brand: "Ghi chú"
     },
     {
         id: 2,

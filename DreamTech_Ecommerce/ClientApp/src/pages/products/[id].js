@@ -160,7 +160,7 @@ function Products() {
                 >
                   {product.price}đ
                 </span>
-                <span className="btn btn_primary_outline">
+                <span className="btn btn_primary_outline calculateDiscount">
                   {calculateDiscount()}%
                 </span>
               </div>

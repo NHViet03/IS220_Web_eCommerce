@@ -44,20 +44,20 @@ const Home = () => {
       <div className="Home_sidebar row mb-2">
         <div className="Home_sidebar-sidebar col-2">
           <ul>
-            <SideBarItem href ="/product/laptop" name="Laptop" icon ={faLaptop}  />
-            <SideBarItem href ="/product/laptop" name="Laptop Gaming" icon ={faLaptop}  />
-            <SideBarItem href ="/product/pc" name="PC GearnVN" icon ={faDesktop}  />
-            <SideBarItem href ="/product/laptop" name="Main- CPU - VGA" icon ={faDesktop}  />
-            <SideBarItem href ="/product/laptop" name="Case - Nguồn - Phụ kiện" icon ={faDesktop}  />
-            <SideBarItem href ="/product/laptop" name="SSD- RAM- HDD" icon ={faMicrochip}  />
-            <SideBarItem href ="/product/laptop" name="Apple" icon ={faApple}  />
-            <SideBarItem href ="/product/laptop" name="Màn hình" icon ={faDesktop}  />
-            <SideBarItem href ="/product/laptop" name="Bàn phím" icon ={faKeyboard}  />
-            <SideBarItem href ="/product/chuot" name="Chuột + Lót chuột" icon ={faComputerMouse}  />
-            <SideBarItem href ="/product/laptop" name="Tai nghe - Loa" icon ={faHeadphones}  />
-            <SideBarItem href ="/product/laptop" name="Phần mềm + Mạng" icon ={faPrint}  />
-            <SideBarItem href ="/product/laptop" name="Phụ kiện" icon ={faGamepad}  />
-            <SideBarItem href ="/product/laptop" name="Thủ thuật - Giải đáp" icon ={faGift}  />
+            <SideBarItem href ="/collections/laptop" name="Laptop" icon ={faLaptop}  />
+            <SideBarItem href ="/collections/laptop" name="Laptop Gaming" icon ={faLaptop}  />
+            <SideBarItem href ="/collections/pc" name="PC GearnVN" icon ={faDesktop}  />
+            <SideBarItem href ="/collections/laptop" name="Main- CPU - VGA" icon ={faDesktop}  />
+            <SideBarItem href ="/collections/laptop" name="Case - Nguồn - Phụ kiện" icon ={faDesktop}  />
+            <SideBarItem href ="/collections/laptop" name="SSD- RAM- HDD" icon ={faMicrochip}  />
+            <SideBarItem href ="/collections/laptop" name="Apple" icon ={faApple}  />
+            <SideBarItem href ="/collections/laptop" name="Màn hình" icon ={faDesktop}  />
+            <SideBarItem href ="/collections/laptop" name="Bàn phím" icon ={faKeyboard}  />
+            <SideBarItem href ="/collections/chuot" name="Chuột + Lót chuột" icon ={faComputerMouse}  />
+            <SideBarItem href ="/collections/laptop" name="Tai nghe - Loa" icon ={faHeadphones}  />
+            <SideBarItem href ="/collections/laptop" name="Phần mềm + Mạng" icon ={faPrint}  />
+            <SideBarItem href ="/collections/laptop" name="Phụ kiện" icon ={faGamepad}  />
+            <SideBarItem href ="/collections/laptop" name="Thủ thuật - Giải đáp" icon ={faGift}  />
           </ul>
         </div>
         {/* Hình ảnh slide giảm giá sốc */}
@@ -253,7 +253,7 @@ const Home = () => {
         <div className="row">
           {listProduct.map((item) => (
             <div className="col-1">
-              <a href="/product/laptop">
+              <a href={item.link}>
                 <img src={item.imageUrl} />
                 <div>{item.name}</div>
               </a>

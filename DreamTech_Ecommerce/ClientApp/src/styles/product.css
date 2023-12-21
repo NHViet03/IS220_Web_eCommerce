@@ -329,3 +329,7 @@
   border-radius: 4px;
   z-index: 100;
 }
+.calculateDiscount:hover{
+  color: #E30019;
+  outline: 1px solid #E30019;
+}

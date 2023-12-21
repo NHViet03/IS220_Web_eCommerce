@@ -46,7 +46,7 @@ const SlideProduct = ({data,name, namedetail1, namedetail2, namedetail3, Xemtatc
             <a href="" className="Home_list-product-pc_right-topic">
             {namedetail3}
             </a>
-            <a href={`/product/${Xemtatca}`} className="Home_list-product-pc_right-all">
+            <a href={`/collections/${Xemtatca}`} className="Home_list-product-pc_right-all">
               Xem tất cả
             </a>
           </div>
