@@ -1,6 +1,15 @@
 .home {
 }
 
+
+.home_filter{
+  border-color:var(--border-color);
+  width:250px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+
 .home_cards {
   display: flex;
   justify-content: space-between;

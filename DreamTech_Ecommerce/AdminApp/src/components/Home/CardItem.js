@@ -1,4 +1,5 @@
 import React from "react";
+import formatMoney from "../../utils/formatMoney";
 
 function CardItem({ card }) {
   return (
@@ -12,7 +13,9 @@ function CardItem({ card }) {
               fontWeight: "700",
             }}
           >
-            {card.value}
+            {card.type === "money"
+              ? `$ ${formatMoney(card.value)} vnđ`
+              : formatMoney(card.value)}
           </span>{" "}
           <p
             className="mb-0"
