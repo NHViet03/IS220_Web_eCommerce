@@ -29,8 +29,11 @@ function LineChart({ chartData }) {
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false,
+              display: true,
+              position: "bottom",
             },
+            color: ["#fff"],
+
             color: ["#fff"],
           },
           scales: {

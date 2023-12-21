@@ -63,6 +63,11 @@ body {
   color: #fff;
   border-color: var(--primary-color);
 }
+.btn_normal.btn_success{
+  background-color: var(--success-color);
+  color: #fff;
+  border-color: var(--success-color);
+}
 
 /* Pagination */
 .pagination {

@@ -40,13 +40,7 @@ const BarChart = ({ chartData }) => {
             x: {
               ...scaleStyle,
               title: {
-                display: true,
-                color: "#fff",
-                font: {
-                  size: 16,
-                  weight: "500",
-                },
-                text: "Tháng",
+                display: false,
               },
             },
             y: scaleStyle,

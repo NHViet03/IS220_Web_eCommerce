@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import formatMoney from "../../utils/formatMoney";
 import ModalUpdateAddress from "../../components/ModalUpdateAddress";
-
-import { usePDF } from "react-to-pdf";
 
 import Invoice from "../../components/Order/Invoice";
 
@@ -20,7 +18,7 @@ const fakeOrder = {
     email: "An789@gmail.com",
     phone: "0833333333",
   },
-  status: "Đã giao hàng",
+  status: "Đang giao hàng",
   payment: "Thanh toán khi nhận hàng",
   orderItems: [
     {
@@ -32,7 +30,7 @@ const fakeOrder = {
       name: "Laptop LG Gram Style 14Z90RS GAH54A5",
       price: 38990000,
       sale_price: 35990000,
-      quantity: 1,  
+      quantity: 1,
     },
     {
       id: "CTHD-02",
@@ -74,6 +72,53 @@ function OrderDetail() {
   const handleExportPDF = () => {
     setExportPDF(true);
   };
+
+  const orderCircle = useMemo(() => {
+    let orderCircle = [
+      {
+        name: "Đã đặt hàng",
+        active: true,
+      },
+      {
+        name: "Đã tiếp nhận",
+        active: true,
+      },
+      {
+        name: "Đã đóng gói",
+        active: true,
+      },
+      {
+        name: "Đang giao hàng",
+        active: true,
+      },
+      {
+        name: "Đã giao hàng",
+        active: true,
+      },
+    ];
+    switch (order.status) {
+      case "Đang giao hàng":
+        orderCircle[4].active = false;
+        break;
+      case "Đã giao hàng":
+        orderCircle[4].active = true;
+        break;
+      case "Đã hủy đơn":
+        orderCircle[0].active = false;
+        orderCircle[1].active = false;
+        orderCircle[2].active = false;
+        orderCircle[3].active = false;
+        orderCircle[4].active = false;
+        orderCircle.push({
+          name: "Đã hủy đơn",
+          active: true,
+        });
+        break;
+      default:
+        break;
+    }
+    return orderCircle;
+  }, [order.status]);
 
   return (
     <form className="mb-4 order_detail" onSubmit={handleSubmit}>
@@ -127,7 +172,57 @@ function OrderDetail() {
       </header>
       <div className=" d-flex align-items-start gap-4 order_detail_body">
         <div className="box_shadow order_detail_items">
-          <h5 className="fw-medium mb-3">Chi tiết đơn hàng</h5>
+          <div className="mb-3 d-flex justify-content-between align-items-center">
+            <h5 className="fw-medium">Chi tiết đơn hàng</h5>
+            {
+              (order.status === "Đang giao hàng" && (
+                <div>
+                  <button
+                    className="btn btn_normal btn_success me-3"
+                    type="button"
+                    style={{
+                      borderRadius: "4px",
+                      padding: "8px",
+                    }}
+                    onClick={() =>
+                      setOrder({ ...order, status: "Đã giao hàng" })
+                    }
+                  >
+                    Xác nhận giao hàng
+                  </button>
+                  <button
+                    className="btn btn_normal btn_accept"
+                    type="button"
+                    style={{
+                      borderRadius: "4px",
+                      padding: "8px",
+                    }}
+                    onClick={() => setOrder({ ...order, status: "Đã hủy đơn" })}
+                  >
+                    Huỷ đơn hàng
+                  </button>
+                </div>
+              ))
+            }
+          </div>
+          <div className="my-5 d-flex items-center justify-content-center">
+            {orderCircle.map((item, index) => (
+              <div
+                key={index}
+                className="d-flex flex-column align-items-center order_status"
+                style={{
+                  opacity: item.active ? 1 : 0.5,
+                }}
+              >
+                {item.name === "Đã hủy đơn" ? (
+                  <i className="fa-solid fa-ban" />
+                ) : (
+                  <i class="fa-solid fa-circle-dot" />
+                )}
+                <p>{item.name}</p>
+              </div>
+            ))}
+          </div>
           <div className="mb-4 d-flex align-items-center justify-content-between order_detail_info">
             <div>
               <p className="mb-2">Ngày đặt</p>
@@ -138,7 +233,17 @@ function OrderDetail() {
             <div className="d-flex justify-content-between gap-4">
               <div>
                 <p className="mb-2">Trạng thái</p>
-                <div className="order_state success">{order.status}</div>
+                <div
+                  className={`order_state ${
+                    order.status === "Đang giao hàng"
+                      ? "shipping"
+                      : order.status === "Đã giao hàng"
+                      ? "success"
+                      : "cancel"
+                  }`}
+                >
+                  {order.status}
+                </div>
               </div>
               <div>
                 <p className="mb-2">Thanh toán</p>
