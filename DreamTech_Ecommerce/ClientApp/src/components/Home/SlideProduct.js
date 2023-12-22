@@ -1,7 +1,7 @@
 import { faTruck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Carousel from "react-multi-carousel";
-import React from 'react'
+import React, { useState } from 'react'
 import CardItem from './CardItem'
 
 
@@ -24,6 +24,14 @@ const SlideProduct = ({data,name, namedetail1, namedetail2, namedetail3, Xemtatc
           items: 1,
         },
       };
+     let details = []
+     if (name === "PC Bán Chạy") {
+         details = ["i7 9700", "GTX 1660", "32GB RAM", "1TB HDD"]
+     }else if (name === "Laptop Bán Chạy") {
+         details = ["i5 11400", "GTX 1650", "8GB RAM", "512GB SSD"]
+      }else if (name === "Chuột Bán Chạy") {
+         details = ["Pin sạc", "Không dây", "Led RGB", "DB -10.000"]
+      }
   return (
     <div>
         <div className="Home_list-product-pc row mb-4">
@@ -58,7 +66,7 @@ const SlideProduct = ({data,name, namedetail1, namedetail2, namedetail3, Xemtatc
             data.map((item)=>{
               return(
                 <CardItem
-                item={item}
+                item={item} details = {details}
               />
               )
             })

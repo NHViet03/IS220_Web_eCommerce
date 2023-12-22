@@ -11,7 +11,7 @@ const LaptopPage = () => {
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
 
-
+  const  details = ["i5 11400", "GTX 1650", "8GB RAM", "512GB SSD"]
   const handleSortChange = (value) => {
     setSortBy(value);
   };
@@ -109,7 +109,7 @@ const LaptopPage = () => {
          {Laptop.map(item=>{
           return(
             <CardItem
-            item={item}
+            item={item} details={details}
           />
           )
          })}

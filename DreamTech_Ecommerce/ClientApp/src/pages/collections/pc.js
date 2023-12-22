@@ -11,7 +11,7 @@ const PCPage = () => {
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
 
-
+  const details = ["i7 9700", "GTX 1660", "32GB RAM", "1TB HDD"]
   const handleSortChange = (value) => {
     setSortBy(value);
   };
@@ -109,7 +109,7 @@ const PCPage = () => {
          {PC.map(item=>{
           return(
             <CardItem
-            item={item}
+            item={item} details={details}
           />
           )
          })}

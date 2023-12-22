@@ -11,7 +11,8 @@ const ChuotPage = () => {
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
 
-
+  
+    const  details = ["Pin sạc", "Không dây", "Led RGB", "DB -10.000"]
   const handleSortChange = (value) => {
     setSortBy(value);
   };
@@ -109,7 +110,7 @@ const ChuotPage = () => {
          {Chuot.map(item=>{
           return(
             <CardItem
-            item={item}
+            item={item} details={details}
           />
           )
          })}

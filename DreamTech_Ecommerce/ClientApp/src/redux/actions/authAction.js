@@ -33,7 +33,6 @@ export const login = (data) => async (dispatch) => {
 };
 
 export const register = (data) => async (dispatch) => {
-  console.log(data);
   const firstName = data.fullname.split(" ")[0];
   const lastName = data.fullname.split(" ").slice(1).join(" ");
 

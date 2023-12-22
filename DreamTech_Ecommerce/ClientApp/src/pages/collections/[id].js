@@ -9,7 +9,7 @@ function Collections() {
     <div>
      { collections.sub_page === 'chuot' && <ChuotPage />}
      { collections.sub_page === 'pc' &&   <PCPage />}
-    {  collections.sub_page === 'laptop' && <LaptopPage />}
+     { collections.sub_page === 'laptop' && <LaptopPage />}
     </div>
   )
 }
