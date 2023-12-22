@@ -1,5 +1,5 @@
 import { getDataAPI } from "../../utils/fetchData";
-import { GLOBAL_TYPES } from "./globalTypes";
+
 
 export const PC_TYPES ={
     GET_PC:'GET_PC',

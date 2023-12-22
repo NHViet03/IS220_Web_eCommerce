@@ -1,9 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CardItem from "../../components/Home/CardItem";
 import ModalHang from "../../components/product/laptop/ModalHang";
 import ModalGia from "../../components/product/laptop/ModalGia";
 import ModalLoc from "../../components/product/laptop/ModalLoc";
 import { PC } from "../../utils/ProductData";
+import { getAllPC } from "../../redux/actions/pcAction";
+import { useDispatch, useSelector } from "react-redux";
 const PCPage = () => {
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
@@ -11,10 +13,21 @@ const PCPage = () => {
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
 
+  
   const details = ["i7 9700", "GTX 1660", "32GB RAM", "1TB HDD"]
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+
+  const [pcdata, setPCData] = useState([]);
+  const {pc} = useSelector(state => state);
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(getAllPC());
+  },[dispatch])
+  useEffect(()=>{
+    setPCData(pc)
+  },[pc])
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">
@@ -28,7 +41,7 @@ const PCPage = () => {
       <div className="row my-4">
         <img
           className="w-100 p-0"
-          src="//file.hstatic.net/200000722513/file/laptop_web_header_84c696d472ae4938900a83837c34c1a3_2048x2048.png"
+          src="https://file.hstatic.net/200000722513/file/pc_header_0a49b02cdad8445fa7202d20da421d01.png"
          />
       </div>
       <div className="row main-content ">
@@ -106,7 +119,7 @@ const PCPage = () => {
         </div>
         {/* Sản phẩm */}
         <div className="list-product my-2">
-         {PC.map(item=>{
+         {pcdata.map(item=>{
           return(
             <CardItem
             item={item} details={details}

@@ -1,17 +1,26 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import CardItem from "../../components/Home/CardItem";
 import ModalHang from "../../components/product/laptop/ModalHang";
 import ModalGia from "../../components/product/laptop/ModalGia";
 import ModalLoc from "../../components/product/laptop/ModalLoc";
-import { Laptop } from "../../utils/ProductData";
+import {useDispatch, useSelector} from "react-redux";
+import { getAllLaptop } from "../../redux/actions/laptopAction";
 const LaptopPage = () => {
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
   const [showHang, setShowHang] = useState(false); 
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
-
+  const [laptopdata, setLaptopData] = useState([]);
+  const {laptop} = useSelector(state => state);
+  const dispatch = useDispatch();
   const  details = ["i5 11400", "GTX 1650", "8GB RAM", "512GB SSD"]
+  useEffect(()=>{
+    dispatch(getAllLaptop());
+  },[dispatch])
+  useEffect(()=>{
+    setLaptopData(laptop)
+  },[laptop])
   const handleSortChange = (value) => {
     setSortBy(value);
   };
@@ -106,7 +115,7 @@ const LaptopPage = () => {
         </div>
         {/* Sản phẩm */}
         <div className="list-product my-2">
-         {Laptop.map(item=>{
+         {laptopdata.map(item=>{
           return(
             <CardItem
             item={item} details={details}

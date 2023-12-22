@@ -6,6 +6,7 @@ import alert from "./alertReducer";
 import pc from "./pcReducer";
 import laptop from "./laptopReducer";
 import chuot from "./chuotReducer";
+import product from "./productsReducer";
 
 export default combineReducers({
   modalAuth,
@@ -14,5 +15,6 @@ export default combineReducers({
   alert,
   pc,
   laptop,
-  chuot
+  chuot,
+  product
 });

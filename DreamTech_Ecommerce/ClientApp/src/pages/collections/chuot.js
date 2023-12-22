@@ -1,16 +1,26 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import CardItem from "../../components/Home/CardItem";
 import ModalHang from "../../components/product/laptop/ModalHang";
 import ModalGia from "../../components/product/laptop/ModalGia";
 import ModalLoc from "../../components/product/laptop/ModalLoc";
-import { Chuot } from "../../utils/ProductData";
+import {useDispatch, useSelector} from "react-redux";
+import { getAllChuot } from "../../redux/actions/chuotAction";
 const ChuotPage = () => {
+  const {chuot} = useSelector(state => state);
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
   const [showHang, setShowHang] = useState(false); 
   const [showGia, setShowGia] = useState(false); 
   const [showLoc, setShowLoc] = useState(false); 
+  const [chuotdata, setChuotdata] = useState([]);
+  const dispatch = useDispatch();
 
+  useEffect(()=>{
+    dispatch(getAllChuot());
+  },[dispatch])
+  useEffect(()=>{
+   setChuotdata(chuot)
+  },[chuot])
   
     const  details = ["Pin sạc", "Không dây", "Led RGB", "DB -10.000"]
   const handleSortChange = (value) => {
@@ -29,7 +39,8 @@ const ChuotPage = () => {
       <div className="row my-4">
         <img
           className="w-100 p-0"
-          src="//file.hstatic.net/200000722513/file/laptop_web_header_84c696d472ae4938900a83837c34c1a3_2048x2048.png"
+          src="//file.hstatic.net/200000722513/file/gearvn-combo-gaming-gear-chunli-sf6-new_081ad2a50a2d40d8b0107bef7d5b6ec4.jpg"
+        
          />
       </div>
       <div className="row main-content ">
@@ -107,7 +118,7 @@ const ChuotPage = () => {
         </div>
         {/* Sản phẩm */}
         <div className="list-product my-2">
-         {Chuot.map(item=>{
+         {chuotdata.map(item=>{
           return(
             <CardItem
             item={item} details={details}

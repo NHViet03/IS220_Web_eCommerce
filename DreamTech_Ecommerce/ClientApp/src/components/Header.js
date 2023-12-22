@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { GLOBAL_TYPES } from "../redux/actions/globalTypes";
 import Logo from "../images/logo.png";
+import { getAllProducts } from "../redux/actions/productsAction";
 
 const fakeSearchResult = [
   {
@@ -45,11 +46,17 @@ const fakeSearchResult = [
 
 function Header() {
   const user = useSelector((state) => state.auth.user);
+  const product = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
-
+  useEffect(() => {
+    dispatch(getAllProducts());
+  },[dispatch]);
+  useEffect(() => {
+   
+  },[]);
   const handleShowModalAuth = () => {
     dispatch({ type: GLOBAL_TYPES.MODAL_AUTH, payload: true });
   };
@@ -59,13 +66,17 @@ function Header() {
   };
 
   const handleSearch = (value) => {
+    console.log(value);
     setSearch(value);
 
     if (value.length === 0) {
       return setSearchResult([]);
     }
     // Fake API
-    setSearchResult(fakeSearchResult);
+    const productAfterSearch = product?.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSearchResult(productAfterSearch);
   };
 
   return (
@@ -89,6 +100,7 @@ function Header() {
           {searchResult.length > 0 && (
             <div className="search_result">
               <div className="search_result_list">
+              {/* Phần tìm kiếm */}
                 {searchResult.map((result) => (
                   <Link
                     to={`/products/${result.id}`}
@@ -105,7 +117,7 @@ function Header() {
                             marginRight: "8px",
                           }}
                         >
-                          {result.sale_price}
+                          {result.salePrice}
                         </span>
                         <span
                           style={{
@@ -118,11 +130,11 @@ function Header() {
                         </span>
                       </div>
                     </div>
-                    <img src={result.images[0]} alt="Product" />
+                    <img src={result.productImages[0].imageUrl} alt="Product" />
                   </Link>
                 ))}
               </div>
-              <Link>
+              <Link to={'collections/laptop'}>
                 <p
                   className="pt-2 text-center"
                   style={{
