@@ -1,0 +1,28 @@
+.customer_add{
+
+}
+
+.customer_add_body{
+    background-color: #fff;
+    width:60%;
+    padding:24px;
+    border-radius: 8px;
+}
+
+.customer_add_name{
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+}
+
+.customer_add_card{
+    margin-bottom: 24px;
+}
+
+.customer_add_card h6{
+    margin-bottom: 12px;
+}
+
+.customer_add_card input{
+    margin-bottom: 12px;
+    width:50%;
+}

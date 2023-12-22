@@ -1,0 +1,36 @@
+.modal {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_logout_container {
+  background-color: #fff;
+  width: 500px;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.modal_logout_container i{
+    text-align: center;
+    display: block;
+    font-size: 64px;
+    color: var(--primary-color);
+}
+
+.modal_logout_content p{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.modal_logout_content button{
+    padding:12px 0;
+    font-weight: 500;
+}

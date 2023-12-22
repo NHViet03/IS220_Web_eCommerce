@@ -18,7 +18,6 @@ namespace DreamTech_Ecommerce.Controllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string ConfirmationPassword { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string Phone { get; set; }
@@ -46,16 +45,17 @@ namespace DreamTech_Ecommerce.Controllers
 
             if (user != null && user.HashedPassword == PasswordHasher.HashPassword(model.Password, user.Salt))
             {
-                var resJson = new { Token = this.GenerateJwtToken(user) };
+                var resJson = new { Token = this.GenerateJwtToken(user), User = user };
                 return Ok(resJson);
             }
 
-            var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
+            var errorJson = new { ErrorMessage = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
             return BadRequest(errorJson);
         }
 
         [HttpPost("LogOut")]
-        public IActionResult Logout() {
+        public IActionResult Logout()
+        {
             // Optional: Delete token or set it to expired
 
             return Ok(new { Message = "Đăng xuất thành công" });
@@ -65,10 +65,6 @@ namespace DreamTech_Ecommerce.Controllers
         public IActionResult SignUp([FromBody] SignUpViewModel model)
         {
             // Optional: Validate password
-            if (model.Password != model.ConfirmationPassword)
-            {
-                return BadRequest(new { ErrorMessage = "Password không trùng khớp" });
-            }
 
             var user = _context
                 .Users
@@ -87,12 +83,12 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
-                return Ok(new { Token = this.GenerateJwtToken(newUser), user = newUser }); ;
+                return Ok(new { Token = this.GenerateJwtToken(newUser), User = newUser }); ;
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
-            }            
+            }
         }
 
         private string GenerateJwtToken(User user)
@@ -112,7 +108,10 @@ namespace DreamTech_Ecommerce.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, userRole),
+
+
                 }),
+
                 Expires = DateTime.UtcNow.AddMinutes(10000),
                 Issuer = issuer,
                 Audience = audience,
@@ -140,7 +139,8 @@ namespace DreamTech_Ecommerce.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Phone = model.Phone,
-                Role = Role.Customer
+                Role = Role.Customer,
+                Salt = salt
             };
         }
     }

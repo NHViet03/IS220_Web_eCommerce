@@ -3,14 +3,12 @@ using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using DreamTech_Ecommerce.Utils;
 
 namespace DreamTech_Ecommerce.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
     public class ProductController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -28,86 +26,24 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpGet("GetAll")]
         public IActionResult Index()
         {
-            var allProducts = _context.Products.Include(p => p.ProductImages).ToList();
-            return Ok(allProducts);
+            var products = _context.Products
+                .Include(e => e.ProductImages)
+                .ToList();
+            return Ok(products);
         }
 
-        [HttpGet("Get/{Id}")]
-        public IActionResult GetByID(string Id)
+        [HttpGet("GetProductById/{Id}")]
+        public IActionResult GetById(String Id)
         {
-            var product = _context.Products.Find(Id);
-            if (product == null)
-            {
-                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
-            }
+            var product = _context.Products
+                .Include(e => e.ProductImages)
+                .Include(e => e.Gifts)
+                .FirstOrDefault(p => p.Id == Id);
             return Ok(product);
         }
 
-        [HttpDelete("Delete/{Id}")]
-        public IActionResult Delete(string Id)
-        {
-            var product = _context.Products.Find(Id);
-
-            try { 
-                if (product == null)
-                {
-                    return BadRequest(new { Message = "Không tìm thấy sản phẩm" });
-                }
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-
-                return Ok(new { Message = "Xóa thành công !" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { ErrorMessage = "Lỗi server" });
-            }
-
-            
-        }
-
-        [HttpPut("Edit/{Id}")]
-        public IActionResult Edit(string Id, [FromForm] ProductViewModel model)
-        {
-            var product = _context.Products.Find(Id);
-
-            if (product == null)
-            {
-                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
-            }
-
-            try
-            {
-                if (model.Image != null)
-                {
-                    var imagePath = SaveImageToServer(model.Image);
-                    var newProductImage = new ProductImage
-                    {
-                        ImageUrl = imagePath,
-                        ProductId = product.Id
-                    };
-                    product.ProductImages.Add(newProductImage);
-                }
-
-                product.Brand = model.Brand;
-                product.Name = model.Name;
-                product.Description = model.Description;
-                product.Price = model.Price;
-                product.QtyInStock = model.QtyInStock;
-                product.CategoryId = model.CategoryId;
-
-                _context.SaveChanges();
-
-                return Ok(new { Message = "Sửa thành công !" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { ErrorMessage = "Lỗi server" });
-            }
-        }
-
-
-        [HttpPost("CreateProduct")]
+        [HttpPost("Create")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProduct([FromForm] ProductViewModel model)
         {
             try
@@ -126,6 +62,16 @@ namespace DreamTech_Ecommerce.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     Price = model.Price,
+                    SalePrice = model.SalePrice,
+                    Cpu = model.Cpu,
+                    Ram = model.Ram,
+                    Disk = model.Disk,
+                    Vga = model.Vga,
+                    Screen = model.Screen,
+                    Battery = model.Battery,
+                    Weight = model.Weight,
+                    Size = model.Size,
+                    Color = model.Color,
                     QtyInStock = model.QtyInStock,
                     CategoryId = model.CategoryId
                 };
@@ -135,7 +81,7 @@ namespace DreamTech_Ecommerce.Controllers
                     ImageUrl = imagePath,
                     ProductId = newProduct.Id
                 };
-                
+
                 if (model.CategoryId != null)
                 {
                     var category = _context.Categories.Find(model.CategoryId);
@@ -157,7 +103,7 @@ namespace DreamTech_Ecommerce.Controllers
         private string SaveImageToServer(IFormFile image)
         {
             var projectRootPath = Directory.GetCurrentDirectory();
-            var uploadFolder = Path.Combine(projectRootPath, "Uploads");
+            var uploadFolder = Path.Combine(projectRootPath, "wwwroot/images");
 
             if (!Directory.Exists(uploadFolder))
             {
@@ -172,11 +118,12 @@ namespace DreamTech_Ecommerce.Controllers
                 image.CopyTo(fileStream);
             }
 
-            return "/Uploads/" + fileName;
+            return "/wwwroot/images/" + fileName;
         }
 
 
         [HttpPost("UnassignFromCategory")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UnassignProductFromCategory(string productId)
         {
             var product = _context.Products.Find(productId);
@@ -200,6 +147,16 @@ namespace DreamTech_Ecommerce.Controllers
         public string Name { get; set; }
         public string? Description { get; set; }
         public int Price { get; set; }
+        public int? SalePrice { get; set; }
+        public String? Cpu { get; set; }
+        public String? Ram { get; set; }
+        public String? Disk { get; set; }
+        public String? Vga { get; set; }
+        public String? Screen { get; set; }
+        public String? Color { get; set; }
+        public String? Size { get; set; }
+        public String? Weight { get; set; }
+        public String? Battery { get; set; }
         public int QtyInStock { get; set; }
         public string? CategoryId { get; set; }
         public IFormFile Image { get; set; }

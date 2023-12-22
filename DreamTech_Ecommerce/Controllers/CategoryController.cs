@@ -9,7 +9,6 @@ namespace DreamTech_Ecommerce.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -30,7 +29,7 @@ namespace DreamTech_Ecommerce.Controllers
         [HttpGet("GetById/{categoryId}")]
         public IActionResult Details(string categoryId)
         {
-            var category = _context.Categories.Find(categoryId);
+            var category = _context.Categories.Include(c => c.Products).Where(e => e.Id == categoryId);
             return Ok(category);
         }
 
