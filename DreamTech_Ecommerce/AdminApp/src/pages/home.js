@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import CardItem from "../components/Home/CardItem";
 
 import Chart from "chart.js/auto";
-import { Tooltip } from "chart.js";
+import { Tooltip, Legend } from "chart.js";
 import BarChart from "../components/Home/BarChart";
 import LineChart from "../components/Home/LineChart";
 import Customers from "../components/Home/Customers";
 
-Chart.register(Tooltip);
+Chart.register(Tooltip, Legend);
 
 const CustomerStatistic = [
   { id: 4, month: "4", num: 250 },
@@ -48,35 +48,35 @@ const SalesStatistic = [
 
 const cusData = [
   {
-    id: 3,
+    id: "KH03",
     name: "Lê Văn An",
     email: "An789@gmail.com",
     phone: "0833333333",
     total: 300000000,
   },
   {
-    id: 5,
+    id: "KH05",
     name: "Trần Văn Tú",
     email: "Tu567@gmail.com",
     phone: "0866666666",
     total: 250000000,
   },
   {
-    id: 1,
+    id: "KH01",
     name: "Nguyễn Hoàng Việt",
     email: "Viet123@gmail.com",
     phone: "0848044777",
     total: 20000000,
   },
   {
-    id: 4,
+    id: "KH04",
     name: "Phạm Thị Hương",
     email: "Huong012@gmail.com",
     phone: "0844444444",
     total: 18000000,
   },
   {
-    id: 2,
+    id: "KH02",
     name: "Trần Thị Mai",
     email: "Mai456@gmail.com",
     phone: "0856789123",
@@ -87,29 +87,30 @@ const cusData = [
 const fakeCardData = [
   {
     title: "Doanh thu trong ngày",
-    value: "$ 120.000 vnđ",
-    percent: "12",
+    value: 120000,
+    percent: 12,
     icon: "fa-solid fa-coins",
     increase: true,
+    type: "money",
   },
   {
     title: "Đơn hàng trong ngày",
-    value: "2.300",
-    percent: "5",
+    value: 2300,
+    percent: 3,
     icon: "fa-solid fa-clipboard-list",
     increase: true,
   },
   {
     title: "Số lượng sản phẩm",
-    value: "124",
-    percent: "-3",
+    value: 124,
+    percent: -3,
     icon: "fa-solid fa-basket-shopping",
     increase: false,
   },
   {
     title: "Khách hàng mới",
-    value: "30",
-    percent: "-2",
+    value: 30,
+    percent: -2,
     icon: "fa-solid fa-users",
     increase: false,
   },
@@ -118,7 +119,7 @@ const fakeCardData = [
 function Home() {
   const [cardsData, setCardsData] = useState([]);
   const [chartLeftData, setChartLeftData] = useState({
-    labels: CustomerStatistic.map((item) => item.month),
+    labels: CustomerStatistic.map((item) => "Th " + item.month),
     datasets: [
       {
         label: "Khách hàng mới ",
@@ -130,7 +131,7 @@ function Home() {
     ],
   });
   const [chartRightData, setChartRightData] = useState({
-    labels: SalesStatistic[0].map((item) => item.month),
+    labels: SalesStatistic[0].map((item) => "Th " + item.month),
     datasets: [
       {
         label: "Laptop, PC,... ",
@@ -153,14 +154,32 @@ function Home() {
     ],
   });
   const [customers, setCustomers] = useState(cusData);
+  const [filter, setFilter] = useState({
+    interval: "7days",
+  });
 
   useEffect(() => {
     // Fake API
     setCardsData(fakeCardData);
   }, []);
 
+  const handleChangeInterval = (e) => {
+    window.location.hash = e.target.value;
+    setFilter({ ...filter, interval: e.target.value });
+  };
+
   return (
     <div className="home">
+      <select
+        className="mb-3 form-select home_filter"
+        required
+        value={filter.interval}
+        onChange={handleChangeInterval}
+      >
+        <option value="7days">Trong 7 ngày gần nhất</option>
+        <option value="30days">Trong 30 ngày gần nhất</option>
+        <option value="365days">Trong năm nay</option>
+      </select>
       <div className="mb-5 home_cards">
         {cardsData.map((card, index) => (
           <CardItem key={index} card={card} />
@@ -182,7 +201,7 @@ function Home() {
             <p>
               <span className="fw-medium">{"( +23% )"}</span> so với tuần trước
             </p>
-            <div className="home_charts_left_cards">
+            <div className="mt-3 home_charts_left_cards">
               <div className="home_charts_left_cards_item">
                 <div
                   style={{

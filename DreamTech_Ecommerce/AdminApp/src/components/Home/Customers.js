@@ -1,32 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
+import formatMoney from "../../utils/formatMoney";
+import ExportCSV from "../ExportCSV";
+import formatUserInfo from "../../utils/formatUserInfo";
 
 function Customers({ customers }) {
-  const customData = (data) => {
-    const newData = {};
-    newData.id = data.id;
-    newData.name = data.name;
-
-    let head_email = data.email.split("@")[0];
-    let tail_email = data.email.split("@")[1];
-    head_email =
-      head_email.slice(0, 3) + head_email.slice(3).replace(/./g, "*");
-    newData.email = head_email + "@" + tail_email;
-
-    newData.phone =
-      data.phone.slice(0, 4) + data.phone.slice(4).replace(/./g, "*");
-    newData.total =
-      data.total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " vnđ";
-
-    if (data.total > 100000000) {
-      newData.level = "Diamond";
-    } else if (data.total > 10000000) {
-      newData.level = "Platinum";
-    } else {
-      newData.level = "Bronze";
-    }
-
-    return newData;
-  };
 
   const renderStar = (level) => {
     const res = [];
@@ -48,36 +25,53 @@ function Customers({ customers }) {
     return res;
   };
 
+  const customExport = useCallback(() => {
+    return customers.map((customer) => ({
+      "Mã khách hàng": customer.id,
+      "Tên khách hàng": customer.name,
+      "Email": customer.email,
+      "Số điện thoại": customer.phone,
+      "Doanh số": customer.total,
+    }));
+  }, [customers]);
+
   return (
     <div className="mb-5 box_shadow home_customers">
-      <div className="mb-3 d-flex align-items-center">
-        <h5 className="mb-0 me-2">Danh sách khách hàng hàng đầu</h5>
-        <i
-          class="fa-solid fa-ranking-star ms-2"
-          style={{
-            fontSize: "28px",
-          }}
-        />
+      <div className="mb-3 d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center">
+          <h5 className="mb-0 me-2">Danh sách khách hàng hàng đầu</h5>
+
+          <i
+            class="fa-solid fa-ranking-star ms-2"
+            style={{
+              fontSize: "28px",
+            }}
+          />
+        </div>
+        <div>
+          <ExportCSV csvData={customExport()} filename="ds-kh-tiem-nang" />
+        </div>
       </div>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col">Mã khách hàng</th>
             <th scope="col">Họ tên</th>
             <th scope="col">Email</th>
             <th scope="col">Số điện thoại</th>
-            <th scope="col">Doanh số</th>
+            <th scope="col">Doanh số (VNĐ)</th>
             <th scope="col">Tích lũy</th>
           </tr>
         </thead>
         <tbody>
           {customers.map((customer, index) => {
-            const newData = customData(customer);
+            const newData = formatUserInfo(customer);
 
             return (
               <tr key={index}>
                 <td>
-                  <i className="fa-solid fa-user" />
+                  <i className="fa-solid fa-user me-1" />
+                  {newData.id}
                 </td>
                 <td>{newData.name}</td>
                 <td>{newData.email}</td>

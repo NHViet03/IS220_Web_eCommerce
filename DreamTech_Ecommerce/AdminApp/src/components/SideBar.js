@@ -1,4 +1,4 @@
-import React, { useState,useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../images/logo.png";
 
@@ -22,7 +22,7 @@ function SideBar({ showSideBar }) {
         link: "/orders",
       },
       {
-        title: "Giao hàng",
+        title: "Đang giao",
         icon: "fa-solid fa-truck-fast",
         link: "/shipping",
       },
@@ -41,6 +41,10 @@ function SideBar({ showSideBar }) {
   );
 
   const { pathname } = useLocation();
+
+  const resetActive = () => {
+    setActive(-1);
+  };
 
   return (
     <div className={`side_bar ${showSideBar ? "active" : ""}`}>
@@ -78,6 +82,7 @@ function SideBar({ showSideBar }) {
             <Link
               to="/profile"
               className={`nav-link ${pathname === "/profile" ? "active" : ""}`}
+              onClick={resetActive}
             >
               <span className="icon_wrapper">
                 <i className="fa-solid fa-id-card-clip" />
