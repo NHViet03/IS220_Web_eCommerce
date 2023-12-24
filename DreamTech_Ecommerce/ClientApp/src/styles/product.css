@@ -251,7 +251,7 @@
   display: flex;
   flex-direction: column;
   min-width: 560px;
-  height: 170px;
+  height: fit-content;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
@@ -273,6 +273,10 @@
     border: 1px solid #1874de;
     color: #1874de;
   }
+}
+.selection > div.active{
+  border: 1px solid #1874de;
+  color: #1874de;
 }
 .modal_hang_selection{
   padding: 5px;
@@ -304,12 +308,26 @@
   display: flex;
   flex-direction: column;
   min-width: 560px;
-  height: 170px;
+  height: fit-content;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
   border-radius: 4px;
   z-index: 100;
+}
+.input-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 10px;
+
+}
+.input-container >input{
+  padding: 5px;
+  border: 1px solid #E30019;
+  border-radius: 5px;
+  outline: none;
 }
 /* ---------MODAL LỌC--------- */
 .product_filter_boloc{

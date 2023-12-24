@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
 import CardItem from "../../components/Home/CardItem";
-import ModalHang from "../../components/product/laptop/ModalHang";
-import ModalGia from "../../components/product/laptop/ModalGia";
-import ModalLoc from "../../components/product/laptop/ModalLoc";
-import { PC } from "../../utils/ProductData";
+import ModalHangPC from "../../components/collections/pc/ModalHangPC";
+import ModalGiaPC from "../../components/collections/pc/ModalGiaPC";
+import ModalLocPC from "../../components/collections/pc/ModalLocPC";
 import { getAllPC } from "../../redux/actions/pcAction";
 import { useDispatch, useSelector } from "react-redux";
+import { sapxep } from "../../redux/actions/filterAction";
 const PCPage = () => {
+
+  const {Sapxep, Hang, Gia} = useSelector(state => state.filter);
+  // console.log(Sapxep, Hang, Gia)
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
   const [showHang, setShowHang] = useState(false); 
@@ -16,17 +19,23 @@ const PCPage = () => {
   
   const details = ["i7 9700", "GTX 1660", "32GB RAM", "1TB HDD"]
   const handleSortChange = (value) => {
-    setSortBy(value);
+     setSortBy(value);
   };
-
+  useEffect(()=>{
+    dispatch(sapxep(sortBy))
+  },[sortBy])
   const [pcdata, setPCData] = useState([]);
   const {pc} = useSelector(state => state);
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(getAllPC());
-  },[dispatch])
+  },[ dispatch])
+  // const SapXepVoiBoLoc = (pc, Sapxep, Hang, Gia) => {
+   // SapXepVoiBoLoc(pc, Sapxep, Hang, Gia)
+  // }
   useEffect(()=>{
-    setPCData(pc)
+    const pcloc =  pc
+    setPCData(pcloc)
   },[pc])
   return (
     <div className="container mb-4">
@@ -52,7 +61,7 @@ const PCPage = () => {
               <i class="fa-solid fa-filter" onClick={()=> setShowLoc(!showLoc)}></i>
               <div onClick={()=> setShowLoc(!showLoc)}>Bộ lọc</div>
               {
-              showLoc && <ModalLoc showLoc={showLoc} setShowLoc={setShowLoc}/>
+              showLoc && <ModalLocPC showLoc={showLoc} setShowLoc={setShowLoc}/>
               }
             </div>
             {/* Hãng */}
@@ -62,7 +71,7 @@ const PCPage = () => {
               <div  onClick={() => setShowHang(!showHang)}>Hãng</div>
               <i class="fa-solid fa-caret-down"  onClick={() => setShowHang(!showHang)}></i>
             {
-              showHang && <ModalHang/>
+              showHang && <ModalHangPC setShowHang={setShowHang}/>
             }
             </div>
            
@@ -71,7 +80,7 @@ const PCPage = () => {
               <div onClick={()=> setShowGia(!showGia)}>Giá</div>
               <i class="fa-solid fa-caret-down" onClick={()=> setShowGia(!showGia)}></i>
               {
-              showGia && <ModalGia/>
+              showGia && <ModalGiaPC/>
             }
             </div>
         </div>

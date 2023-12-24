@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
 import CardItem from "../../components/Home/CardItem";
-import ModalHang from "../../components/product/laptop/ModalHang";
-import ModalGia from "../../components/product/laptop/ModalGia";
-import ModalLoc from "../../components/product/laptop/ModalLoc";
+import ModalHang from "../../components/collections/laptop/ModalHangLaptop";
+import ModalGia from "../../components/collections/laptop/ModalGiaLaptop";
+import ModalLoc from "../../components/collections/laptop/ModalLocLaptop";
 import {useDispatch, useSelector} from "react-redux";
 import { getAllLaptop } from "../../redux/actions/laptopAction";
+import { sapxep } from "../../redux/actions/filterAction";
 const LaptopPage = () => {
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
@@ -24,6 +25,9 @@ const LaptopPage = () => {
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+  useEffect(()=>{
+    dispatch(sapxep(sortBy))
+  },[sortBy])  
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">

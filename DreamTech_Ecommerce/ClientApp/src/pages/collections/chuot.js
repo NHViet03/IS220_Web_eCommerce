@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
 import CardItem from "../../components/Home/CardItem";
-import ModalHang from "../../components/product/laptop/ModalHang";
-import ModalGia from "../../components/product/laptop/ModalGia";
-import ModalLoc from "../../components/product/laptop/ModalLoc";
+import ModalHang from "../../components/collections/chuot/ModalHangChuot";
+import ModalGia from "../../components/collections/chuot/ModalGiaChuot";
+import ModalLoc from "../../components/collections/chuot/ModalLocChuot";
 import {useDispatch, useSelector} from "react-redux";
 import { getAllChuot } from "../../redux/actions/chuotAction";
+import { sapxep } from "../../redux/actions/filterAction";
 const ChuotPage = () => {
   const {chuot} = useSelector(state => state);
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
@@ -14,7 +15,7 @@ const ChuotPage = () => {
   const [showLoc, setShowLoc] = useState(false); 
   const [chuotdata, setChuotdata] = useState([]);
   const dispatch = useDispatch();
-
+  
   useEffect(()=>{
     dispatch(getAllChuot());
   },[dispatch])
@@ -26,6 +27,9 @@ const ChuotPage = () => {
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+  useEffect(()=>{
+    dispatch(sapxep(sortBy))
+  },[sortBy])
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">
