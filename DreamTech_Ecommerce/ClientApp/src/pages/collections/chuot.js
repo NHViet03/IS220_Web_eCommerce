@@ -19,9 +19,27 @@ const ChuotPage = () => {
   useEffect(()=>{
     dispatch(getAllChuot());
   },[dispatch])
+  // Lọc data
+  const {Sapxep, Hang, Gia } = useSelector(state => state.filter);
+
+ 
+
   useEffect(()=>{
-   setChuotdata(chuot)
-  },[chuot])
+    let datasort = [...chuot]
+    if (Sapxep === "ascending") {
+      datasort.sort((a, b) => a.salePrice - b.salePrice);
+    }else if (Sapxep === "descending"){
+      datasort.sort((a, b) => b.salePrice - a.salePrice);
+    }
+    if( Gia.length > 0){
+       datasort = datasort.filter(item => item.salePrice >= Gia[0] && item.salePrice <= Gia[1])
+    } 
+    if (Hang.length > 0) {
+      datasort = datasort.filter(item => Hang.includes(item.brand))
+    }
+
+    setChuotdata(datasort)
+  },[chuot, Sapxep, Gia, Hang])
   
     const  details = ["Pin sạc", "Không dây", "Led RGB", "DB -10.000"]
   const handleSortChange = (value) => {

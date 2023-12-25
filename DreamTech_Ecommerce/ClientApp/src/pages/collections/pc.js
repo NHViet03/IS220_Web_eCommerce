@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { sapxep } from "../../redux/actions/filterAction";
 const PCPage = () => {
 
-  const {Sapxep, Hang, Gia} = useSelector(state => state.filter);
   // console.log(Sapxep, Hang, Gia)
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
@@ -30,13 +29,28 @@ const PCPage = () => {
   useEffect(()=>{
     dispatch(getAllPC());
   },[ dispatch])
-  // const SapXepVoiBoLoc = (pc, Sapxep, Hang, Gia) => {
-   // SapXepVoiBoLoc(pc, Sapxep, Hang, Gia)
-  // }
+  // Lọc data
+  const {Sapxep, Hang, Gia } = useSelector(state => state.filter);
+
+ 
+
   useEffect(()=>{
-    const pcloc =  pc
-    setPCData(pcloc)
-  },[pc])
+    let datasort = [...pc]
+    if (Sapxep === "ascending") {
+      datasort.sort((a, b) => a.salePrice - b.salePrice);
+    }else if (Sapxep === "descending"){
+      datasort.sort((a, b) => b.salePrice - a.salePrice);
+    }
+    if( Gia.length > 0){
+       datasort = datasort.filter(item => item.salePrice >= Gia[0] && item.salePrice <= Gia[1])
+    } 
+    if (Hang.length > 0) {
+      datasort = datasort.filter(item => Hang.includes(item.brand))
+    }
+
+    setPCData(datasort)
+  },[pc, Sapxep, Gia, Hang])
+  
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">

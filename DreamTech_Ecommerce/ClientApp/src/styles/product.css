@@ -333,6 +333,13 @@
 .product_filter_boloc{
   position: relative;
 }
+.product_filter{
+  height: fit-content;
+}
+.product_arrange {
+  height: fit-content;
+
+}
 .modal_loc{
   position: absolute;
   top: 40px;

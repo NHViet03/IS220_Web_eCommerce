@@ -17,13 +17,12 @@ const fillterReducer =  (state = initialState, action) => {
         case FILTER_TYPES.HANG:
                 return {
                     ...state,
-                    Hang: {...action.payload}
+                    Hang: [...action.payload]
                 };
         case FILTER_TYPES.GIA:
-            console.log(action.payload)
                 return {
                     ...state,
-                    Gia: {...action.payload}
+                    Gia: [...action.payload]
                 };
         default:
             return state;

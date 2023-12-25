@@ -5,12 +5,12 @@ import Slider from '@mui/material/Slider';
 
 const ModalLocPC = ({setShowLoc,showLoc}) => {
   const dispatch = useDispatch();
-  const [GVN, setGVN] = useState(false);
+  const [MSI, setMSI] = useState(false);
   const [Lenovo, setLenovo] = useState(false);
   const [AcerPredato, setAcerPredato] = useState(false);
   const [ASUS, setASUS] = useState(false);
   const handleGVN = () => {
-    setGVN(!GVN)
+    setMSI(!MSI)
   }
   const handleLenovo = () => {
     setLenovo(!Lenovo)
@@ -22,7 +22,7 @@ const ModalLocPC = ({setShowLoc,showLoc}) => {
     setASUS(!ASUS)
   }
   const handleBoChon = () => {
-    setGVN(false)
+    setMSI(false)
     setLenovo(false)
     setAcerPredato(false)
     setASUS(false)
@@ -33,8 +33,8 @@ const ModalLocPC = ({setShowLoc,showLoc}) => {
   const Hang = []
   const handleXemKetQua = () => {
     
-    if (GVN) {
-      Hang.push('GVN')
+    if (MSI) {
+      Hang.push('MSI')
     }
     if (Lenovo) {
       Hang.push('Lenovo')
@@ -83,8 +83,8 @@ const ModalLocPC = ({setShowLoc,showLoc}) => {
             </div>
         <h1 className='fw-medium p-2 pb-0 '>Hãng</h1>
         <div className='selection'>
-            <div className={GVN ? 'active' : ''} onClick={handleGVN}>
-            GVN
+            <div className={MSI ? 'active' : ''} onClick={handleGVN}>
+            MSI
             </div>
             <div className={Lenovo ? 'active' : ''} onClick={handleLenovo}>
             Lenovo

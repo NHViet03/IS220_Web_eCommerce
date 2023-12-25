@@ -19,15 +19,40 @@ const LaptopPage = () => {
   useEffect(()=>{
     dispatch(getAllLaptop());
   },[dispatch])
+
+  // Lọc data
+  const {Sapxep, Hang, Gia } = useSelector(state => state.filter);
+
+ 
+
   useEffect(()=>{
-    setLaptopData(laptop)
-  },[laptop])
+    let datasort = [...laptop]
+    if (Sapxep === "ascending") {
+      datasort.sort((a, b) => a.salePrice - b.salePrice);
+    }else if (Sapxep === "descending"){
+      datasort.sort((a, b) => b.salePrice - a.salePrice);
+    }
+    if( Gia.length > 0){
+       datasort = datasort.filter(item => item.salePrice >= Gia[0] && item.salePrice <= Gia[1])
+    } 
+    if (Hang.length > 0) {
+      datasort = datasort.filter(item => Hang.includes(item.brand))
+    }
+
+    setLaptopData(datasort)
+  },[laptop, Sapxep, Gia, Hang])
+  
+
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+
+
   useEffect(()=>{
     dispatch(sapxep(sortBy))
   },[sortBy])  
+
+
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">
