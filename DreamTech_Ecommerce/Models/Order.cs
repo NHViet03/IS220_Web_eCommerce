@@ -14,7 +14,6 @@ namespace DreamTech_Ecommerce.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int Qty { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public DateTime OrderDate { get; set; }
         public int TotalAmount { get; set; }
@@ -24,9 +23,9 @@ namespace DreamTech_Ecommerce.Models
         [ForeignKey("User")]
         public int UserId { get; set; }
         public User User { get; set; }
-        
+
         [ForeignKey("Discount")]
-        public int? DiscountId { get; set; }
+        public int? DiscountId { get; set; }    
         public Discount? Discount { get; set; }
         public ICollection<OrderItem> OrderDetails { get; } = new List<OrderItem>();
         public ICollection<Payment> Payments { get; } = new List<Payment>();

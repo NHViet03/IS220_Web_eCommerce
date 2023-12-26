@@ -1,6 +1,7 @@
 ﻿using DreamTech_Ecommerce.Models;
 using DreamTech_Ecommerce.Utils;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace DreamTech_Ecommerce.DAL
 {
@@ -35,7 +36,6 @@ namespace DreamTech_Ecommerce.DAL
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 
-            // Declare relationship between table in EF
             modelBuilder.Entity<CartItem>()
                 .HasOne(e => e.User)
                 .WithMany(e => e.Carts)
@@ -76,7 +76,7 @@ namespace DreamTech_Ecommerce.DAL
                 .HasOne(e => e.Discount)
                 .WithMany(e => e.Orders)
                 .HasForeignKey(e => e.DiscountId)
-                .IsRequired();
+                .IsRequired(false);
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(e => e.Product)
@@ -88,7 +88,7 @@ namespace DreamTech_Ecommerce.DAL
                 .HasOne(e => e.Order)
                 .WithMany(e => e.OrderDetails)
                 .HasForeignKey(e => e.OrderId)
-                .IsRequired();
+                .IsRequired(false);
 
             modelBuilder.Entity<Payment>()
                 .HasOne(e => e.Order)
@@ -102,21 +102,160 @@ namespace DreamTech_Ecommerce.DAL
                 .HasForeignKey(e => e.PaymentMethodId)
                 .IsRequired();
 
-            // Seed admin user
+            // Seed Users
             var salt = PasswordHasher.GenerateSalt();
-            var hashedPassword = PasswordHasher.HashPassword("adminvip123", salt);
+            var hashedPassword = PasswordHasher.HashPassword("test@1234", salt);
+            var hashedUserPassword = PasswordHasher.HashPassword("test@1234", salt);
             modelBuilder.Entity<User>().HasData(
-            new User
+                new User
+                {
+                    Id = 1,
+                    FirstName = "Admin",
+                    LastName = "Account",
+                    Role = Role.Admin,
+                    Email = "admin@test.com",
+                    Phone = "123-456-7890",
+                    HashedPassword = hashedPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 2,
+                    FirstName = "Tony",
+                    LastName = "Stark",
+                    Role = Role.Customer,
+                    Email = "tony.stark@email.com",
+                    Phone = "091-456-7890",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 3,
+                    FirstName = "Steve",
+                    LastName = "Rogers",
+                    Role = Role.Customer,
+                    Email = "steve.rogers@email.com",
+                    Phone = "091-123-4567",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 4,
+                    FirstName = "Natasha",
+                    LastName = "Romanoff",
+                    Role = Role.Customer,
+                    Email = "natasha.romanoff@email.com",
+                    Phone = "091-789-0123",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 5,
+                    FirstName = "Bruce",
+                    LastName = "Banner",
+                    Role = Role.Customer,
+                    Email = "bruce.banner@email.com",
+                    Phone = "091-234-5678",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 6,
+                    FirstName = "Thor",
+                    LastName = "Odinson",
+                    Role = Role.Customer,
+                    Email = "thor.odinson@email.com",
+                    Phone = "091-678-9012",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 7,
+                    FirstName = "Peter",
+                    LastName = "Parker",
+                    Role = Role.Customer,
+                    Email = "peter.parker@email.com",
+                    Phone = "091-345-6789",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 8,
+                    FirstName = "Wanda",
+                    LastName = "Maximoff",
+                    Role = Role.Customer,
+                    Email = "wanda.maximoff@email.com",
+                    Phone = "091-987-6543",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 9,
+                    FirstName = "Scott",
+                    LastName = "Lang",
+                    Role = Role.Customer,
+                    Email = "scott.lang@email.com",
+                    Phone = "091-567-8901",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                },
+                new User
+                {
+                    Id = 10,
+                    FirstName = "Diana",
+                    LastName = "Prince",
+                    Role = Role.Customer,
+                    Email = "diana.prince@email.com",
+                    Phone = "091-123-4567",
+                    Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                    CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    HashedPassword = hashedUserPassword,
+                    Salt = salt
+                });
+            for (int i = 11; i < 100; i++)
             {
-                Id = 1,
-                FirstName = "Admin",
-                LastName = "User",
-                Role = Role.Admin,
-                Email = "admin@test.com",
-                Phone = "123-456-7890",
-                HashedPassword = hashedPassword,
-                Salt = salt
-            });
+                var firstName = RandomGenerator.GenerateRandomFirstName();
+                var lastName = RandomGenerator.GenerateRandomLastName();
+
+                modelBuilder.Entity<User>().HasData(
+                    new User
+                    {
+                        Id = i,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        Role = Role.Customer,
+                        Email = RandomGenerator.GenerateRandomEmail(firstName, lastName),
+                        Phone = RandomGenerator.GenerateRandomPhoneNumber(),
+                        Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
+                        CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                        HashedPassword = hashedUserPassword,
+                        Salt = salt
+                    }    
+                );
+            }
 
             // Seed category
             modelBuilder.Entity<Category>().HasData(
@@ -133,8 +272,8 @@ namespace DreamTech_Ecommerce.DAL
                 new Category { Id = "tai-nghe-loa", Name = "Tai nghe - Loa" }
             );
 
-            // Seed products
-            modelBuilder.Entity<Product>().HasData(
+            Product[] productList = new Product[]
+            {
                 new Product
                 {
                     Id = "laptop-asus-expertbook-b1400ceae-bv3186w",
@@ -153,7 +292,7 @@ namespace DreamTech_Ecommerce.DAL
                     Weight = "1.45 kg",
                     Battery = "42WHrs, 3S1P, 3-cell Li-ion",
                     QtyInStock = 10,
-                    CategoryId = "laptop", 
+                    CategoryId = "laptop",
                 },
                 // Laptop Gaming
                 new Product
@@ -558,6 +697,16 @@ namespace DreamTech_Ecommerce.DAL
                     QtyInStock = 20,
                     CategoryId = "chuot-lot-chuot",
                 }
+            };
+
+            // Seed products
+            modelBuilder.Entity<Product>().HasData(productList);
+
+            // Seed cart items 
+            modelBuilder.Entity<CartItem>().HasData(
+                new CartItem { Id = 1, ProductId = "laptop-asus-expertbook-b1400ceae-bv3186w", UserId = 2, Qty = 2 },
+                new CartItem { Id = 2, ProductId = "laptop-gaming-msi-stealth-16-mercedes-amg-a13vg-289vn", UserId = 2, Qty = 4 }
+
             );
 
             // Seed gifts
@@ -604,6 +753,116 @@ namespace DreamTech_Ecommerce.DAL
                 new ProductImage { Id = 29, ProductId = "chuot-logitech-g304-wireless-white", ImageUrl = "https://product.hstatic.net/200000722513/product/h-g304-lightspeed-wireless-white-1000_e28318985b5049099c4e8381695e810f_782b9a4494994a2ea98cf9e699e35200_medium.jpg" },
                 new ProductImage { Id = 30, ProductId = "chuot-logitech-g304-wireless", ImageUrl = "https://product.hstatic.net/200000722513/product/gvn_log_g304_3df28cd60a48412b8fb1d2ff762dc6a9_1f12340f2e6b4b8892163de0a06676f2_medium.png" }
             );
+
+            // Seed orders
+            modelBuilder.Entity<Order>().HasData(
+                new Order { 
+                    Id = 1, 
+                    OrderStatus = OrderStatus.Completed, 
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(), 
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 2,
+                    OrderStatus = OrderStatus.Pending,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 3,
+                    OrderStatus = OrderStatus.Completed,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 4,
+                    OrderStatus = OrderStatus.Pending,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 5,
+                    OrderStatus = OrderStatus.Completed,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 6,
+                    OrderStatus = OrderStatus.Pending,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 7,
+                    OrderStatus = OrderStatus.Completed,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 8,
+                    OrderStatus = OrderStatus.Pending,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                },
+                new Order
+                {
+                    Id = 9,
+                    OrderStatus = OrderStatus.Failed,
+                    OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                    TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                    ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                    UserId = RandomGenerator.GenerateUserId(),
+                }
+            );
+
+            for (int i = 10; i <= 200; i++)
+            {
+                modelBuilder.Entity<Order>().HasData(
+                    new Order
+                    {
+                        Id = i,
+                        OrderStatus = RandomGenerator.GenerateRandomOrderStatus(),
+                        OrderDate = RandomGenerator.GenerateRandomDateTime(),
+                        TotalAmount = RandomGenerator.GenerateRandomAmount(),
+                        ShippingAddress = RandomGenerator.GenerateRandomVietnameseAddress(),
+                        UserId = RandomGenerator.GenerateUserId(),
+                    });
+            }
+
+            for (int i = 1; i <= 200; i++) {
+                Random rn = new Random();
+                modelBuilder.Entity<OrderItem>().HasData(
+                    new OrderItem
+                    {
+                        Id = i,
+                        Qty = rn.Next(1, 5),
+                        OrderId = i,
+                        ProductId = productList[rn.Next(productList.Length)].Id
+                    });
+            }
 
             base.OnModelCreating(modelBuilder);
         }

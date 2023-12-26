@@ -1,0 +1,222 @@
+﻿/* Cart global css */
+.rounded-br {
+    border-end-end-radius: 0.25rem;
+}
+
+.rounded-tr {
+    border-start-end-radius: 0.25rem;
+}
+
+.rounded-bl {
+    border-end-start-radius: 0.25rem;
+}
+
+.rounded-tl {
+    border-start-start-radius: 0.25rem;
+}
+
+/* Progress Bar*/
+
+.cart-wrapper {
+    max-width: 620px;
+    width: 620px;
+}
+
+.cart-main {
+    background-color: #fff;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+}
+
+.line {
+    flex: 1;
+    height: 2px;
+    border-top: 1px dashed #ccc;
+}
+
+.step {
+    text-align: center;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 0 4px;
+    position: relative;
+}
+
+.step:not(:first-child)::after {
+    content: "";
+    position: absolute;
+    top: 22%;
+    right: 50%;
+    width: 100%;
+    height: 1px;
+    border-top: 1px dashed #535353;
+}
+
+.step.completed:not(:first-child)::after {
+    border-top: 1px solid var(--primary-color);
+}
+
+.step.completed,
+.text-custom-primary {
+    color: var(--primary-color);
+}
+
+.bg-custom-primary {
+    background-color: var(--primary-color);
+}
+
+.icon {
+    height: 28px;
+    width: 28px;
+    margin: 0 auto 4px;
+    position: relative;
+    z-index: 1;
+    border-radius: 100%;
+}
+
+/* Step 1*/
+.cart-wrapper .left .item-img {
+    margin: 0 auto 0 0;
+    text-align: center;
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border: 1px solid #ECECEC;
+}
+
+.cart-wrapper .left .item-img > a {
+    display: block;
+}
+
+.cart-wrapper .left .item-remove {
+    margin: 8px 0 0;
+}
+.cart-wrapper .left .item-remove .remove a:hover {
+    color: var(--primary-color);
+}
+
+.cart-wrapper .left .item-img img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+}
+.cart-wrapper .left .item-remove .remove button {
+    display: flex;
+    color: #6D6E72;
+    align-items: center;
+    justify-content: start;
+    margin-left: 26px;
+}
+
+.cart-wrapper .gifts-list .line-gift {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 4px;
+}
+
+.cart-wrapper .gifts-list .line-gift:before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 9px;
+    width: 3px;
+    height: 3px;
+    background: #6D6E72;
+    border-radius: 50%;
+}
+
+/* Step 2 */
+.form__input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.form__input-wrapper .form__floating-label {
+    position: absolute;
+    left: 16px;
+    top: 0;
+    font-size: 16px;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #535353;
+    -webkit-transform: translateY(32%);
+    transform: translateY(32%);
+    transition: -webkit-transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.cart-wrapper .form-select,
+.cart-wrapper .form__floating-label {
+    font-size: 0.875rem;
+    color: #535353;
+}
+
+.form__input-wrapper .form__field.is-filled + .form__floating-label, .form__input-wrapper .form__field:focus + .form__floating-label {
+    -webkit-transform: translateY(-9px);
+    transform: translateY(-9px);
+    background: #fff;
+    padding: 0 5px;
+    font-size: 12px;
+}
+.form-control.is-filled, .form__field.is-filled {
+    background: #fff;
+    border-color: #1E9800;
+}
+.form-control {
+    border-radius: 0.25rem;
+    line-height: inherit;
+}
+
+
+.cart-wrapper .form-group.has-bg {
+    background: #ECECEC;
+    border-radius: 4px;
+    padding: 8px 8px 0px 8px;
+    margin-bottom: 16px;
+}
+
+/* Summary section */
+.checkout-steplist .text {
+    color: #535353;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+.checkout-steplist .completed .text {
+    color: var(--primary-color);
+}
+
+.total-amount .text,
+.item-price {
+    color: var(--primary-color);
+}
+
+.action-button {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px;
+    color: #fff;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.action-button:hover {
+    cursor: pointer;
+    color: #fff;
+}

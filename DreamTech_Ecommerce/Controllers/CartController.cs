@@ -31,21 +31,58 @@ namespace DreamTech_Ecommerce.Controllers
             return Ok(allCarts);
         }
 
-        [HttpPost("GetByUser/{userId}")]
-        public IActionResult GetCartsByUser(int userId)
+        [Authorize]
+        [HttpGet("GetByUser")]
+        public IActionResult GetCartsByUser()
         { 
             try
             {
-                var carts = _context.CartItems.Include(cart => cart.Product).Where(e => e.UserId == userId).ToList();
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                var carts = _context.CartItems
+                    .Include(cart => cart.Product)
+                        .ThenInclude(product => product.ProductImages)
+                    .Include(cart => cart.Product.Gifts)
+                    .Where(e => e.UserId == userId)
+                    .ToList();
                 return Ok(carts);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
+        [Authorize]
+        [HttpPut("UpdateQty/{cartId}")]
+        public IActionResult UpdateQty(int cartId, [FromQuery] int qty) {
+            try
+            {
+                var cartItem = _context.CartItems.Find(cartId);
+
+                if (cartItem == null)
+                {
+                    return NotFound("CartItem not found");
+                }
+
+                cartItem.Qty = qty;
+
+                _context.SaveChanges();
+
+                return Ok(cartItem);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
         [HttpPost("AddToCart")]
         public IActionResult AddToCart([FromBody] CartItem cart)
         {
@@ -78,8 +115,9 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("Delete/{Id}")]
-        public IActionResult RemoveFromCart([FromBody] int Id)
+        public IActionResult RemoveFromCart(int Id)
         {
             try
             {
