@@ -116,6 +116,7 @@ namespace DreamTech_Ecommerce.DAL
                     Email = "admin@test.com",
                     Phone = "123-456-7890",
                     HashedPassword = hashedPassword,
+                    Gender = new Random().Next(0,1),
                     Salt = salt
                 },
                 new User
@@ -129,6 +130,7 @@ namespace DreamTech_Ecommerce.DAL
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
                     HashedPassword = hashedUserPassword,
+                    Gender = new Random().Next(0, 1),
                     Salt = salt
                 },
                 new User
@@ -142,6 +144,7 @@ namespace DreamTech_Ecommerce.DAL
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
                     HashedPassword = hashedUserPassword,
+                    Gender = new Random().Next(0, 1),
                     Salt = salt
                 },
                 new User
@@ -154,6 +157,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-789-0123",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -167,6 +171,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-234-5678",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -180,6 +185,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-678-9012",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -193,6 +199,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-345-6789",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -206,6 +213,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-987-6543",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -219,6 +227,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-567-8901",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 },
@@ -232,6 +241,7 @@ namespace DreamTech_Ecommerce.DAL
                     Phone = "091-123-4567",
                     Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                     CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                    Gender = new Random().Next(0,1),
                     HashedPassword = hashedUserPassword,
                     Salt = salt
                 });
@@ -251,9 +261,10 @@ namespace DreamTech_Ecommerce.DAL
                         Phone = RandomGenerator.GenerateRandomPhoneNumber(),
                         Birthday = RandomGenerator.GenerateRandomDateTime(1960, 2016),
                         CreatedDate = RandomGenerator.GenerateRandomDateTime(),
+                        Gender = new Random().Next(0,1),
                         HashedPassword = hashedUserPassword,
                         Salt = salt
-                    }    
+                    }
                 );
             }
 
@@ -755,7 +766,7 @@ namespace DreamTech_Ecommerce.DAL
             );
 
             // Seed orders
-            modelBuilder.Entity<Order>().HasData(
+            /*modelBuilder.Entity<Order>().HasData(
                 new Order { 
                     Id = 1, 
                     OrderStatus = OrderStatus.Completed, 
@@ -862,7 +873,23 @@ namespace DreamTech_Ecommerce.DAL
                         OrderId = i,
                         ProductId = productList[rn.Next(productList.Length)].Id
                     });
-            }
+            }*/
+            List<Order> orders = RandomGenerator.GenerateRandomOrders(productList, 100);
+
+            List<OrderItem> orderItems = orders
+                .SelectMany(order => order.OrderDetails.Select(orderDetail => new OrderItem
+                {
+                    Id = orderDetail.Id,
+                    Qty = orderDetail.Qty,
+                    ProductId = orderDetail.ProductId,
+                    OrderId = orderDetail.OrderId
+                }))
+                .ToList();
+
+            orders.ForEach(order => order.OrderDetails.Clear());
+
+            modelBuilder.Entity<OrderItem>().HasData(orderItems);
+            modelBuilder.Entity<Order>().HasData(orders);
 
             base.OnModelCreating(modelBuilder);
         }
