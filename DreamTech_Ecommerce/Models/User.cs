@@ -18,6 +18,8 @@ namespace DreamTech_Ecommerce.Models
         public string Email { get; set; }
         public string Phone { get; set; }
         public string HashedPassword { get; set; }
+        public DateTime? Birthday { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         [Required]
         [MaxLength(16)]

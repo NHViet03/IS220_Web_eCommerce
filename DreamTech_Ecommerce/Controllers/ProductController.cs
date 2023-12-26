@@ -24,11 +24,42 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Index()
+        public IActionResult Index([FromQuery] string? category = null, [FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1)
         {
-            var products = _context.Products
+            const int pageSize = 10;
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var query = _context.Products
                 .Include(e => e.ProductImages)
+                .Include(e => e.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.CategoryId == category);
+            }
+
+            if (priceFrom > 0)
+            {
+                query = query.Where(p => p.SalePrice >= priceFrom);
+            }
+
+            if (priceTo > 0)
+            {
+                query = query.Where(p => p.SalePrice <= priceTo);
+            }
+
+            int skipCount = (page - 1) * pageSize;
+
+            var products = query
+                .Skip(skipCount)
+                .Take(pageSize)
                 .ToList();
+
             return Ok(products);
         }
 
@@ -48,12 +79,24 @@ namespace DreamTech_Ecommerce.Controllers
         {
             try
             {
-                if (model.Image == null || model.Image.Length == 0)
+                if (model.Images == null || model.Images.Count == 0)
                 {
-                    return BadRequest("Image is required.");
+                    return BadRequest("At least one image is required.");
                 }
 
-                var imagePath = SaveImageToServer(model.Image);
+                var productImages = new List<ProductImage>();
+
+                foreach (var image in model.Images)
+                {
+                    if (image.Length == 0)
+                    {
+                        return BadRequest("Image file is empty.");
+                    }
+
+                    var imagePath = SaveImageToServer(image);
+                    var productImage = new ProductImage { ImageUrl = imagePath };
+                    productImages.Add(productImage);
+                }
 
                 var newProduct = new Product
                 {
@@ -76,23 +119,25 @@ namespace DreamTech_Ecommerce.Controllers
                     CategoryId = model.CategoryId
                 };
 
-                var newProductImage = new ProductImage
+                foreach (var image in productImages)
                 {
-                    ImageUrl = imagePath,
-                    ProductId = newProduct.Id
-                };
-                
+                    newProduct.ProductImages.Add(image);
+                }
+
                 if (model.CategoryId != null)
                 {
                     var category = _context.Categories.Find(model.CategoryId);
-                    category.Products.Add(newProduct);
+
+                    if (category != null)
+                    {
+                        category.Products.Add(newProduct);
+                    }
                 }
 
-                newProduct.ProductImages.Add(newProductImage);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
 
-                return Ok();
+                return Ok(newProduct);
             }
             catch (Exception ex)
             {
@@ -118,7 +163,7 @@ namespace DreamTech_Ecommerce.Controllers
                 image.CopyTo(fileStream);
             }
 
-            return "/wwwroot/images/" + fileName;
+            return "http://localhost:5031/images/" + fileName;
         }
 
 
@@ -159,6 +204,6 @@ namespace DreamTech_Ecommerce.Controllers
         public String? Battery { get; set; }
         public int QtyInStock { get; set; }
         public string? CategoryId { get; set; }
-        public IFormFile Image { get; set; }
+        public List<IFormFile> Images { get; set; }
     }
 }
