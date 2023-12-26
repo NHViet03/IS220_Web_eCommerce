@@ -65,8 +65,13 @@
     border-top: 1px solid var(--primary-color);
 }
 
-.step.completed {
+.step.completed,
+.text-custom-primary {
     color: var(--primary-color);
+}
+
+.bg-custom-primary {
+    background-color: var(--primary-color);
 }
 
 .icon {
@@ -107,7 +112,7 @@
     object-fit: contain;
     transform: translate(-50%, -50%);
 }
-.cart-wrapper .left .item-remove .remove a {
+.cart-wrapper .left .item-remove .remove button {
     display: flex;
     color: #6D6E72;
     align-items: center;

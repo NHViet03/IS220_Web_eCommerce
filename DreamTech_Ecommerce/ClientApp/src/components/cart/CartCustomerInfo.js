@@ -1,10 +1,8 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 
-function CartCustomerInfo() {
-	const [inputName, setInputName] = useState('');
-	const [inputPhone, setInputPhone] = useState('');
-	const [inputEmail, setInputEmail] = useState('');
-	const [inputNote, setInputNote] = useState('');
+function CartCustomerInfo({
+	inputEmail, inputName, inputPhone, inputNote, setInputEmail, setInputName, setInputPhone, setInputNote
+}) {
 
     return (
 		<div className="form-edit mx-2">
@@ -14,7 +12,7 @@ function CartCustomerInfo() {
 					<h2 className="font-semibold">Thông tin khách mua hàng</h2>
 				</div>
 				<div className="cart-detail text-sm">
-					<div className="checkbox-cart checkbox-gender flex my-2">
+					<div className="checkbox-cart checkbox-gender flex mt-2 mb-3">
 						<div className="checkbox-item flex items-center me-3">
 							<input type="radio" id="men" name="gender" value="Anh" checked/>
 							<label for="men" className="ms-1">Anh</label>
@@ -47,12 +45,11 @@ function CartCustomerInfo() {
 									name="editcustomer[phone]"
 									id="editcustomer-phone"
 									type="text"
-									className="form-data form-control form__field form__field--text"
 									placeholder=""
 									minlength="10"
 									maxlength="12"
+									value={inputPhone}
 									className={`form-data form-control form__field form__field--text ${inputPhone.trim() !== '' ? 'is-filled' : ''}`}
-									placeholder=""
 									onChange={event => setInputPhone(event.target.value)}
 								/>
 								<label for="editcustomer-phone" className="form__floating-label">Nhập số điện thoại</label>
@@ -65,8 +62,7 @@ function CartCustomerInfo() {
 									name="editcustomer[email]"
 									id="editcustomer-email"
 									type="email"
-									className="form-data form-control form__field form__field--text is-filled"
-									placeholder=""
+									value={inputEmail}
 									className={`form-data form-control form__field form__field--text ${inputEmail.trim() !== '' ? 'is-filled' : ''}`}
 									placeholder=""
 									onChange={event => setInputEmail(event.target.value)}
@@ -83,9 +79,9 @@ function CartCustomerInfo() {
 					<h2 className="font-semibold">Chọn cách nhận hàng</h2>
 				</div>
 				<div className="cart-detail">
-					<div className="checkbox-cart checkbox-shipmethod my-2 text-sm">
+					<div className="checkbox-cart checkbox-shipmethod mb-3 mt-2 text-sm">
 						<div className="checkbox-item flex item-center">
-							<input type="radio" id="cod-method" name="method" value="Giao hàng tận nơi" checked=""/>
+							<input type="radio" id="cod-method" name="method" value="Giao hàng tận nơi" checked/>
 							<label className="ms-1" for="cod-method">Giao hàng tận nơi</label>
 							<br/>
 						</div>
@@ -170,7 +166,7 @@ function CartCustomerInfo() {
 								<input type="hidden" name="attributes[order_vat_invoice]" id="re-checkbox-bill" value=""/>
 								<input type="checkbox" id="checkbox-bill" value="" name="regular-checkbox" class="regular-checkbox"/>
 								<label for="checkbox-bill" class="box"></label>
-								<label className="ms-1" for="checkbox-bill" class="title">Xuất hoá đơn cho đơn hàng</label>
+								<label className="ms-2" for="checkbox-bill" class="title">Xuất hoá đơn cho đơn hàng</label>
 							</div>
 							<div class="bill-field d-none">
 								<div class="form-group inputs-bill has-bg no-mrg d-flex flex-wrap">
