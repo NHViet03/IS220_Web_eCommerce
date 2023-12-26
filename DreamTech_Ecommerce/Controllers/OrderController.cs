@@ -29,7 +29,8 @@ namespace DreamTech_Ecommerce.Controllers
                 page = 1;
             }
 
-            var query = _context.Orders.AsQueryable();
+            var query = _context.Orders
+                .AsQueryable();
 
             if (status.HasValue)
             {
@@ -49,6 +50,9 @@ namespace DreamTech_Ecommerce.Controllers
             int skipCount = (page - 1) * pageSize;
 
             var orders = query
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                        .ThenInclude(pro => pro.ProductImages)
                 .Skip(skipCount)
                 .Take(pageSize)
                 .ToList();
@@ -64,6 +68,8 @@ namespace DreamTech_Ecommerce.Controllers
                 .Include(o => o.User)
                 .Include(o => o.Discount)
                 .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                        .ThenInclude(pro => pro.ProductImages)
                 .Include(o => o.Payments)
                 .FirstOrDefault(o => o.Id == orderId);
 

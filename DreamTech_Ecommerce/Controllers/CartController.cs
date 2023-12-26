@@ -3,6 +3,7 @@ using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -32,16 +33,25 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetByUser")]
-        public IActionResult GetCartsByUser()
+        [HttpGet("GetByUser/{userId}")]
+        public IActionResult GetCartsByUser(int userId)
         { 
             try
             {
                 var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+                var roleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultRoleClaimType);
 
-                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
                 {
                     return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                // Check if the user is an admin
+                bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
+
+                if (!isAdmin && tokenUserId != userId)
+                {
+                    return Forbid("You don't have permission to access this resource");
                 }
 
                 var carts = _context.CartItems
@@ -68,6 +78,22 @@ namespace DreamTech_Ecommerce.Controllers
                 if (cartItem == null)
                 {
                     return NotFound("CartItem not found");
+                }
+
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+                var roleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultRoleClaimType);
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
+                {
+                    return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                // Check if the user is an admin
+                bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
+
+                if (!isAdmin && tokenUserId != cartItem.UserId)
+                {
+                    return Forbid("You don't have permission to access this resource");
                 }
 
                 cartItem.Qty = qty;

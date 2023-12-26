@@ -1,5 +1,4 @@
 ﻿using DreamTech_Ecommerce.Models;
-using System;
 using System.Globalization;
 using System.Text;
 
@@ -17,7 +16,7 @@ namespace DreamTech_Ecommerce.Utils
         }
 
         // Generate a random datetime from min and max range
-        public static DateTime GenerateRandomDateTime(int fromYear = 2019, int toYear = 2023)
+        public static DateTime GenerateRandomDateTime(int fromYear = 2017, int toYear = 2023)
         {
             DateTime minDateTime = new DateTime(2019, 12, 23);
             DateTime maxDateTime = new DateTime(2023, 12, 23, 23, 59, 59);
@@ -126,6 +125,49 @@ namespace DreamTech_Ecommerce.Utils
             string phoneNumber = $"{prefixes[random.Next(prefixes.Length)]}-{random.Next(100, 999)}-{random.Next(1000, 9999)}";
 
             return phoneNumber;
+        }
+
+        public static List<Order> GenerateRandomOrders(Product[] productList, int numberOfOrders)
+        {
+            List<Order> orders = new List<Order>();
+
+            int orderItemId = 1;
+
+            for (int i = 0; i < numberOfOrders; i++)
+            {
+                Order order = new Order
+                {
+                    Id = i + 1,
+                    OrderStatus = GenerateRandomOrderStatus(),
+                    OrderDate = GenerateRandomDateTime(), 
+                    TotalAmount = 0,
+                    ShippingAddress = GenerateRandomVietnameseAddress(),
+                    UserId = random.Next(1, 50)
+                };
+
+                int numberOfItems = random.Next(1, 3);
+                for (int j = 0; j < numberOfItems; j++)
+                {
+                    Product randomProduct = productList[random.Next(productList.Length)];
+                    int quantity = random.Next(1, 5);
+
+                    OrderItem orderItem = new OrderItem
+                    {
+                        Id = orderItemId,
+                        Qty = quantity,
+                        ProductId = randomProduct.Id,
+                        OrderId = order.Id
+                    };
+
+                    orderItemId++;
+                    order.TotalAmount += quantity * randomProduct.Price;
+                    order.OrderDetails.Add(orderItem);
+                }
+
+                orders.Add(order);
+            }
+
+            return orders;
         }
     }
 }
