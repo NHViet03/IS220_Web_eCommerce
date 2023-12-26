@@ -104,14 +104,14 @@ namespace DreamTech_Ecommerce.DAL
 
             // Seed Users
             var salt = PasswordHasher.GenerateSalt();
-            var hashedPassword = PasswordHasher.HashPassword("adminvip123", salt);
+            var hashedPassword = PasswordHasher.HashPassword("test@1234", salt);
             var hashedUserPassword = PasswordHasher.HashPassword("test@1234", salt);
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = 1,
                     FirstName = "Admin",
-                    LastName = "User",
+                    LastName = "Account",
                     Role = Role.Admin,
                     Email = "admin@test.com",
                     Phone = "123-456-7890",

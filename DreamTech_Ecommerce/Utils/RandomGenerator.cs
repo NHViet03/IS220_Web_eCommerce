@@ -1,5 +1,7 @@
 ﻿using DreamTech_Ecommerce.Models;
 using System;
+using System.Globalization;
+using System.Text;
 
 namespace DreamTech_Ecommerce.Utils
 {
@@ -95,7 +97,27 @@ namespace DreamTech_Ecommerce.Utils
             string[] domains = { "gmail.com", "yahoo.com", "outlook.com", "example.com" };
             string domain = domains[random.Next(domains.Length)];
 
-            return $"{firstName.ToLower()}.{lastName.ToLower()}@{domain}";
+            string normalizedFirstName = RemoveDiacritics(firstName).ToLower().Replace(" ", "");
+            string normalizedLastName = RemoveDiacritics(lastName).ToLower().Replace(" ", "");
+
+            return $"{normalizedFirstName}.{normalizedLastName}@{domain}";
+        }
+
+        public static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
         public static string GenerateRandomPhoneNumber()
         {

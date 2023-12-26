@@ -2,6 +2,7 @@
 using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -19,11 +20,59 @@ namespace DreamTech_Ecommerce.Controllers
 
         [HttpGet("GetAllOrders")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetAllOrders()
+        public IActionResult GetAllOrders([FromQuery] OrderStatus? status = null, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, [FromQuery] int page = 1)
         {
-            var orders = _context.Orders.ToList();
+            const int pageSize = 10;
 
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var query = _context.Orders.AsQueryable();
+
+            if (status.HasValue)
+            {
+                query = query.Where(o => o.OrderStatus == status.Value);
+            }
+
+            if (dateFrom.HasValue)
+            {
+                query = query.Where(o => o.OrderDate >= dateFrom.Value.Date);
+            }
+
+            if (dateTo.HasValue)
+            {
+                query = query.Where(o => o.OrderDate <= dateTo.Value.Date);
+            }
+
+            int skipCount = (page - 1) * pageSize;
+
+            var orders = query
+                .Skip(skipCount)
+                .Take(pageSize)
+                .ToList();
+                
             return Ok(orders);
+        }
+
+        [HttpGet("GetOrderById/{orderId}")]
+        [Authorize]
+        public IActionResult GetOrderById(int orderId)
+        {
+            var order = _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Discount)
+                .Include(o => o.OrderDetails)
+                .Include(o => o.Payments)
+                .FirstOrDefault(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return NotFound("Order not found.");
+            }
+
+            return Ok(order);
         }
 
         [HttpPost("CreateOrder")]
