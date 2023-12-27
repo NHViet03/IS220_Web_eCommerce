@@ -103,6 +103,8 @@ namespace DreamTech_Ecommerce.Controllers
                 var customer = _context.Users
                     .Include(u => u.Orders)
                     .ThenInclude(o => o.OrderDetails)
+                        .ThenInclude(od => od.Product)
+                            .ThenInclude(pro => pro.ProductImages)
                     .FirstOrDefault(u => u.Id == Id);
 
                 if (customer == null)
