@@ -46,7 +46,6 @@ namespace DreamTech_Ecommerce.Controllers
                     return BadRequest("Unable to retrieve user ID from the token");
                 }
 
-                // Check if the user is an admin
                 bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
 
                 if (!isAdmin && tokenUserId != userId)
@@ -88,7 +87,6 @@ namespace DreamTech_Ecommerce.Controllers
                     return BadRequest("Unable to retrieve user ID from the token");
                 }
 
-                // Check if the user is an admin
                 bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
 
                 if (!isAdmin && tokenUserId != cartItem.UserId)
@@ -108,13 +106,25 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Customer")]
         [HttpPost("AddToCart")]
         public IActionResult AddToCart([FromBody] CartItem cart)
         {
             if (cart == null)
             {
                 return BadRequest("Invalid cart data");
+            }
+
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
+            {
+                return BadRequest("Unable to retrieve user ID from the token");
+            }
+
+            if (tokenUserId != cart.UserId)
+            {
+                return Forbid("You don't have permission to access this resource");
             }
 
             var user = _context.Users.Find(cart.UserId);
@@ -147,12 +157,30 @@ namespace DreamTech_Ecommerce.Controllers
         {
             try
             {
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+                var roleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultRoleClaimType);
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
+                {
+                    return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
                 var cart = _context.CartItems.Find(Id);
+
+                if (!isAdmin && tokenUserId != cart.UserId)
+                {
+                    return Forbid("You don't have permission to access this resource");
+                }
+
 
                 if (cart == null)
                 {
                     return NotFound("Không tìm thấy sản phẩm");
                 }
+
+                _context.CartItems.Remove(cart);
+                _context.SaveChanges();
 
                 return Ok("Ok");
             }
