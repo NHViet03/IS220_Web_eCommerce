@@ -6,35 +6,8 @@ import formatMoney from "../../utils/formatMoney";
 import OrderList from "../../components/Order/OrderList";
 import Filter from "../../components/Order/Filter";
 
-const fakeOrders = [
-  {
-    id: "HD-012",
-    quantity: 10,
-    totalAmount: 38990000,
-    orderDate: new Date(),
-    address: "Quang Trung, Hà Đông, Hà Nội",
-    userId: "user-01",
-    status: "Đã giao hàng",
-  },
-  {
-    id: "HD-013",
-    quantity: 7,
-    totalAmount: 28990000,
-    orderDate: new Date(2023, 5, 4),
-    address: "Trần Phú, Hà Đông, Hà Nội",
-    userId: "user-02",
-    status: "Đang giao hàng",
-  },
-  {
-    id: "HD-013",
-    quantity: 15,
-    totalAmount: 18990000,
-    orderDate: new Date(2023, 3, 1),
-    address: "Thủ Đức, Hồ Chí Minh",
-    userId: "user-03",
-    status: "Đã hủy đơn",
-  },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getOrders } from "../../redux/actions/orderAction";
 
 function Products() {
   const [orders, setOrders] = useState([]);
@@ -43,18 +16,30 @@ function Products() {
   const [filter, setFilter] = useState({
     sort: "default",
     status: "all",
-    date: [new Date(new Date().getFullYear(), 0, 1), new Date()],
+    date: [new Date(new Date().getFullYear()-2, 0, 1), new Date()],
   });
 
-  const pages = [1, 2, 3, 4, 5];
+  const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  const auth = useSelector((state) => state.auth);
+  const order = useSelector((state) => state.order);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    let newArr = [];
-    for (let i = 0; i < 3; i++) {
-      newArr.push(...fakeOrders);
-    }
-    setOrders(newArr);
-  }, []);
+    dispatch(
+      getOrders({
+        status: filter.status,
+        dateFrom: filter.date[0],
+        dateTo: filter.date[1],
+        page,
+        auth,
+      })
+    );
+  }, [auth, dispatch, page, filter.status, filter.date]);
+
+  useEffect(() => {
+    setOrders(order.orders);
+  }, [order.orders]);
 
   const customData = useCallback(() => {
     return orders.map((order) => ({
@@ -79,20 +64,22 @@ function Products() {
         newOrders.sort((a, b) => a.totalAmount - b.totalAmount);
         break;
       case "date_newest_to_oldest":
-        newOrders.sort((a, b) => b.orderDate - a.orderDate);
+        newOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
         break;
       case "date_oldest_to_newest":
-        newOrders.sort((a, b) => a.orderDate - b.orderDate);
+        newOrders.sort((a, b) => new Date(a.orderDate) - new Date(b.orderDate));
         break;
       default:
-        let newArr = [];
-        for (let i = 0; i < 3; i++) {
-          newArr.push(...fakeOrders);
-          newOrders = newArr;
-        }
+        newOrders = order.orders;
     }
     setOrders(newOrders);
   }, [filter.sort]);
+
+  useEffect(() => {
+    window.location.hash = `status=${filter.status}&dateFrom=${moment(
+      filter.date[0]
+    ).format("l")}&${moment(filter.date[1]).format("l")}&page=${page}`;
+  }, [page, filter.status, filter.date]);
 
   return (
     <div className="mb-3 table">
@@ -112,14 +99,14 @@ function Products() {
                 <i class="fa-solid fa-magnifying-glass" />
               </div>
               <Link
-              to={{
-                pathname: "/orders/add",
-              }}
-              className="btn btn_table btn_add"
-            >
-              <i class="fa-solid fa-plus" />
-              Tạo đơn hàng
-            </Link>
+                to={{
+                  pathname: "/orders/add",
+                }}
+                className="btn btn_table btn_add"
+              >
+                <i class="fa-solid fa-plus" />
+                Tạo đơn hàng
+              </Link>
               <ExportCSV
                 csvData={customData()}
                 filename={"danh-sach-don-hang"}
@@ -136,7 +123,8 @@ function Products() {
       </div>
       <div className="d-flex justify-content-between align-items-center ">
         <p>
-          Hiển thị {1} đến {10} trong tổng số {50} đơn hàng
+          Hiển thị {(page - 1) * 10 + 1} đến {page * 10} trong tổng số{" "}
+          {pages.length * 10} đơn hàng
         </p>
         <div className="pagination">
           <button

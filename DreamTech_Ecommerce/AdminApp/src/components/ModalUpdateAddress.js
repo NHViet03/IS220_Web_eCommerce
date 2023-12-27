@@ -10,7 +10,7 @@ const ModalUpdateAddress = ({
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const addressArr = order
-    ? order.address.split(", ")
+    ? order.shippingAddress.split(", ")
     : customer.shippingAddress.split(", ");
   const [address, setAddress] = useState({
     province: addressArr[addressArr.length - 1] || "",
@@ -47,7 +47,7 @@ const ModalUpdateAddress = ({
 
     const provinceCode = provinces.find(
       (province) => province.name === address.province
-    ).code;
+    )?.code;
 
     fetch(
       `https://cdn.jsdelivr.net/gh/thien0291/vietnam_dataset@1.0.0/data/${provinceCode}.json`
@@ -79,7 +79,7 @@ const ModalUpdateAddress = ({
     if (order) {
       setOrder({
         ...order,
-        address: addressArr.join(", "),
+        shippingAddress: addressArr.join(", "),
       });
     } else {
       setCustomer({

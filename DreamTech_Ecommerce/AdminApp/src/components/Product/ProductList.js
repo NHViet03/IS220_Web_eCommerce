@@ -74,7 +74,7 @@ const ProductList = ({ products, setModalDelete }) => {
             <td>{formatMoney(product.price)}</td>
             <td>{formatMoney(product.sale_price)}</td>
             <td>{product.QtyInStock}</td>
-            <td>{product.category}</td>
+            <td>{product.category.name}</td>
             <td colSpan="2">
               <div className="d-flex align-items-center gap-3">
                 <Link to={`/products/${product.id}`}>

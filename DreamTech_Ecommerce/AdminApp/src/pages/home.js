@@ -7,6 +7,9 @@ import BarChart from "../components/Home/BarChart";
 import LineChart from "../components/Home/LineChart";
 import Customers from "../components/Home/Customers";
 
+import { useSelector, useDispatch } from "react-redux";
+import { getTopCustomers } from "../redux/actions/homeAction";
+
 Chart.register(Tooltip, Legend);
 
 const CustomerStatistic = [
@@ -153,15 +156,27 @@ function Home() {
       },
     ],
   });
-  const [customers, setCustomers] = useState(cusData);
+  const [customers, setCustomers] = useState([]);
   const [filter, setFilter] = useState({
     interval: "7days",
   });
+
+  const auth = useSelector((state) => state.auth);
+  const home = useSelector((state) => state.home);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Fake API
     setCardsData(fakeCardData);
   }, []);
+
+  useEffect(() => {
+    dispatch(getTopCustomers(auth.token));
+  }, [auth.token, dispatch]);
+
+  useEffect(() => {
+    setCustomers(home.customers);
+  }, [home.customers]);
 
   const handleChangeInterval = (e) => {
     window.location.hash = e.target.value;

@@ -6,6 +6,7 @@ function Header({ setShowSideBar }) {
   const auth = useSelector((state) => state.auth);
   const { pathname } = useLocation();
 
+
   const path = useMemo(() => {
     const path = pathname.split("/");
     let navigate = "";
@@ -44,6 +45,8 @@ function Header({ setShowSideBar }) {
 
     return navigate;
   }, [pathname]);
+
+  if(!auth.token || pathname==='/login') return null;
 
   return (
     <div className="d-flex justify-content-between align-items-center  box_shadow header">

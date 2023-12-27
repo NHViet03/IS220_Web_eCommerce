@@ -1,40 +1,29 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Categories from "../../utils/categoryData";
 
-const fakeProduct = {
-  id: "chuot-logitech-g102-lightsync-black",
-  images: [
-    "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
-    "https://product.hstatic.net/200000722513/product/5.hinhanhsanpham1_d29de04024294f329e38332a99f2cb7c_f6f1e3c980974cd2b30dbc9e3438ae4c_1024x1024.jpg",
-    "https://product.hstatic.net/200000722513/product/6.hinhanhsanpham3_9f2fbf6b901f4a83b85737612e957030_92ddadad61b14aa3a725c3924a3f8089_1024x1024.jpg",
-    "https://product.hstatic.net/200000722513/product/14z90rs-02-1-gram-style-design-mobile_d3807c71442c4235b9da6ffdcf597d04_999d52f9503749069407961b41b8e2e7_1024x1024.jpg",
-  ],
-  name: "Laptop LG Gram Style 14Z90RS GAH54A5",
-  brand:'LG',
-  price: "38990000",
-  sale_price: "35990000",
-  description:
-    "là một chiếc PC chất lượng cao với hiệu suất khủng từ CPU thế hệ thứ 11, ổ lưu trữ khủng cho khả năng xử lý ổn định. Nếu bạn đang tìm kiếm một chiếc laptop giá rẻ dưới 10 triệu nhưng vẫn đáp ứng đầy đủ mọi nhu cầu từ học tập đến làm việc thì Asus Expert Book B1400CEAE BV3186W chính là nhân vật bạn đang tìm kiếm.",
-  categoryId: "laptop",
-  quantity: 10,
-  color:'Sliver',
-  weight:'1.86 kg',
-  size:'359 x 254 x 21.5 mm',
-};
+import { useSelector, useDispatch } from "react-redux";
+import { getDataAPI } from "../../utils/fetchData";
+import { updateProduct } from "../../redux/actions/productAction";
 
 function EditProduct() {
-  const [product, setProduct] = useState(fakeProduct);
+  const [product, setProduct] = useState({});
   const navigate = useNavigate();
+  const { id } = useParams();
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  const handleRemoveImage = (index) => {
-    const newImages = [...product.images];
-    newImages.splice(index, 1);
-    setProduct({
-      ...product,
-      images: newImages,
-    });
-  };
+  useEffect(() => {
+    const getProduct = async () => {
+      const res = await getDataAPI(`Product/GetProductById/${id}`, auth.token);
+      setProduct({
+        ...res.data,
+        images: res.data.productImages.map((img) => img.imageUrl),
+      });
+    };
+
+    getProduct();
+  }, [auth.token, id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,15 +33,17 @@ function EditProduct() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(product);
-    navigate("/products");
+    await dispatch(updateProduct({ newProduct: product, auth }));
+    navigate(-1);
   };
 
   const isActive = (index) => {
     return index === 0 ? "active" : "";
   };
+
+  if (!product.id) return null;
 
   return (
     <div className="product_edit">
@@ -102,7 +93,7 @@ function EditProduct() {
 
       <form className="mb-4" onSubmit={handleSubmit}>
         <div className="mb-4 product_add_info">
-        <div className="product_edit_info_card">
+          <div className="product_edit_info_card">
             <h6>Mã sản phẩm</h6>
             <input
               type="text"
@@ -152,11 +143,11 @@ function EditProduct() {
             <h6>Giá giảm</h6>
             <input
               type="number"
-              name="sale_price"
+              name="salePrice"
               className="form-control"
               required
               placeholder="VD: 18000..."
-              value={product.sale_price}
+              value={product.salePrice}
               onChange={handleChange}
             />
           </div>
@@ -165,10 +156,10 @@ function EditProduct() {
             <input
               type="number"
               required
-              name="quantity"
+              name="qtyInStock"
               className="form-control"
               placeholder="VD: 15..."
-              value={product.quantity}
+              value={product.qtyInStock}
               onChange={handleChange}
             />
           </div>

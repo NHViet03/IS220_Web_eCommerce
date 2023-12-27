@@ -1,68 +1,53 @@
-import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import formatMoney from "../../utils/formatMoney";
 import ModalUpdateAddress from "../../components/ModalUpdateAddress";
-
 import Invoice from "../../components/Order/Invoice";
 
-const fakeOrder = {
-  id: "HD-012",
-  quantity: 10,
-  totalAmount: 47279000,
-  orderDate: new Date(),
-  address: "Quang Trung, Hà Đông, Hà Nội",
-  user: {
-    id: "KH03",
-    name: "Lê Văn An",
-    email: "An789@gmail.com",
-    phone: "0833333333",
-  },
-  status: "Đang giao hàng",
-  payment: "Thanh toán khi nhận hàng",
-  orderItems: [
-    {
-      id: "CTHD-01",
-      productId: "laptop-gaming-msi-gf63-12ucx-841vn",
-      images: [
-        "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
-      ],
-      name: "Laptop LG Gram Style 14Z90RS GAH54A5",
-      price: 38990000,
-      sale_price: 35990000,
-      quantity: 1,
-    },
-    {
-      id: "CTHD-02",
-      productId: "chuot-logitech-g102-lightsync-black",
-      images: [
-        "https://product.hstatic.net/200000722513/product/thumbchuot_a405fadb92a34c429c3eed4d11a84fb5_medium.jpg",
-      ],
-      name: "Chuột Logitech G102 LightSync Black",
-      price: 599000,
-      sale_price: 399000,
-      quantity: 1,
-    },
-    {
-      id: "CTHD-03",
-      productId: "pc-gvn-intel-i3-12100f-vga-gtx-1650",
-      images: [
-        "https://product.hstatic.net/200000722513/product/5000d_white_aero_61797e20d29a47ff9f7589071a5099da_medium.png",
-      ],
-      name: "PC GVN Intel i3-12100F/ VGA GTX 1650",
-      price: 11590000,
-      sale_price: 10890000,
-      quantity: 1,
-    },
-  ],
-  notes: "Không có ghi chú",
-};
+import { useSelector, useDispatch } from "react-redux";
+import { getDataAPI } from "../../utils/fetchData";
 
 function OrderDetail() {
-  const [order, setOrder] = useState(fakeOrder);
+  const [order, setOrder] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [exportPDF, setExportPDF] = useState(false);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getOrderData = async () => {
+      const res = await getDataAPI(`Order/GetOrderById/${id}`, auth.token);
+      const order = {
+        ...res.data,
+        orderDetails: res.data.orderDetails.map((item) => ({
+          id: item.id,
+          productId: item.product.productId,
+          images: [item.product.productImages[0].imageUrl],
+          name: item.product.name,
+          price: item.product.price,
+          sale_price: item.product.salePrice,
+          quantity: item.qty,
+        })),
+        user: {
+          id: res.data.user.id,
+          name: res.data.user.firstName + " " + res.data.user.lastName,
+          email: res.data.user.email,
+          phone: res.data.user.phone,
+        },
+        notes: "Không có ghi chú",
+        payment: "Thanh toán khi nhận hàng",
+      };
+      console.log(order);
+
+      setOrder(order);
+    };
+
+    getOrderData();
+  }, [auth.token, id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -96,14 +81,14 @@ function OrderDetail() {
         active: true,
       },
     ];
-    switch (order.status) {
-      case "Đang giao hàng":
+    switch (order.orderStatus) {
+      case 0:
         orderCircle[4].active = false;
         break;
-      case "Đã giao hàng":
+      case 2:
         orderCircle[4].active = true;
         break;
-      case "Đã hủy đơn":
+      case 1:
         orderCircle[0].active = false;
         orderCircle[1].active = false;
         orderCircle[2].active = false;
@@ -118,7 +103,9 @@ function OrderDetail() {
         break;
     }
     return orderCircle;
-  }, [order.status]);
+  }, [order.orderStatus]);
+
+  if (!order.id) return null;
 
   return (
     <form className="mb-4 order_detail" onSubmit={handleSubmit}>
@@ -174,36 +161,32 @@ function OrderDetail() {
         <div className="box_shadow order_detail_items">
           <div className="mb-3 d-flex justify-content-between align-items-center">
             <h5 className="fw-medium">Chi tiết đơn hàng</h5>
-            {
-              (order.status === "Đang giao hàng" && (
-                <div>
-                  <button
-                    className="btn btn_normal btn_success me-3"
-                    type="button"
-                    style={{
-                      borderRadius: "4px",
-                      padding: "8px",
-                    }}
-                    onClick={() =>
-                      setOrder({ ...order, status: "Đã giao hàng" })
-                    }
-                  >
-                    Xác nhận giao hàng
-                  </button>
-                  <button
-                    className="btn btn_normal btn_accept"
-                    type="button"
-                    style={{
-                      borderRadius: "4px",
-                      padding: "8px",
-                    }}
-                    onClick={() => setOrder({ ...order, status: "Đã hủy đơn" })}
-                  >
-                    Huỷ đơn hàng
-                  </button>
-                </div>
-              ))
-            }
+            {order.orderStatus === 0 && (
+              <div>
+                <button
+                  className="btn btn_normal btn_success me-3"
+                  type="button"
+                  style={{
+                    borderRadius: "4px",
+                    padding: "8px",
+                  }}
+                  onClick={() => setOrder({ ...order, orderStatus: "Đã giao hàng" })}
+                >
+                  Xác nhận giao hàng
+                </button>
+                <button
+                  className="btn btn_normal btn_accept"
+                  type="button"
+                  style={{
+                    borderRadius: "4px",
+                    padding: "8px",
+                  }}
+                  onClick={() => setOrder({ ...order, orderStatus: "Đã hủy đơn" })}
+                >
+                  Huỷ đơn hàng
+                </button>
+              </div>
+            )}
           </div>
           <div className="my-5 d-flex items-center justify-content-center">
             {orderCircle.map((item, index) => (
@@ -235,14 +218,18 @@ function OrderDetail() {
                 <p className="mb-2">Trạng thái</p>
                 <div
                   className={`order_state ${
-                    order.status === "Đang giao hàng"
+                    order.orderStatus === 0
                       ? "shipping"
-                      : order.status === "Đã giao hàng"
+                      : order.status === 2
                       ? "success"
                       : "cancel"
                   }`}
                 >
-                  {order.status}
+                  { order.orderStatus === 0
+                      ? "Đang giao hàng"
+                      : order.status === 2
+                      ? "Đã giao hàng"
+                      : "Đã hủy đơn"}
                 </div>
               </div>
               <div>
@@ -257,7 +244,7 @@ function OrderDetail() {
               borderBottom: "1px solid var(--border-color)",
             }}
           >
-            {order.orderItems.map((item) => (
+            {order.orderDetails.map((item) => (
               <div key={item.id} className="mb-4 order_detail_item">
                 <img src={item.images[0]} alt="Product" />
                 <div className="flex-fill mx-3">
@@ -369,7 +356,7 @@ function OrderDetail() {
           </div>
           <div className="mb-4">
             <h6 className="mb-3 fw-medium">Địa chỉ giao hàng</h6>
-            {order.address.split(",").map((item, index) => (
+            {order.shippingAddress.split(",").map((item, index) => (
               <p key={index} className="mt-0 mb-2">
                 {item}
               </p>
@@ -404,11 +391,13 @@ function OrderDetail() {
         />
       )}
 
-      <Invoice
-        exportPDF={exportPDF}
-        setExportPDF={setExportPDF}
-        order={order}
-      />
+      {order.user && (
+        <Invoice
+          exportPDF={exportPDF}
+          setExportPDF={setExportPDF}
+          order={order}
+        />
+      )}
     </form>
   );
 }

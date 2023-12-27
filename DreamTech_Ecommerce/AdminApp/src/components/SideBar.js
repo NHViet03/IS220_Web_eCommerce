@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../images/logo.png";
+import {useSelector} from 'react-redux';
 
 function SideBar({ showSideBar }) {
   const [active, setActive] = useState(0);
@@ -22,11 +23,6 @@ function SideBar({ showSideBar }) {
         link: "/orders",
       },
       {
-        title: "Đang giao",
-        icon: "fa-solid fa-truck-fast",
-        link: "/shipping",
-      },
-      {
         title: "Khách hàng",
         icon: "fa-solid fa-users",
         link: "/customers",
@@ -41,10 +37,13 @@ function SideBar({ showSideBar }) {
   );
 
   const { pathname } = useLocation();
+  const auth=useSelector(state=>state.auth);
 
   const resetActive = () => {
     setActive(-1);
   };
+
+  if(!auth.token || pathname==='/login') return null;
 
   return (
     <div className={`side_bar ${showSideBar ? "active" : ""}`}>

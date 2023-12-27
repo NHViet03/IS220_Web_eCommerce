@@ -5,20 +5,20 @@ const Filter = ({filter,setFilter}) => {
     const revenueFilterData = useMemo(
         () => [
           {
-            title: "Dưới 10 triệu",
-            value: [0, 10000000],
+            title: "Dưới 100 triệu",
+            value: [0, 100000000],
           },
           {
-            title: "Từ 10 - 20 triệu",
-            value: [10000000, 20000000],
+            title: "Từ 100 - 200 triệu",
+            value: [100000000, 200000000],
           },
           {
-            title: "Từ 20 - 50 triệu",
-            value: [20000000, 50000000],
+            title: "Từ 200 - 500 triệu",
+            value: [200000000, 500000000],
           },
           {
-            title: "Trên 50 triệu",
-            value: [50000000, 500000000],
+            title: "Trên 500 triệu",
+            value: [500000000, 1000000000],
           },
         ],
         []

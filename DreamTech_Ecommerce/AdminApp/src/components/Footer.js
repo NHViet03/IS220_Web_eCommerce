@@ -1,6 +1,11 @@
 import React from "react";
+import {useSelector} from 'react-redux';
 
 function Footer() {
+
+  const auth=useSelector(state=>state.auth);
+  if(!auth.token) return null;
+
   return (
     <div className="d-flex justify-content-between">
       <p className="mb-0">

@@ -24,7 +24,7 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Index([FromQuery] string? category = null, [FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1)
+        public IActionResult Index([FromQuery] string? category = null, [FromQuery] string? search = null,[FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1)
         {
             const int pageSize = 10;
 
@@ -38,9 +38,15 @@ namespace DreamTech_Ecommerce.Controllers
                 .Include(e => e.Category)
                 .AsQueryable();
 
+
             if (!string.IsNullOrEmpty(category))
             {
                 query = query.Where(p => p.CategoryId == category);
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.Name.Contains(search));
             }
 
             if (priceFrom > 0)

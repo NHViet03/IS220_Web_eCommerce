@@ -19,33 +19,53 @@ namespace DreamTech_Ecommerce.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("GetAllUsers")]
-        public IActionResult GetAllUsers([FromQuery] int? id = null, [FromQuery] string? name = null, [FromQuery] string? phone = null, [FromQuery] string? email = null)
+        public IActionResult GetAllUsers([FromQuery] string? name = null, [FromQuery] int? totalFrom = null, [FromQuery] int? totalTo = null,[FromQuery] int page = 1)
         {
             try
             {
-                var query = _context.Users.AsQueryable();
+                var query = _context.Users
+                    .Where(u => u.Role == Role.Customer)
+                    .Select(user => new
+                    {
+                        user.Id,
+                        Name =user.FirstName+" "+ user.LastName,
+                        user.Email,
+                        user.Phone,
+                        Total = _context.Orders
+                        .Where(o => o.UserId == user.Id && o.OrderStatus == OrderStatus.Completed)
+                        .Sum(o => (int?)o.TotalAmount) ?? 0
+                    });
 
-                if (id.HasValue)
+                const int pageSize = 10;
+
+                if (page < 1)
                 {
-                    query = query.Where(u => u.Id == id.Value);
+                    page = 1;
                 }
+
+               
 
                 if (!string.IsNullOrEmpty(name))
                 {
-                    query = query.Where(u => u.FirstName.Contains(name) || u.LastName.Contains(name));
+                    query = query.Where(u => u.Name.Contains(name));
                 }
 
-                if (!string.IsNullOrEmpty(phone))
+                if (totalFrom >= 0)
                 {
-                    query = query.Where(u => u.Phone == phone);
+                    query = query.Where(p => p.Total >= totalFrom);
                 }
 
-                if (!string.IsNullOrEmpty(email))
+                if (totalTo > 0)
                 {
-                    query = query.Where(u => u.Email == email);
+                    query = query.Where(p => p.Total <= totalTo);
                 }
 
-                var users = query.ToList();
+                int skipCount = (page - 1) * pageSize;
+
+                var users = query
+                            .Skip(skipCount)
+                            .Take(pageSize)
+                            .ToList();
 
                 return Ok(users);
             }

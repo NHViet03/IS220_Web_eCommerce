@@ -87,7 +87,7 @@ const Invoice = ({ exportPDF, setExportPDF, order }) => {
           >
             {order.user.name}
           </p>
-          {order.address.split(",").map((item, index) => (
+          {order.shippingAddress.split(",").map((item, index) => (
             <p key={index} className="my-0">
               {item}
             </p>
@@ -152,7 +152,7 @@ const Invoice = ({ exportPDF, setExportPDF, order }) => {
           </tr>
         </thead>
         <tbody>
-          {order.orderItems.map((item, index) => (
+          {order.orderDetails.map((item, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{item.productId}</td>

@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Categories from "../../utils/categoryData";
+import { nanoid } from "nanoid";
+import { useSelector, useDispatch } from "react-redux";
+import { createProduct } from "../../redux/actions/productAction";
 
 function AddProduct() {
   const [product, setProduct] = useState({
-    name: "",
-    brand: "",
-    price: "",
-    sale_price: "",
-    description: "",
-    images: [],
-    categoryId: "",
-    color: "",
-    weight: "",
-    size: "",
-    quantity: "",
+    Name: "",
+    Brand: "",
+    Price: "",
+    SalePrice: "",
+    Description: "",
+    Images: [],
+    CategoryId: "",
+    Color: "",
+    Weight: "",
+    Size: "",
+    QtyInStock: 0,
   });
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handlePickImages = (e) => {
     const files = [...e.target.files];
@@ -28,16 +33,16 @@ function AddProduct() {
 
     setProduct({
       ...product,
-      images: [...product.images, ...newImages],
+      Images: [...product.Images, ...newImages],
     });
   };
 
   const handleRemoveImage = (index) => {
-    const newImages = [...product.images];
+    const newImages = [...product.Images];
     newImages.splice(index, 1);
     setProduct({
       ...product,
-      images: newImages,
+      Images: newImages,
     });
   };
 
@@ -49,10 +54,23 @@ function AddProduct() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(product);
-    navigate("/products");
+    const Id = product.Name.toLowerCase().replace(/\s/g, "-") + "-" + nanoid(3);
+
+    const productData = new FormData();
+    productData.append("Id", Id);
+
+    for (const key in product) {
+      if (key === "Images") {
+        for (const img of product[key]) {
+          productData.append("Images", img);
+        }
+      } else productData.append(key, product[key]);
+    }
+
+    await dispatch(createProduct({ product: productData, auth }));
+    navigate(-1);
   };
 
   return (
@@ -76,11 +94,11 @@ function AddProduct() {
       <div className="mb-4 product_add_upload">
         <h6>Hình ảnh đã tải lên</h6>
         <div>
-          {product.images.map((img, index) => (
+          {product.Images.map((img, index) => (
             <div className="mb-2 d-flex align-items-center justify-content-between gap-3  product_add_card">
               <img src={URL.createObjectURL(img)} alt="product" />
               <div className="flex-fill">
-                <p className="mb-1">{img.name}</p>
+                <p className="mb-1">{img.name.slice(0, 50)}</p>
                 <small className="mb-0">
                   {(img.size / 1024 / 1024).toFixed(2)} MB
                 </small>
@@ -99,11 +117,11 @@ function AddProduct() {
             <h6>Tên sản phẩm</h6>
             <input
               type="text"
-              name="name"
+              name="Name"
               className="form-control"
               placeholder="VD: Laptop..."
               required
-              value={product.name}
+              value={product.Name}
               onChange={handleChange}
             />
           </div>
@@ -111,11 +129,11 @@ function AddProduct() {
             <h6>Thương hiệu</h6>
             <input
               type="text"
-              name="brand"
+              name="Brand"
               className="form-control"
               required
               placeholder="VD: Dell..."
-              value={product.brand}
+              value={product.Brand}
               onChange={handleChange}
             />
           </div>
@@ -123,11 +141,11 @@ function AddProduct() {
             <h6>Giá gốc</h6>
             <input
               type="number"
-              name="price"
+              name="Price"
               className="form-control"
               required
               placeholder="VD: 19000..."
-              value={product.price}
+              value={product.Price}
               onChange={handleChange}
             />
           </div>
@@ -135,11 +153,11 @@ function AddProduct() {
             <h6>Giá giảm</h6>
             <input
               type="number"
-              name="sale_price"
+              name="SalePrice"
               className="form-control"
               required
               placeholder="VD: 18000..."
-              value={product.sales_price}
+              value={product.SalePrice}
               onChange={handleChange}
             />
           </div>
@@ -147,11 +165,10 @@ function AddProduct() {
             <h6>Số lượng</h6>
             <input
               type="number"
-              required
-              name="quantity"
+              name="QtyInStock"
               className="form-control"
               placeholder="VD: 15..."
-              value={product.quantity}
+              value={product.QtyInStock}
               onChange={handleChange}
             />
           </div>
@@ -160,11 +177,10 @@ function AddProduct() {
             <h6>Màu sắc</h6>
             <input
               type="text"
-              required
-              name="color"
+              name="Color"
               className="form-control"
               placeholder="VD: Silver..."
-              value={product.color}
+              value={product.Color}
               onChange={handleChange}
             />
           </div>
@@ -172,11 +188,10 @@ function AddProduct() {
             <h6>Kích thước</h6>
             <input
               type="text"
-              required
-              name="size"
+              name="Size"
               className="form-control"
               placeholder="VD: 359 x 254 x 21.5 mm..."
-              value={product.size}
+              value={product.Size}
               onChange={handleChange}
             />
           </div>
@@ -184,11 +199,10 @@ function AddProduct() {
             <h6>Trọng lượng</h6>
             <input
               type="text"
-              required
-              name="weight"
+              name="Weight"
               className="form-control"
               placeholder="VD: 359 x 254 x 21.5 mm..."
-              value={product.weight}
+              value={product.Weight}
               onChange={handleChange}
             />
           </div>
@@ -201,9 +215,9 @@ function AddProduct() {
             <h6>Danh mục</h6>
             <select
               class="form-select"
-              name="categoryId"
+              name="CategoryId"
               required
-              value={product.categoryId}
+              value={product.CategoryId}
               onChange={handleChange}
             >
               {Categories.map((category) => (
@@ -217,12 +231,12 @@ function AddProduct() {
             <h6>Mô tả</h6>
             <textarea
               className="form-control"
-              name="description"
+              name="Description"
               placeholder="VD: Mô tả..."
               style={{
                 minHeight: "120px",
               }}
-              value={product.description}
+              value={product.Description}
               onChange={handleChange}
             />
           </div>
@@ -231,10 +245,7 @@ function AddProduct() {
           <button className="btn btn_normal btn_accept " type="submit">
             Thêm
           </button>
-          <button
-            className="btn btn_normal"
-            onClick={() => navigate("/products")}
-          >
+          <button className="btn btn_normal" onClick={handleSubmit}>
             Hủy
           </button>
         </div>

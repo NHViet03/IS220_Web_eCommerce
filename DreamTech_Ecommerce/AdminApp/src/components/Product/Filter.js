@@ -26,17 +26,10 @@ function Filter({ filter, setFilter }) {
   );
 
   const handleChangeCategory = (id) => {
-    if (filter.category.includes(id)) {
-      setFilter({
-        ...filter,
-        category: filter.category.filter((item) => item !== id),
-      });
-    } else {
-      setFilter({
-        ...filter,
-        category: [...filter.category, id],
-      });
-    }
+    setFilter({
+      ...filter,
+      category: id,
+    });
   };
   return (
     <>
@@ -56,7 +49,7 @@ function Filter({ filter, setFilter }) {
                 <div
                   key={category.id}
                   className={`form-check mb-2 ${
-                    filter.category.includes(category.id) && "active"
+                    filter.category===category.id && "active"
                   }`}
                   onClick={() => handleChangeCategory(category.id)}
                 >
@@ -65,7 +58,7 @@ function Filter({ filter, setFilter }) {
                     type="checkbox"
                     value={category.id}
                     id={category.id}
-                    checked={filter.category.includes(category.id)}
+                    checked={filter.category===category.id}
                   />
                   <label className="form-check-label" htmlFor={category.id}>
                     {category.title}

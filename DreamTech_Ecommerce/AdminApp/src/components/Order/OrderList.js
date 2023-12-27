@@ -8,17 +8,20 @@ const OrderList = ({ orders, orderSmall }) => {
     return (
       <span
         className={`order_state ${
-          status === "Đã giao hàng"
-            ? "success"
-            : status === "Đang giao hàng"
-            ? "shipping"
-            : "cancel"
+          status === 2 ? "success" : status === 0 ? "shipping" : "cancel"
         }`}
       >
-        <span className="me-1"> {status}</span>
-        {status === "Đã giao hàng" ? (
+        <span className="me-1">
+          {" "}
+          {status === 2
+            ? "Đã giao hàng"
+            : status === 0
+            ? "Đang giao hàng"
+            : "Đã hủy đơn"}
+        </span>
+        {status === 2 ? (
           <i className="fa-solid fa-circle-check" />
-        ) : status === "Đang giao hàng" ? (
+        ) : status === 0 ? (
           <i className="fa-solid fa-truck-fast" />
         ) : (
           <i className="fa-solid fa-ban" />
@@ -70,18 +73,18 @@ const OrderList = ({ orders, orderSmall }) => {
             <td>
               {order.id.length > 10 ? order.id.slice(0, 10) + "..." : order.id}
             </td>
-            <td>{order.quantity}</td>
+            {!orderSmall && <td>{order.orderDetails.length}</td>}
             <td>{formatMoney(order.totalAmount)}</td>
             <td>{moment(order.orderDate).format("L")}</td>
             {!orderSmall && (
               <td>
-                {order.address.length > 20
-                  ? order.address.slice(0, 20) + "..."
-                  : order.address}
+                {order.shippingAddress.length > 20
+                  ? order.shippingAddress.slice(0, 20) + "..."
+                  : order.shippingAddress}
               </td>
             )}
             {!orderSmall && <td>{order.userId}</td>}
-            <td>{renderOrderState(order.status)}</td>
+            <td>{renderOrderState(order.orderStatus)}</td>
             <td colSpan="1">
               <div className="d-flex align-items-center gap-3">
                 <Link to={`/orders/${order.id}`}>

@@ -1,11 +1,17 @@
 import React from "react";
+import {useSelector,useDispatch} from 'react-redux';
+import { deleteProduct } from "../redux/actions/productAction";
 
-const ModalDeleteProduct = ({ setModalDelete }) => {
+const ModalDeleteProduct = ({ setModalDelete,id }) => {
+  const auth=useSelector(state=>state.auth);
+  const dispatch=useDispatch();
+
   const handleClose = () => {
     setModalDelete(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete =async () => {
+    await dispatch(deleteProduct({id,auth}))
     setModalDelete(false);
   };
 

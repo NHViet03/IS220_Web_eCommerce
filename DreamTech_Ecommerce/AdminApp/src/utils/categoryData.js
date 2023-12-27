@@ -1,7 +1,7 @@
 const categories = [
   {
     title: "Tất cả",
-    id: "all",
+    id: "",
   },
   {
     title: "Apple",

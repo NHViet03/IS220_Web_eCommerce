@@ -6,13 +6,13 @@ function Filter({ filter, setFilter, filterSmall }) {
     if (value === null) {
       setFilter({
         ...filter,
-        date: [new Date(new Date().getFullYear(), 0, 1), new Date()],
+        date: [new Date(new Date().getFullYear() - 2, 0, 1), new Date()],
       });
-    }
-    setFilter({
-      ...filter,
-      date: value,
-    });
+    } else
+      setFilter({
+        ...filter,
+        date: value,
+      });
   };
 
   return (
@@ -35,9 +35,9 @@ function Filter({ filter, setFilter, filterSmall }) {
             }
           >
             <option value="all">Tất cả</option>
-            <option value="success">Đã giao hàng</option>
-            <option value="shipping">Đang giao hàng</option>
-            <option value="cancel">Đã hủy đơn</option>
+            <option value={2}>Đã giao hàng</option>
+            <option value={0}>Đang giao hàng</option>
+            <option value={1}>Đã hủy đơn</option>
           </select>
         </div>
         {!filterSmall && (
