@@ -101,7 +101,7 @@ namespace DreamTech_Ecommerce.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim("Id", user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti,

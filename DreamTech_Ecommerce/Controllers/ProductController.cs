@@ -24,11 +24,42 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Index()
+        public IActionResult Index([FromQuery] string? category = null, [FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1)
         {
-            var products = _context.Products
+            const int pageSize = 10;
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            var query = _context.Products
                 .Include(e => e.ProductImages)
+                .Include(e => e.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                query = query.Where(p => p.CategoryId == category);
+            }
+
+            if (priceFrom > 0)
+            {
+                query = query.Where(p => p.SalePrice >= priceFrom);
+            }
+
+            if (priceTo > 0)
+            {
+                query = query.Where(p => p.SalePrice <= priceTo);
+            }
+
+            int skipCount = (page - 1) * pageSize;
+
+            var products = query
+                .Skip(skipCount)
+                .Take(pageSize)
                 .ToList();
+
             return Ok(products);
         }
 
@@ -48,12 +79,24 @@ namespace DreamTech_Ecommerce.Controllers
         {
             try
             {
-                if (model.Image == null || model.Image.Length == 0)
+                if (model.Images == null || model.Images.Count == 0)
                 {
-                    return BadRequest("Image is required.");
+                    return BadRequest("At least one image is required.");
                 }
 
-                var imagePath = SaveImageToServer(model.Image);
+                var productImages = new List<ProductImage>();
+
+                foreach (var image in model.Images)
+                {
+                    if (image.Length == 0)
+                    {
+                        return BadRequest("Image file is empty.");
+                    }
+
+                    var imagePath = SaveImageToServer(image);
+                    var productImage = new ProductImage { ImageUrl = imagePath };
+                    productImages.Add(productImage);
+                }
 
                 var newProduct = new Product
                 {
@@ -76,23 +119,127 @@ namespace DreamTech_Ecommerce.Controllers
                     CategoryId = model.CategoryId
                 };
 
-                var newProductImage = new ProductImage
+                foreach (var image in productImages)
                 {
-                    ImageUrl = imagePath,
-                    ProductId = newProduct.Id
-                };
-                
+                    newProduct.ProductImages.Add(image);
+                }
+
                 if (model.CategoryId != null)
                 {
                     var category = _context.Categories.Find(model.CategoryId);
-                    category.Products.Add(newProduct);
+
+                    if (category != null)
+                    {
+                        category.Products.Add(newProduct);
+                    }
                 }
 
-                newProduct.ProductImages.Add(newProductImage);
                 _context.Products.Add(newProduct);
                 _context.SaveChanges();
 
-                return Ok();
+                return Ok(newProduct);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("UnassignFromCategory")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UnassignProductFromCategory(string productId)
+        {
+            var product = _context.Products.Find(productId);
+
+            if (product == null)
+            {
+                return NotFound("Product not found");
+            }
+
+            product.Category = null;
+            _context.SaveChanges();
+
+            return Ok($"Product '{product.Name}' unassigned from any category");
+        }
+
+
+        [HttpPut("UpdateProduct")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateProduct([FromBody] ProductUpdateModel model)
+        {
+            try
+            {
+                if (model == null || string.IsNullOrEmpty(model.Id))
+                {
+                    return BadRequest("Invalid request data.");
+                }
+
+                var existingProduct = _context.Products
+                    .Include(p => p.ProductImages)
+                    .FirstOrDefault(p => p.Id == model.Id);
+
+                if (existingProduct == null)
+                {
+                    return NotFound("Product not found.");
+                }
+
+                existingProduct.Brand = model.Brand;
+                existingProduct.Name = model.Name;
+                existingProduct.Description = model.Description;
+                existingProduct.Price = model.Price;
+                existingProduct.SalePrice = model.SalePrice;
+                existingProduct.Cpu = model.Cpu;
+                existingProduct.Ram = model.Ram;
+                existingProduct.Disk = model.Disk;
+                existingProduct.Vga = model.Vga;
+                existingProduct.Screen = model.Screen;
+                existingProduct.Color = model.Color;
+                existingProduct.Size = model.Size;
+                existingProduct.Weight = model.Weight;
+                existingProduct.Battery = model.Battery;
+                existingProduct.QtyInStock = model.QtyInStock;
+                existingProduct.CategoryId = model.CategoryId;
+
+                _context.SaveChanges();
+
+                return Ok("Product updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteProduct/{productId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteProduct(string productId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(productId))
+                {
+                    return BadRequest("Invalid product ID.");
+                }
+
+                var productToDelete = _context.Products
+                    .Include(p => p.ProductImages)
+                    .FirstOrDefault(p => p.Id == productId);
+
+                if (productToDelete == null)
+                {
+                    return NotFound("Product not found.");
+                }
+
+                foreach (var image in productToDelete.ProductImages)
+                {
+                    DeleteImageFromServer(image.ImageUrl);
+                    _context.ProductImages.Remove(image);
+                }
+
+                _context.Products.Remove(productToDelete);
+                _context.SaveChanges();
+
+                return Ok("Product deleted successfully.");
             }
             catch (Exception ex)
             {
@@ -118,29 +265,29 @@ namespace DreamTech_Ecommerce.Controllers
                 image.CopyTo(fileStream);
             }
 
-            return "/wwwroot/images/" + fileName;
+            return "http://localhost:5031/images/" + fileName;
         }
 
-
-        [HttpPost("UnassignFromCategory")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult UnassignProductFromCategory(string productId)
+        private void DeleteImageFromServer(string imageUrl)
         {
-            var product = _context.Products.Find(productId);
-
-            if (product == null)
+            try
             {
-                return NotFound("Product not found");
+                var projectRootPath = Directory.GetCurrentDirectory();
+                var imagePath = Path.Combine(projectRootPath, "wwwroot", imageUrl.TrimStart('/'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
             }
-
-            product.Category = null;
-            _context.SaveChanges();
-
-            return Ok($"Product '{product.Name}' unassigned from any category");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting image: {ex.Message}");
+            }
         }
     }
 
-    public class ProductViewModel
+    public class ProductUpdateModel
     {
         public string Id { get; set; }
         public string? Brand { get; set; }
@@ -159,6 +306,10 @@ namespace DreamTech_Ecommerce.Controllers
         public String? Battery { get; set; }
         public int QtyInStock { get; set; }
         public string? CategoryId { get; set; }
-        public IFormFile Image { get; set; }
+    }
+    public class ProductViewModel : ProductUpdateModel
+    {
+
+        public List<IFormFile> Images { get; set; }
     }
 }

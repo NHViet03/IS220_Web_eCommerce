@@ -27,3 +27,47 @@ export const deleteDataAPI=async(url,post)=>{
     const res=await axios.delete(`${target}/${url}`,post)
     return res;
 }
+
+export const getDataAPIWithAuth = async (url, token) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
+
+    const res = await axios.get(`${target}/${url}`, { headers });
+
+    return res;
+}
+
+export const postDataAPIWithAuth = async (url, data, token) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
+
+    const res = await axios.post(`${target}/${url}`, data, { headers });
+
+    return res;
+}
+
+export const putDataAPIWithAuth = async (url, data, token) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
+
+    const res = await axios.put(`${target}/${url}`, data, { headers });
+
+    return res;
+}
+
+export const deleteDataAPIWithAuth = async (url, data, token) => {
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
+
+    const res = await axios.delete(`${target}/${url}`, data, { headers });
+
+    return res;
+}

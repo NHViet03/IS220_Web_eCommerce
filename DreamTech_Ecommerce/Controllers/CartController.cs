@@ -3,6 +3,7 @@ using DreamTech_Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DreamTech_Ecommerce.Controllers
 {
@@ -31,21 +32,83 @@ namespace DreamTech_Ecommerce.Controllers
             return Ok(allCarts);
         }
 
-        [HttpPost("GetByUser/{userId}")]
+        [Authorize]
+        [HttpGet("GetByUser/{userId}")]
         public IActionResult GetCartsByUser(int userId)
         { 
             try
             {
-                var carts = _context.CartItems.Include(cart => cart.Product).Where(e => e.UserId == userId).ToList();
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+                var roleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultRoleClaimType);
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
+                {
+                    return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                // Check if the user is an admin
+                bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
+
+                if (!isAdmin && tokenUserId != userId)
+                {
+                    return Forbid("You don't have permission to access this resource");
+                }
+
+                var carts = _context.CartItems
+                    .Include(cart => cart.Product)
+                        .ThenInclude(product => product.ProductImages)
+                    .Include(cart => cart.Product.Gifts)
+                    .Where(e => e.UserId == userId)
+                    .ToList();
                 return Ok(carts);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
+        [Authorize]
+        [HttpPut("UpdateQty/{cartId}")]
+        public IActionResult UpdateQty(int cartId, [FromQuery] int qty) {
+            try
+            {
+                var cartItem = _context.CartItems.Find(cartId);
+
+                if (cartItem == null)
+                {
+                    return NotFound("CartItem not found");
+                }
+
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "Id");
+                var roleClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimsIdentity.DefaultRoleClaimType);
+
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int tokenUserId))
+                {
+                    return BadRequest("Unable to retrieve user ID from the token");
+                }
+
+                // Check if the user is an admin
+                bool isAdmin = roleClaim != null && roleClaim.Value == "Admin";
+
+                if (!isAdmin && tokenUserId != cartItem.UserId)
+                {
+                    return Forbid("You don't have permission to access this resource");
+                }
+
+                cartItem.Qty = qty;
+
+                _context.SaveChanges();
+
+                return Ok(cartItem);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
         [HttpPost("AddToCart")]
         public IActionResult AddToCart([FromBody] CartItem cart)
         {
@@ -78,8 +141,9 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("Delete/{Id}")]
-        public IActionResult RemoveFromCart([FromBody] int Id)
+        public IActionResult RemoveFromCart(int Id)
         {
             try
             {
