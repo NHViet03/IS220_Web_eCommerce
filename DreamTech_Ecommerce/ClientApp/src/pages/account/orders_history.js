@@ -1,5 +1,6 @@
 import React from 'react';
 import Sidebar from '../../components/MyAccount/Sidebar';
+import { NavLink } from 'react-router-dom';
 
 function OrdersHistory() {
   return (
@@ -49,7 +50,7 @@ function OrdersHistory() {
                         <button className='px-4 text-base whitespace-nowrap font-semibold color-app-blue-nd' type="submit" id="btn-history-search">Tìm đơn hàng</button>
                       </div>
                     </div>
-                    <div class="history-table" data-table="all">
+                    {/* <div class="history-table" data-table="all">
                       <div class="data-account__empty text-center w-full mt-8 mb-6 box-border block">
                         <div class="icon-empty box-border block text-center align-middle text-center">
                           <svg className='block m-auto pr-2' width="132" height="170" viewBox="0 0 132 170" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,6 +67,105 @@ function OrdersHistory() {
                         <p class="alert-empty text-base my-4 font-semibold mb-4">Quý khách chưa có đơn hàng nào.</p>
                         <div>
                           <a href="/" class="button relative px-7 py-2 font-semibold text-white bgcolor-app-primary rounded">TIẾP TỤC MUA HÀNG</a>
+                        </div>
+                      </div>
+                    </div> */}
+                    <div class="history-table" data-table="all">
+                      <div class="history-table__item" data-search="#168124" data-stt="new">
+                        <div class="history-table__item-head">
+                          <div class="stt-order">
+                            <span>Mới</span>
+                          </div>
+                          <div class="code-order">#168124</div>
+                        </div>
+                        <div class="history-table__item-body" data-count="2">
+                          <div class="history-table__item-line ">
+                            <div class="left"><div class="img-line">
+                              <img src="https://product.hstatic.net/200000722513/product/thumbchuot_543cc8711e454bb78dad2bd8ec0720a5_722315ca336f43d1bffe01c68bc7a016.gif" alt="Lót Chuột Rapoo V1000" />
+                              <div class="qty-line">x1</div></div><div class="info-line"><div class="name-line">Lót Chuột Rapoo V1000</div>
+                              </div>
+                            </div>
+                            <div class="right">
+                              <div class="text-right"><div class="price-line">150.000₫</div>
+                                <div class="price-original-line">150.000₫</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="history-table__item-line ">
+                            <div class="left">
+                              <div class="img-line">
+                                <img src="https://product.hstatic.net/200000722513/product/9017_1_403877065bc54e3a9c5098fdfeb709ce.jpg" alt="Tấm lót chuột Steelseries Qck Mini Mousepad" />
+                                <div class="qty-line">x1</div>
+                              </div>
+                              <div class="info-line">
+                                <div class="name-line">Tấm lót chuột Steelseries Qck Mini Mousepad</div>
+                              </div>
+                            </div>
+                            <div class="right">
+                              <div class="text-right">
+                                <div class="price-line">200.000₫</div>
+                                <div class="price-original-line">200.000₫</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="history-table__item-foot">
+                          <div class="total-order text-right">
+                            <span>Tổng tiền: </span>
+                            <span>350.000₫</span>
+                          </div>
+                          <div class="view-order text-right">
+                            <NavLink
+                              to="/account/view-order-detail"
+                              data-id="1563512977"
+                              title="Xem chi tiết">
+                              Xem chi tiết
+                            </NavLink>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="history-table__item " data-search="#168123" data-stt="new">
+                        <div class="history-table__item-head">
+                          <div class="stt-order">
+                            <span>Mới</span>
+                          </div>
+                          <div class="code-order">#168123</div>
+                        </div>
+                        <div class="history-table__item-body" data-count="1">
+                          <div class="history-table__item-line ">
+                            <div class="left">
+                              <div class="img-line">
+                                <img src="https://product.hstatic.net/200000722513/product/chuot-microsoft-1850-do-u7z-00035-1_51ff997240ba4079b8a72213b1ee8c2a_e2fb354d8c614051a95edeb9d89ac05f.jpg" alt="Chuột không dây Microsoft M1850 Đỏ" />
+                                <div class="qty-line">x1</div>
+                              </div>
+                              <div class="info-line">
+                                <div class="name-line">Chuột không dây Microsoft M1850 Đỏ</div>
+                              </div>
+                            </div>
+                            <div class="right">
+                              <div class="text-right">
+                                <div class="price-line">290.000₫</div>
+                                <div class="price-original-line">290.000₫</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="history-table__item-foot">
+                          <div class="total-order text-right">
+                            <span>Tổng tiền: </span>
+                            <span>290.000₫</span>
+                          </div>
+                          {/* <div class="view-order text-right">
+                              <a href="/account/view-order-detail" data-id="1563512170" title="Xem chi tiết">Xem chi tiết</a>
+                            </div> */}
+                          <div class="view-order text-right">
+                            <NavLink
+                              to="/account/view-order-detail"
+                              data-id="1563512170"
+                              title="Xem chi tiết">
+                              Xem chi tiết
+                            </NavLink>
+                          </div>
                         </div>
                       </div>
                     </div>
