@@ -3,28 +3,60 @@ import { useSelector } from 'react-redux';
 
 import { deleteDataAPIWithAuth, putDataAPIWithAuth } from '../../utils/fetchData';
 
-function Cart({ item, setItems }) {
-    const [quantity, setQuantity] = useState(item.qty);
+
+function Cart({ item, items, setItems, setLoading}) {
+    const [quantity, setQuantity] = useState(0);
     const token = useSelector(state => state.auth.token);
 
-    const updateCartQtyInDB = async () => {
-        const res = await putDataAPIWithAuth(`Cart/UpdateQty/${item.id}?qty=${quantity}`, {}, token);
-        console.log(res);
+    const updateCartQtyInDB = async (qty) => {   
+        try {
+            setLoading(true);
+            setQuantity(qty);
+            const res = await putDataAPIWithAuth(`Cart/UpdateQty/${item.id}?qty=${qty}`, {}, token);
+            const newItems = items.map(i => {
+                if (item && item.id === i.id) {
+                    item.qty = qty;
+                    return item;
+                }
+                return i;
+            });
+
+            setItems(newItems);
+
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const removeCartItem = async () => {
-        const res = await deleteDataAPIWithAuth(`Cart/Delete/${item.id}`, {}, token);
-        console.log(res);
+        try {
+            setLoading(true);
+            const res = await deleteDataAPIWithAuth(`Cart/Delete/${item.id}`, token);
+            const newItems = items.filter(i => i.id !== item.id);
+            setItems(newItems);
+            
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+        
     }
 
     const formatNumberWithCommas = (number) => {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        if (number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        } 
+        return "";
     };
 
     useEffect(() => {
-        updateCartQtyInDB();
-    }, [quantity]);
-
+        if (item.qty) {
+            setQuantity(item.qty)
+        }
+    }, []);
 
     return (    
         <div className="row mx-1 relative mb-4">
@@ -33,7 +65,7 @@ function Cart({ item, setItems }) {
                 <div className="left">
                     <div className="item-img">
                         <a href="/products/pc-gvn-x-msi-project-zero-white">
-                            <img src={ item.product.productImages[0].imageUrl } alt="PC GVN x MSI PROJECT ZERO WHITE (Intel i5-13400F/ VGA RTX 4060)"/>
+                            <img src={ item?.product.productImages[0].imageUrl } alt="PC GVN x MSI PROJECT ZERO WHITE (Intel i5-13400F/ VGA RTX 4060)"/>
                         </a>
                     </div>
                     <div className="item-remove">
@@ -52,7 +84,7 @@ function Cart({ item, setItems }) {
             <div className="col col-7">
                 <div className="item-info text-black">
                     <a href="/products/pc-gvn-x-msi-project-zero-white" className="text-black hover:text-black">
-                        <h3 className="text-sm font-semibold mb-3">{ item.product.name }</h3>
+                        <h3 className="text-sm font-semibold mb-3">{ item?.product.name }</h3>
                     </a>
                     <div className="gifts-list text-xs">
                         <h4 className="font-semibold">Quà tặng khuyến mãi</h4>
@@ -66,10 +98,10 @@ function Cart({ item, setItems }) {
             </div>
             {/* Item price */}
             <div className="col col-3 text-right pe-1">
-                <div className="item-price mb-2"><span className="text font-semibold">{ formatNumberWithCommas(item.product.salePrice) }₫</span></div>
+                <div className="item-price mb-2"><span className="text font-semibold">{ formatNumberWithCommas(item?.product.salePrice) }₫</span></div>
                 <div className="item-quan text-sm">
                     <div className="flex justify-end">
-                        <button type="button" className="p-1 border rounded-bl rounded-tl" onClick={() => quantity > 1 && setQuantity(quantity - 1) }>
+                        <button type="button" className="p-1 border rounded-bl rounded-tl" onClick={() => quantity > 1 && updateCartQtyInDB(quantity - 1) }>
                             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.3332 8H7.99984H2.6665" stroke="#111111" stroke-width="1" stroke-linecap="round"></path>
                             </svg>
@@ -85,7 +117,7 @@ function Cart({ item, setItems }) {
                             value={quantity}
                             className="p-1 border text-center outline-none"
                         />
-                        <button type="button" className="p-1 border rounded-br rounded-tr" onClick={() => setQuantity(quantity + 1)}>
+                        <button type="button" className="p-1 border rounded-br rounded-tr" onClick={() => { updateCartQtyInDB(quantity + 1) }}>
                             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8.00033 13.3334V8.00008M8.00033 8.00008V2.66675M8.00033 8.00008H13.3337M8.00033 8.00008H2.66699" stroke="#111111" stroke-width="1" stroke-linecap="round">
                                 </path>

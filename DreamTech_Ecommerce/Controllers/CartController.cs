@@ -108,9 +108,9 @@ namespace DreamTech_Ecommerce.Controllers
 
         [Authorize(Roles = "Customer")]
         [HttpPost("AddToCart")]
-        public IActionResult AddToCart([FromBody] CartItem cart)
+        public IActionResult AddToCart([FromBody] AddToCartDto model)
         {
-            if (cart == null)
+            if (model == null)
             {
                 return BadRequest("Invalid cart data");
             }
@@ -122,28 +122,33 @@ namespace DreamTech_Ecommerce.Controllers
                 return BadRequest("Unable to retrieve user ID from the token");
             }
 
-            if (tokenUserId != cart.UserId)
-            {
-                return Forbid("You don't have permission to access this resource");
-            }
-
-            var user = _context.Users.Find(cart.UserId);
-            var product = _context.Products.Find(cart.ProductId);
+            var user = _context.Users.Find(tokenUserId);
+            var product = _context.Products.Find(model.ProductId);
 
             if (user == null || product == null)
             {
                 return NotFound("Không tìm sản phẩm hoặc user để thêm giỏ hàng");
             }
 
-            cart.User = user;
-            cart.Product = product;
+            var newCartItem = new CartItem()
+            {
+                UserId = tokenUserId,
+                ProductId = product.Id,
+                Qty = model.Qty,
+            };
 
             try
             {
-                _context.CartItems.Add(cart);
+                _context.CartItems.Add(newCartItem);
                 _context.SaveChanges();
 
-                return CreatedAtAction(nameof(CartItem), new { id = cart.Id }, cart);
+                var carts = _context.CartItems
+                    .Where(c => c.UserId == user.Id)
+                    .Include(c => c.Product)
+                        .ThenInclude(p => p.ProductImages)
+                    .ToList();
+
+                return Ok(new { newCartItems = carts });
             }
             catch (Exception ex)
             {
@@ -189,6 +194,12 @@ namespace DreamTech_Ecommerce.Controllers
                 return BadRequest(ex.Message);
             }
             
+        }
+
+        public class AddToCartDto
+        {
+            public string ProductId { get; set;}
+            public int Qty { get; set;}
         }
     }
 }

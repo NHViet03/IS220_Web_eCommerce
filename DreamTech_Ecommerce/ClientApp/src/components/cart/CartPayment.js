@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const CartPayment = function ({inputEmail, inputName, inputPhone, inputNote}) {
+const CartPayment = function ({inputEmail, inputName, inputPhone, inputNote, total, inputAddress }) {
    useEffect(() => {
 
    });
@@ -17,11 +17,11 @@ const CartPayment = function ({inputEmail, inputName, inputPhone, inputNote}) {
                   <div className="col-4 font-semibold mb-2">• Số điện thoại</div>
                   <div className="col-8 mb-2">{inputPhone}</div>
                   <div className="col-4 font-semibold mb-2">• Địa chỉ nhận hàng</div>
-                  <div className="col-8 mb-2">123 Co Giang, Xã Bình Phước Xuân, Huyện Chợ Mới, An Giang</div>
+                  <div className="col-8 mb-2">{inputAddress}</div>
                   <div className="col-4 font-semibold mb-2">• Phí vận chuyển</div>
                   <div className="col-8 text-custom-primary font-semibold mb-2">Miễn phí</div>
                   <div className="col-4 font-semibold mb-2">• Tổng tiền</div>
-                  <div className="col-8 text-custom-primary font-semibold mb-2">5.690.000</div>
+                       <div className="col-8 text-custom-primary font-semibold mb-2">{ total }</div>
                </div>
                <div class="w-full border-zinc-200 border-b"></div>
                <div className="pt-3">

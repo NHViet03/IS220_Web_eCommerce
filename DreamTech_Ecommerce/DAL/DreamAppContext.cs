@@ -874,7 +874,7 @@ namespace DreamTech_Ecommerce.DAL
                         ProductId = productList[rn.Next(productList.Length)].Id
                     });
             }*/
-            List<Order> orders = RandomGenerator.GenerateRandomOrders(productList, 100);
+            List<Order> orders = RandomGenerator.GenerateRandomOrders(productList, 1000);
 
             List<OrderItem> orderItems = orders
                 .SelectMany(order => order.OrderDetails.Select(orderDetail => new OrderItem
