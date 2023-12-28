@@ -590,23 +590,24 @@ svg {
   margin-left: 50%;
 }
 
-#order_details .total-order .line {
+#order_details .total-order .ac_line {
   margin-bottom: 12px;
   display: flex;
 }
 
-#order_details .total-order .line--l, #order_details .total-order .line--r {
+#order_details .total-order .ac_line--l, #order_details .total-order .ac_line--r {
   flex: 0 0 50%;
   max-width: 50%;
   display: inline-flex;
   align-items: center;
 }
 
-#order_details .total-order .line--r {
+#order_details .total-order .ac_line--r {
   justify-content: flex-end;
+  display: none;
 }
 
-#order_details .total-order .line--r {
+#order_details .total-order .ac_line--r {
   flex: 0 0 50%;
   max-width: 50%;
   display: inline-flex;
@@ -626,7 +627,7 @@ svg {
   display: flex;
 }
 
-#order_details .total-order .line--l, #order_details .total-order .line--r {
+#order_details .total-order .ac_line--l, #order_details .total-order .ac_line--r {
   -ms-flex: 0 0 50%;
   flex: 0 0 50%;
   max-width: 50%;
@@ -634,7 +635,7 @@ svg {
   align-items: center;
 }
 
-#order_details .total-order .line--l svg {
+#order_details .total-order .ac_line--l svg {
   width: 16px;
   height: 16px;
   margin-right: 8px;

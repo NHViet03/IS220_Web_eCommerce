@@ -31,7 +31,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/account/addresses" element={<Addresses />} />
           <Route path="/account/orders-history" element={<OrdersHistory />} />
-          <Route path="/account/view-order-detail" element={<ViewOrderDetail />} />
+          <Route path="/account/view-order-detail/:orderId" element={<ViewOrderDetail />} />
         </Routes>
       </div>
       <Footer />
