@@ -44,12 +44,12 @@ function Products() {
   const customData = useCallback(() => {
     return orders.map((order) => ({
       "Mã đơn hàng": order.id,
-      "Số lượng": order.quantity,
+      "Số lượng": order.orderDetails.length,
       "Tổng tiền": formatMoney(order.totalAmount),
       "Ngày đặt": moment(order.orderDate).format("LLL"),
       "Địa chỉ": order.address,
       "Mã khách hàng": order.userId,
-      "Trạng thái": order.status,
+      "Trạng thái": order.orderStatus,
     }));
   }, [orders]);
 

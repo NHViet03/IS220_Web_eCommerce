@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Route, Routes } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import Header from "./components/Header";
@@ -12,9 +12,19 @@ import AccountPage from "./pages/account";
 import Addresses from "./pages/account/address";
 import OrdersHistory from "./pages/account/orders_history";
 
+import {useDispatch} from 'react-redux';
+import { refreshToken } from "./redux/actions/authAction";
+
 export default function App() {
   const modalAuth = useSelector(state => state.modalAuth);
   const modalLogout = useSelector(state => state.modalLogout);
+
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+    dispatch(refreshToken());
+  },[dispatch])
+  
 
   return (
     <div className="main">

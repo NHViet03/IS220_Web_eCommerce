@@ -1,15 +1,13 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { GLOBAL_TYPES } from "../redux/actions/globalTypes";
+import { logout } from "../redux/actions/authAction";
 
 function ModalLogout() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch({
-      type: GLOBAL_TYPES.AUTH,
-      payload: false,
-    });
+    dispatch(logout());
     handleCloseModal();
   };
   const handleCloseModal = () => {

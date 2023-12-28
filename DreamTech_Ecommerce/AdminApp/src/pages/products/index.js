@@ -53,7 +53,7 @@ function Products() {
       "Giá gốc (VNĐ)": formatMoney(product.price),
       "Giá giảm giá (VNĐ)": formatMoney(product.sale_price),
       "Tồn kho": product.QtyInStock,
-      "Danh mục": product.category,
+      "Danh mục": product.category.name,
     }));
   }, [products]);
 

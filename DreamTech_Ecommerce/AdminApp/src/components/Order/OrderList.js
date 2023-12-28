@@ -36,14 +36,16 @@ const OrderList = ({ orders, orderSmall }) => {
         <tr>
           {!orderSmall && <th scope="col">#</th>}
           <th scope="col">Mã đơn hàng</th>
-          <th
-            scope="col"
-            style={{
-              cursor: "pointer",
-            }}
-          >
-            Số lượng <i className="fa-solid fa-sort ms-1" />
-          </th>
+          {!orderSmall && (
+            <th
+              scope="col"
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              Số lượng <i className="fa-solid fa-sort ms-1" />
+            </th>
+          )}
           <th
             scope="col"
             style={{

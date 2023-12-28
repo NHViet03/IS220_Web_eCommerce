@@ -220,14 +220,14 @@ function OrderDetail() {
                   className={`order_state ${
                     order.orderStatus === 0
                       ? "shipping"
-                      : order.status === 2
+                      : order.orderStatus === 2
                       ? "success"
                       : "cancel"
                   }`}
                 >
                   { order.orderStatus === 0
                       ? "Đang giao hàng"
-                      : order.status === 2
+                      : order.orderStatus === 2
                       ? "Đã giao hàng"
                       : "Đã hủy đơn"}
                 </div>

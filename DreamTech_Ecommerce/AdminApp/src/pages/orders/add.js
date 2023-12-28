@@ -61,7 +61,7 @@ const AddOrder = () => {
     id: "HD-013",
     totalAmount: 0,
     orderDate: new Date(),
-    address: "",
+    shippingAddress: "",
     user: {
       id: "",
       name: "",
@@ -69,7 +69,7 @@ const AddOrder = () => {
       phone: "",
     },
     payment: "",
-    orderItems: [],
+    orderDetails: [],
     notes: "",
   });
   const [showModal, setShowModal] = useState(false);
@@ -119,7 +119,7 @@ const AddOrder = () => {
     setSearchProductList([]);
     setShowSearchProduct(false);
 
-    if (order.orderItems.find((item) => item.id === product.id)) return;
+    if (order.orderDetails.find((item) => item.id === product.id)) return;
 
     const newItem = {
       ...product,
@@ -128,13 +128,13 @@ const AddOrder = () => {
     };
     setOrder({
       ...order,
-      orderItems: [...order.orderItems, newItem],
+      orderDetails: [...order.orderDetails, newItem],
     });
   };
 
   const handleChangeQuantity = (value, id) => {
     if (value < 1) return;
-    const newOrderItems = order.orderItems.map((item) => {
+    const newOrderItems = order.orderDetails.map((item) => {
       if (item.id === id) {
         return {
           ...item,
@@ -146,19 +146,19 @@ const AddOrder = () => {
     });
     setOrder({
       ...order,
-      orderItems: newOrderItems,
+      orderDetails: newOrderItems,
     });
   };
 
   const handleDeleteProduct = (id) => {
     setOrder({
       ...order,
-      orderItems: order.orderItems.filter((item) => item.id !== id),
+      orderDetails: order.orderDetails.filter((item) => item.id !== id),
     });
   };
 
   const handleUpdateOrder = () => {
-    const totalAmount = order.orderItems.reduce(
+    const totalAmount = order.orderDetails.reduce(
       (total, item) => total + item.subTotal,
       0
     );
@@ -257,7 +257,7 @@ const AddOrder = () => {
               </tr>
             </thead>
             <tbody>
-              {order.orderItems.map((item, index) => (
+              {order.orderDetails.map((item, index) => (
                 <tr key={index}>
                   <td>
                     {item.name.length > 20
@@ -442,7 +442,7 @@ const AddOrder = () => {
           </div>
           <div className="mb-4">
             <h6 className="mb-3 fw-medium">Địa chỉ giao hàng</h6>
-            {order.address.split(",").map((item, index) => (
+            {order.shippingAddress.split(",").map((item, index) => (
               <p key={index} className="mt-0 mb-2">
                 {item}
               </p>

@@ -218,7 +218,7 @@ function Header() {
                       }}
                     >
                       <i className="fa-solid fa-hands-clapping"></i>
-                      <span>Xin chào, {user.fullname}</span>
+                      <span>Xin chào, {user.lastName  }</span>
                     </Link>
                   </li>
 

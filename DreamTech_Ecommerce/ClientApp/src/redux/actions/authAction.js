@@ -1,35 +1,38 @@
 import { GLOBAL_TYPES } from "./globalTypes";
 import { postDataAPI } from "../../utils/fetchData";
+import { jwtDecode } from "jwt-decode";
+import { getDataAPIWithAuth } from "../../utils/fetchData";
 
 export const login = (data) => async (dispatch) => {
-    console.log(data);
+  console.log(data);
   try {
-    const res=await postDataAPI("Auth/Login",data);
+    const res = await postDataAPI("Auth/Login", data);
+    localStorage.setItem("firstLogin", res.data.token);
     const auth = {
       token: res.data.token,
       user: res.data.user,
     };
     dispatch({
-        type:GLOBAL_TYPES.AUTH,
-        payload:auth
-    })
+      type: GLOBAL_TYPES.AUTH,
+      payload: auth,
+    });
     dispatch({
-        type: GLOBAL_TYPES.ALERT,
-        payload: {
-          type: "success",
-          title: "Đăng nhập thành công"
-        },
-      });
-      return true;
+      type: GLOBAL_TYPES.ALERT,
+      payload: {
+        type: "success",
+        title: "Đăng nhập thành công",
+      },
+    });
+    return true;
   } catch (error) {
     dispatch({
-        type: GLOBAL_TYPES.ALERT,
-        payload: {
-          type: "error",
-          title: "Đăng nhập thất bại",
-          data: error.response.data.errorMessage,
-        },
-      });
+      type: GLOBAL_TYPES.ALERT,
+      payload: {
+        type: "error",
+        title: "Đăng nhập thất bại",
+        data: error.response.data.errorMessage,
+      },
+    });
   }
 };
 
@@ -75,4 +78,32 @@ export const register = (data) => async (dispatch) => {
       },
     });
   }
+};
+
+export const refreshToken = () => async (dispatch) => {
+  try {
+    const firstLogin = localStorage.getItem("firstLogin");
+    if (firstLogin) {
+      const account = jwtDecode(firstLogin);
+      const res = await getDataAPIWithAuth(
+        `User/GetCustomerDetail/${account.Id}`,
+        firstLogin
+      );
+      dispatch({
+        type: GLOBAL_TYPES.AUTH,
+        payload: {
+          token: firstLogin,
+          user: res.data,
+        },
+      });
+    }
+  } catch (error) {}
+};
+
+export const logout = () => async (dispatch) => {
+  localStorage.removeItem("firstLogin");
+  dispatch({
+    type: GLOBAL_TYPES.AUTH,
+    payload: false,
+  });
 };

@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import CusCard from "../../components/Customer/CusCard";
 import formatMoney from "../../utils/formatMoney";
 import OrderList from "../../components/Order/OrderList";
 import Filter from "../../components/Order/Filter";
 import ModalSendMail from "../../components/ModalSendMail";
+
+import { useSelector } from "react-redux";
+import { getDataAPI } from "../../utils/fetchData";
 
 const cusData = {
   id: "KH01",
@@ -52,13 +55,45 @@ function Customer() {
   const [filter, setFilter] = useState({
     sort: "default",
     status: "all",
-    date: [new Date(new Date().getFullYear(), 0, 1), new Date()],
   });
   const [showModal, setShowModal] = useState(false);
 
+  const auth = useSelector((state) => state.auth);
+  const { id } = useParams();
+
   useEffect(() => {
-    setCustomer(cusData);
-  }, []);
+    const getCustomerData = async () => {
+      const res = await getDataAPI(`User/GetCustomerDetail/${id}`, auth.token);
+      const orderSuccess = res.data.orders.reduce(
+        (count, order) => (order.orderStatus === 2 ? count + 1 : count),
+        0
+      );
+      const orderCancel = res.data.orders.reduce(
+        (count, order) => (order.orderStatus === 1 ? count + 1 : count),
+        0
+      );
+      const total = res.data.orders.reduce(
+        (total, order) =>
+          order.orderStatus === 2 ? total + order.totalAmount : total,
+        0
+      );
+
+      setCustomer({
+        id: res.data.id,
+        name: res.data.firstName + " " + res.data.lastName,
+        phone: res.data.phone,
+        email: res.data.email,
+        shippingAddress: "Quang Trung, Hà Đông, Hà Nội",
+        orders: res.data.orders,
+        orderSuccess,
+        orderCancel,
+        total,
+        createdDate: res.data.createdDate,
+      });
+    };
+
+    getCustomerData();
+  }, [auth.token, id]);
 
   useEffect(() => {
     if (!customer.orders) return;
@@ -71,17 +106,12 @@ function Customer() {
         newOrders.sort((a, b) => a.totalAmount - b.totalAmount);
         break;
       case "date_newest_to_oldest":
-        newOrders.sort((a, b) => b.orderDate - a.orderDate);
+        newOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
         break;
       case "date_oldest_to_newest":
-        newOrders.sort((a, b) => a.orderDate - b.orderDate);
+        newOrders.sort((a, b) => new Date(a.orderDate) - new Date(b.orderDate));
         break;
       default:
-        let newArr = [];
-        for (let i = 0; i < 3; i++) {
-          newArr.push(...cusData.orders);
-          newOrders = newArr;
-        }
     }
     setCustomer({
       ...customer,
@@ -124,6 +154,8 @@ function Customer() {
     ];
   }, [customer]);
 
+  if (!customer.id) return null;
+
   return (
     <div className="customer_detail">
       <header className="box_shadow d-flex justify-content-between align-items-center mb-4 bg-white">
@@ -135,7 +167,7 @@ function Customer() {
         </div>
         <div className="d-flex gap-3">
           <div className="btn btn_normal">
-            {moment(new Date(2023, 3, 1)).format("MM/YYYY")} -{" "}
+            {moment(customer.createdDate).format("MM/YYYY")} -{" "}
             {moment(new Date()).format("MM/YYYY")}
           </div>
           <div className="dropdown">
