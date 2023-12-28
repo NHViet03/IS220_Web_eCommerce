@@ -1,8 +1,71 @@
-﻿import React from 'react';
+﻿import React, { useState } from 'react';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 function CartCustomerInfo({
-	inputEmail, inputName, inputPhone, inputNote, setInputEmail, setInputName, setInputPhone, setInputNote
+	inputEmail, inputName, inputPhone, inputNote, setInputEmail, setInputName, setInputPhone, setInputNote, setInputAddress,
 }) {
+	const [province, setProvince] = useState('');
+	const [district, setDistrict] = useState('');
+	const [ward, setWard] = useState('');
+	const [street, setStreet] = useState('');
+	const [districtList, setDistrictList] = useState([]);
+	const [wardList, setWardList] = useState([]);
+	const [provinces, setProvinces] = useState([]);
+
+	const getProvinces = async () => {
+		const res = await axios.get('https://provinces.open-api.vn/api/p/');
+		setProvinces(res.data);
+	}
+	const getDistrict = async (provinceCode) => {
+		try {
+			const res = await axios.get(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`);
+			if (res) {
+				setDistrictList(res.data.districts);
+				setDistrict('');
+				setWard('');
+				setWardList([]);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	const getWards = async (districtCode) => {
+		try {
+			const res = await axios.get(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`);
+			console.log(res)
+			if (res) {
+				setWardList(res.data.wards);
+				setWard('');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	const handleChangeProvince = (event) => {
+		getDistrict(event.target.options[event.target.selectedIndex].value);
+
+		setProvince(event.target.options[event.target.selectedIndex].text);
+		setInputAddress(`${street}, ${ward}, ${district}, ${province}.`);
+	}
+
+	const handlechangeDistrict = (event) => {
+		getWards(event.target.options[event.target.selectedIndex].value);
+
+		setDistrict(event.target.options[event.target.selectedIndex].text);
+		setInputAddress(`${street}, ${ward}, ${district}, ${province}.`);
+	}
+
+	const handlechangeWard = (event) => {
+		setWard(event.target.options[event.target.selectedIndex].text);
+
+		setInputAddress(`${street}, ${ward}, ${district}, ${province}.`);
+	}
+
+
+	useEffect(() => {
+		getProvinces();		
+	}, [])
 
     return (
 		<div className="form-edit mx-2">
@@ -94,36 +157,51 @@ function CartCustomerInfo({
 					<div className="form-group inputs-ship d-flex flex-wrap has-bg text-sm" id="cod-method-form">
 						<div className="col-xl-6 col-lg-6 col-12 p-2">
 							<div className="select-group">
-								<select className="form-data form-control form-select field-input select-province" required="">
-									<option value="">Chọn Tỉnh, Thành phố</option>
-									<option value="HC" data-id="50">Hồ Chí Minh</option>
-									<option value="HI" data-id="1">Hà Nội</option>
-									<option value="DA" data-id="32">Đà Nẵng</option>
-									<option value="AG" data-id="57">An Giang</option>
-									<option value="BV" data-id="49">Bà Rịa - Vũng Tàu</option>
-									<option value="BI" data-id="47">Bình Dương</option>
-									<option value="BP" data-id="45">Bình Phước</option>
-									<option value="BU" data-id="39">Bình Thuận</option>
-									<option value="BD" data-id="35">Bình Định</option><option value="BL" data-id="62">Bạc Liêu</option><option value="BG" data-id="15">Bắc Giang</option><option value="BK" data-id="4">Bắc Kạn</option><option value="BN" data-id="18">Bắc Ninh</option><option value="BT" data-id="53">Bến Tre</option><option value="CB" data-id="3">Cao Bằng</option><option value="CM" data-id="63">Cà Mau</option><option value="CN" data-id="59">Cần Thơ</option><option value="GL" data-id="41">Gia Lai</option><option value="HG" data-id="2">Hà Giang</option><option value="HM" data-id="23">Hà Nam</option><option value="HT" data-id="28">Hà Tĩnh</option><option value="HO" data-id="11">Hòa Bình</option><option value="HY" data-id="21">Hưng Yên</option><option value="HD" data-id="19">Hải Dương</option><option value="HP" data-id="20">Hải Phòng</option><option value="HU" data-id="60">Hậu Giang</option><option value="KH" data-id="37">Khánh Hòa</option><option value="KG" data-id="58">Kiên Giang</option><option value="KT" data-id="40">Kon Tum</option><option value="LI" data-id="8">Lai Châu</option><option value="LA" data-id="51">Long An</option><option value="LO" data-id="6">Lào Cai</option><option value="LD" data-id="44">Lâm Đồng</option><option value="LS" data-id="13">Lạng Sơn</option><option value="ND" data-id="24">Nam Định</option><option value="NA" data-id="27">Nghệ An</option><option value="NB" data-id="25">Ninh Bình</option><option value="NT" data-id="38">Ninh Thuận</option><option value="PT" data-id="16">Phú Thọ</option><option value="PY" data-id="36">Phú Yên</option><option value="QB" data-id="29">Quảng Bình</option><option value="QM" data-id="33">Quảng Nam</option><option value="QG" data-id="34">Quảng Ngãi</option><option value="QN" data-id="14">Quảng Ninh</option><option value="QT" data-id="30">Quảng Trị</option><option value="ST" data-id="61">Sóc Trăng</option><option value="SL" data-id="9">Sơn La</option><option value="TH" data-id="26">Thanh Hóa</option><option value="TB" data-id="22">Thái Bình</option><option value="TY" data-id="12">Thái Nguyên</option><option value="TT" data-id="31">Thừa Thiên Huế</option><option value="TG" data-id="52">Tiền Giang</option><option value="TV" data-id="54">Trà Vinh</option><option value="TQ" data-id="5">Tuyên Quang</option><option value="TN" data-id="46">Tây Ninh</option><option value="VL" data-id="55">Vĩnh Long</option><option value="VT" data-id="17">Vĩnh Phúc</option><option value="YB" data-id="10">Yên Bái</option><option value="DB" data-id="7">Điện Biên</option><option value="DC" data-id="42">Đắk Lắk</option><option value="DO" data-id="43">Đắk Nông</option><option value="DN" data-id="48">Đồng Nai</option><option value="DT" data-id="56">Đồng Tháp</option></select>
+								<select
+									className="form-data form-control form-select field-input select-province"
+									required
+									onChange={event => {
+										handleChangeProvince(event)
+									}}>
+									<option value="" >Chọn Tỉnh, Thành phố</option>
+									{provinces && provinces.map(p => <option value={p.code}>{ p.name }</option>) }
+								</select>
 							</div>
 						</div>
 						<div className="col-xl-6 col-lg-6 col-12 p-2">
 							<div className="select-group">
-								<select className="form-data form-control form-select field-input select-district" required="">
-									<option value="">Chọn Quận, Huyện</option>
+								<select
+									className="form-data form-control form-select field-input select-district"
+									required
+									onChange={event => handlechangeDistrict(event)}>
+									<option value="" selected={district==""}>Chọn Quận, Huyện</option>
+									{districtList && districtList.map(d => <option value={d.code}>{d.name}</option>)}
 								</select>
 							</div>
 						</div>
 						<div className="col-xl-6 col-lg-6 col-12 p-2">
 							<div className="select-group no-mrg">
-								<select className="form-data form-control form-select field-input select-ward" required="">
-									<option value="">Chọn Phường, Xã</option>
+								<select
+									className="form-data form-control form-select field-input select-ward"
+									required
+									onChange={event => handlechangeWard(event)}>
+									<option value="" selected={ward == ""}>Chọn Phường, Xã</option>
+									{wardList && wardList.map(w => <option value={w.code}>{w.name}</option>)}
 								</select>
 							</div>
 						</div>
 						<div className="col-xl-6 col-lg-6 col-12 p-2">
 							<div className="no-mrg form__input-wrapper form__input-wrapper--labelled">
-								<input required="" name="editcustomer[address]" id="editcustomer-address" type="text" className="form-data form-control form__field form__field--text" placeholder=""/>
+								<input
+									required
+									name="editcustomer[address]"
+									id="editcustomer-address"
+									type="text"
+									className={`form-data form-control form__field form__field--text ${street.trim() !== '' ? 'is-filled' : ''}`} 
+									placeholder=""
+									value={street}
+									onChange={event => setStreet(event.target.value)}
+								/>
 								<label for="editcustomer-address" className="form__floating-label bg-gradient">Số nhà, tên đường</label>
 							</div>
 						</div>
@@ -200,7 +278,6 @@ function CartCustomerInfo({
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
