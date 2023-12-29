@@ -19,9 +19,6 @@ function Sidebar({ activePage }) {
 
   const lastname = useSelector(state => state.auth.user?.lastName);
   const firstname = useSelector(state => state.auth.user?.firstName);
-  console.log("sidebar: " ,lastname);
-  console.log("sidebar: " ,firstname);
-
   return (
     <div className='order-1 mb-6 px-2 grow-0 shrink-0 w-1/4 relative box-border block colleft'>
       <div className='ac_left-sidebar h-full bg-white rounded box-border m-0 p-0 block text-sm font-normal'>

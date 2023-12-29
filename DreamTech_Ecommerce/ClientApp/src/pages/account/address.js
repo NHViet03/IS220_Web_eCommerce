@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/tailwind-style.css';
 import Sidebar from '../../components/MyAccount/Sidebar';
 import ModalUpdateAddress from '../../components/MyAccount/Modal/ModalUpdateAddress';
+import { useSelector } from 'react-redux';
+
 
 function Addresses() {
     const [show, setShow] = useState(false);
+    const lastname = useSelector(state => state.auth.user?.lastName);
+    const firstname = useSelector(state => state.auth.user?.firstName);
+    const phone = useSelector(state => state.auth.user?.phone);
+
+    const [currentAddress, setCurrentAddress] = useState("22A, đường Thống Nhất, phường Đông Hòa, Thành phố Dĩ An, Bình Dương");
+    const handleUpdateAddress = (updatedAddress) => {
+        setCurrentAddress(updatedAddress);
+    };
     return (
         <div>
             <div className='wrapbox-content-account'>
@@ -25,10 +35,12 @@ function Addresses() {
                                                 >
                                                     + Thêm địa chỉ mới
                                                 </button>
-
                                             </div>
-                                            <ModalUpdateAddress title="My Modal" onClose={() => setShow(false)} show={show}>
-                                                <p>This is modal body</p>
+                                            <ModalUpdateAddress
+                                                title="Cập nhật địa chỉ"
+                                                onClose={() => setShow(false)}
+                                                onUpdateAddress={handleUpdateAddress}
+                                                show={show}>
                                             </ModalUpdateAddress>
                                         </div>
                                     </div>
@@ -37,16 +49,15 @@ function Addresses() {
                                             <div class="address_table default order-none py-5 px-0 relative border-t-2 solid">
                                                 <div id="view_address_1139209403" class="customer_address block box-border">
                                                     <div class="address_wrap flex space-between flex-row box-border">
-
                                                         <div class="colright view_address grow-0 shrink-0 w-3/4 mb-0">
                                                             <div class="line m-0 p-0 box-border block font-normal">
                                                                 <p className='mb-2'>
                                                                     <span class="default_address note color-app-primary border-1 px-1 py-1 border-red-600 inline-flex items-center justify-center mr-2 text-sm font-semibold rounded">Mặc định</span>
-                                                                    <span class="name_address inline-block font-semibold">Linh Tran</span>
+                                                                    <span class="name_address inline-block font-semibold">{lastname} {firstname} | {phone}</span>
                                                                 </p>
                                                             </div>
                                                             <div class="line">
-                                                                <p>Vietnam</p>
+                                                                <p>{currentAddress}</p>
                                                             </div>
                                                             <div class="line d-none"><p>Nhà riêng</p></div>
                                                         </div>
@@ -56,19 +67,16 @@ function Addresses() {
                                                                     <div>
                                                                         <span class="action_edit box-border text-right">
                                                                             <a className='inline-block relative no-underline text-right' data-id="1139209403" data-default="1" data-first-name="" data-last-name="linhtran" data-phone="" data-province="" data-provinceid="" data-district="" data-districtid="" data-ward="" data-wardid="" data-address="" data-type="Nhà riêng" href="javascript:void(0);" class="js-edit-customer">
-                                                                                <button 
-                                                                                class="btn-edit box-border text-right text-sm not-italic font-semibold color-app-blue-nd"
-                                                                                type='button'
-                                                                                onClick={() => setShow(true)}
+                                                                                <button
+                                                                                    class="btn-edit box-border text-right text-sm not-italic font-semibold color-app-blue-nd"
+                                                                                    type='button'
+                                                                                    onClick={() => setShow(true)}
                                                                                 >
                                                                                     Cập nhật
                                                                                 </button>
                                                                             </a>
                                                                         </span>
                                                                     </div>
-                                                                    <ModalUpdateAddress title="My Modal" onClose={() => setShow(false)} show={show}>
-                                                                        <p>This is modal body</p>
-                                                                    </ModalUpdateAddress>
                                                                 </div>
                                                             </div>
                                                         </div>
