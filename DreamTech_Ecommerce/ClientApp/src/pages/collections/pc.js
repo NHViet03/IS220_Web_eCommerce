@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from "react";
 import CardItem from "../../components/Home/CardItem";
-import ModalHang from "../../components/product/laptop/ModalHang";
-import ModalGia from "../../components/product/laptop/ModalGia";
-import ModalLoc from "../../components/product/laptop/ModalLoc";
-import { PC } from "../../utils/ProductData";
+import ModalHangPC from "../../components/collections/pc/ModalHangPC";
+import ModalGiaPC from "../../components/collections/pc/ModalGiaPC";
+import ModalLocPC from "../../components/collections/pc/ModalLocPC";
 import { getAllPC } from "../../redux/actions/pcAction";
 import { useDispatch, useSelector } from "react-redux";
+import { sapxep } from "../../redux/actions/filterAction";
 const PCPage = () => {
+
+  // console.log(Sapxep, Hang, Gia)
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
   const [showHang, setShowHang] = useState(false); 
@@ -16,18 +18,39 @@ const PCPage = () => {
   
   const details = ["i7 9700", "GTX 1660", "32GB RAM", "1TB HDD"]
   const handleSortChange = (value) => {
-    setSortBy(value);
+     setSortBy(value);
   };
-
+  useEffect(()=>{
+    dispatch(sapxep(sortBy))
+  },[sortBy])
   const [pcdata, setPCData] = useState([]);
   const {pc} = useSelector(state => state);
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(getAllPC());
-  },[dispatch])
+  },[ dispatch])
+  // Lọc data
+  const {Sapxep, Hang, Gia } = useSelector(state => state.filter);
+
+ 
+
   useEffect(()=>{
-    setPCData(pc)
-  },[pc])
+    let datasort = [...pc]
+    if (Sapxep === "ascending") {
+      datasort.sort((a, b) => a.salePrice - b.salePrice);
+    }else if (Sapxep === "descending"){
+      datasort.sort((a, b) => b.salePrice - a.salePrice);
+    }
+    if( Gia.length > 0){
+       datasort = datasort.filter(item => item.salePrice >= Gia[0] && item.salePrice <= Gia[1])
+    } 
+    if (Hang.length > 0) {
+      datasort = datasort.filter(item => Hang.includes(item.brand))
+    }
+
+    setPCData(datasort)
+  },[pc, Sapxep, Gia, Hang])
+  
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">
@@ -52,7 +75,7 @@ const PCPage = () => {
               <i class="fa-solid fa-filter" onClick={()=> setShowLoc(!showLoc)}></i>
               <div onClick={()=> setShowLoc(!showLoc)}>Bộ lọc</div>
               {
-              showLoc && <ModalLoc showLoc={showLoc} setShowLoc={setShowLoc}/>
+              showLoc && <ModalLocPC showLoc={showLoc} setShowLoc={setShowLoc}/>
               }
             </div>
             {/* Hãng */}
@@ -62,7 +85,7 @@ const PCPage = () => {
               <div  onClick={() => setShowHang(!showHang)}>Hãng</div>
               <i class="fa-solid fa-caret-down"  onClick={() => setShowHang(!showHang)}></i>
             {
-              showHang && <ModalHang/>
+              showHang && <ModalHangPC setShowHang={setShowHang}/>
             }
             </div>
            
@@ -71,7 +94,7 @@ const PCPage = () => {
               <div onClick={()=> setShowGia(!showGia)}>Giá</div>
               <i class="fa-solid fa-caret-down" onClick={()=> setShowGia(!showGia)}></i>
               {
-              showGia && <ModalGia/>
+              showGia && <ModalGiaPC/>
             }
             </div>
         </div>

@@ -21,4 +21,4 @@ export const getAllLaptop = () => async (dispatch) =>{
     } catch (error) {
         console.log(error);
     }
-}
+}   

@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
 import CardItem from "../../components/Home/CardItem";
-import ModalHang from "../../components/product/laptop/ModalHang";
-import ModalGia from "../../components/product/laptop/ModalGia";
-import ModalLoc from "../../components/product/laptop/ModalLoc";
+import ModalHang from "../../components/collections/laptop/ModalHangLaptop";
+import ModalGia from "../../components/collections/laptop/ModalGiaLaptop";
+import ModalLoc from "../../components/collections/laptop/ModalLocLaptop";
 import {useDispatch, useSelector} from "react-redux";
 import { getAllLaptop } from "../../redux/actions/laptopAction";
+import { sapxep } from "../../redux/actions/filterAction";
 const LaptopPage = () => {
   const [sortBy, setSortBy] = useState("featured"); //State cho thanh sắp xếp
   const [showMenuItem, setShowMenuItem] = useState(false); // 
@@ -18,12 +19,40 @@ const LaptopPage = () => {
   useEffect(()=>{
     dispatch(getAllLaptop());
   },[dispatch])
+
+  // Lọc data
+  const {Sapxep, Hang, Gia } = useSelector(state => state.filter);
+
+ 
+
   useEffect(()=>{
-    setLaptopData(laptop)
-  },[laptop])
+    let datasort = [...laptop]
+    if (Sapxep === "ascending") {
+      datasort.sort((a, b) => a.salePrice - b.salePrice);
+    }else if (Sapxep === "descending"){
+      datasort.sort((a, b) => b.salePrice - a.salePrice);
+    }
+    if( Gia.length > 0){
+       datasort = datasort.filter(item => item.salePrice >= Gia[0] && item.salePrice <= Gia[1])
+    } 
+    if (Hang.length > 0) {
+      datasort = datasort.filter(item => Hang.includes(item.brand))
+    }
+
+    setLaptopData(datasort)
+  },[laptop, Sapxep, Gia, Hang])
+  
+
   const handleSortChange = (value) => {
     setSortBy(value);
   };
+
+
+  useEffect(()=>{
+    dispatch(sapxep(sortBy))
+  },[sortBy])  
+
+
   return (
     <div className="container mb-4">
       <div className="product_link mt-4 flex gap-3 align-items-center">
