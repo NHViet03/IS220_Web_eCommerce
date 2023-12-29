@@ -1,0 +1,220 @@
+/* Modal Update Address */
+.modal .modal-content {
+    border-radius: 16px;
+    border: none;
+}
+
+.modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    outline: 0;
+}
+
+.modal .modal-header {
+    border-bottom: 1px solid #CFCFCF;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-top-left-radius: calc(0.3rem - 1px);
+    border-top-right-radius: calc(0.3rem - 1px);
+}
+
+.modal .modal-header h4 {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--titlecolor);
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.modal .modal-header button {
+    box-shadow: none;
+    background: none;
+    outline: 0;
+    border: none;
+    display: inline-block;
+    text-align: center;
+}
+
+svg {
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.modal.modal-account .modal-body {
+    font-size: 16px;
+}
+
+.modal .modal-body {
+    padding: 24px;
+}
+
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+}
+
+.customer_address h5 {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 16px;
+}
+
+.form__input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.form-control,
+.form__field {
+    font-size: 16px;
+}
+
+.form-control,
+.form__field {
+    width: 100%;
+    height: 40px;
+    background: #FFFFFF;
+    color: var(--color-text);
+    border: 1px solid var(--color-line-border);
+    border-radius: 4px;
+    padding: 0 16px;
+    font-weight: 400;
+    appearance: none;
+    outline: none !important;
+    display: block;
+    line-height: 1.5;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.form__input-wrapper .form__floating-label {
+    position: absolute;
+    left: 16px;
+    top: 0;
+    font-size: 16px;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #535353;
+    -webkit-transform: translateY(32%);
+    transform: translateY(32%);
+    transition: -webkit-transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, -webkit-transform 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.customer_address h5 {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--titlecolor);
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.customer_address .form__line-wrapper {
+    display: flex;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper:first-child {
+    padding-right: 4px;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper {
+    width: 100%;
+}
+
+.form__input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper select {
+    color: #535353;
+}
+
+.form-control,
+.form__field {
+    font-size: 16px;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper:last-child {
+    padding-left: 4px;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper {
+    width: 100%;
+}
+
+.form__input-wrapper {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.customer_address .form__line-wrapper .form__input-wrapper select {
+    color: #535353;
+}
+
+.customer_address .action_bottom .button {
+    width: 100%;
+}
+
+.button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 28px;
+    line-height: normal;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    color: #fff;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    border-radius: 4px;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    z-index: 1;
+    overflow: hidden;
+    outline: none !important;
+    cursor: pointer;
+}
