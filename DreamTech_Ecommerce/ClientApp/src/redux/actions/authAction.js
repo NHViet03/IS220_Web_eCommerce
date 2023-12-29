@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
 import { getDataAPIWithAuth } from "../../utils/fetchData";
 
 export const login = (data) => async (dispatch) => {
-  console.log(data);
   try {
     const res = await postDataAPI("Auth/Login", data);
     localStorage.setItem("firstLogin", res.data.token);
@@ -37,7 +36,6 @@ export const login = (data) => async (dispatch) => {
 };
 
 export const register = (data) => async (dispatch) => {
-  console.log(data);
   const firstName = data.fullname.split(" ")[0];
   const lastName = data.fullname.split(" ").slice(1).join(" ");
 

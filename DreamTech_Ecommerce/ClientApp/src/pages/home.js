@@ -1,15 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { listProduct } from "../components/Home/fetchData";
-import Carousel from "react-multi-carousel";
+import { listProduct } from "../components/Home/DataProductList";
 import "react-multi-carousel/lib/styles.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faTruck,
   faGift,
   faMicrochip,
   faLaptop,
-  faAngleRight,
   faDesktop,
   faKeyboard,
   faComputerMouse,
@@ -18,163 +14,108 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import { faApple } from "@fortawesome/free-brands-svg-icons";
-import CardItem from "../components/Home/CardItem";
-
+import { Laptop, PC, Chuot } from "../utils/ProductData";
+import SlideProduct from "../components/Home/SlideProduct";
+import SideBarItem from "../components/Home/SideBarItem";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPC } from "../redux/actions/pcAction";
+import { getAllLaptop } from "../redux/actions/laptopAction";
+import { getAllChuot } from "../redux/actions/chuotAction";
 const Home = () => {
-  // Multiple slide carousel
-  const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 1024 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 1024, min: 800 },
-      items: 3,
-    },
-    tablet: {
-      breakpoint: { max: 800, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  };
+  const { laptop, pc, chuot } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const [pcdata, setPcdata] = useState([]);
+  const [laptopdata, setLaptopdata] = useState([]);
+  const [chuotdata, setChuotdata] = useState([]);
+  useEffect(() => {
+    dispatch(getAllPC());
+    dispatch(getAllLaptop());
+    dispatch(getAllChuot());
+  }, [dispatch]);
+  useEffect(() => {
+    setPcdata(pc);
+    setLaptopdata(laptop);
+    setChuotdata(chuot);
+  },[ pc, laptop, chuot])
   return (
     <div className="mt-4 Home">
-      {/* Home SideNBar */}
+      {/* Begin Home SideNBar */}
       <div className="Home_sidebar row mb-2">
         <div className="Home_sidebar-sidebar col-2">
           <ul>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faLaptop} fontSize={14} />
-                  <h5>Laptop</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faLaptop} fontSize={14} />
-                  <h5>Laptop Gaming</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faDesktop} fontSize={14} />
-                  <h5>PC GearnVN</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faDesktop} fontSize={14} />
-                  <h5>Main- CPU - VGA</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faDesktop} fontSize={14} />
-                  <h5>Case - Nguồn - Phụ kiện</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faMicrochip} fontSize={14} />
-                  <h5>SSD- RAM- HDD</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faApple} fontSize={14} />
-                  <h5>Apple</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faDesktop} fontSize={14} />
-                  <h5>Màn hình</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faKeyboard} fontSize={14} />
-                  <h5>Bàn phím</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faComputerMouse} fontSize={14} />
-                  <h5>Chuột + Lót chuột</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faHeadphones} fontSize={14} />
-                  <h5>Tai nghe - Loa</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faPrint} fontSize={14} />
-                  <h5>Phần mềm + Mạng</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faGamepad} fontSize={14} />
-                  <h5>Phụ kiện</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
-            <li className="Home_sidebar-sidebar-li">
-              <a href="/product">
-                <div>
-                  <FontAwesomeIcon icon={faGift} fontSize={14} />
-                  <h5>Thủ thuật - Giải đáp</h5>
-                </div>
-                <FontAwesomeIcon icon={faAngleRight} />
-              </a>
-            </li>
+            <SideBarItem
+              href="/collections/laptop"
+              name="Laptop"
+              icon={faLaptop}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Laptop Gaming"
+              icon={faLaptop}
+            />
+            <SideBarItem
+              href="/collections/pc"
+              name="PC GearnVN"
+              icon={faDesktop}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Main- CPU - VGA"
+              icon={faDesktop}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Case - Nguồn - Phụ kiện"
+              icon={faDesktop}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="SSD- RAM- HDD"
+              icon={faMicrochip}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Apple"
+              icon={faApple}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Màn hình"
+              icon={faDesktop}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Bàn phím"
+              icon={faKeyboard}
+            />
+            <SideBarItem
+              href="/collections/chuot"
+              name="Chuột + Lót chuột"
+              icon={faComputerMouse}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Tai nghe - Loa"
+              icon={faHeadphones}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Phần mềm + Mạng"
+              icon={faPrint}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Phụ kiện"
+              icon={faGamepad}
+            />
+            <SideBarItem
+              href="/collections/laptop"
+              name="Thủ thuật - Giải đáp"
+              icon={faGift}
+            />
           </ul>
         </div>
+        {/* Hình ảnh slide giảm giá sốc */}
         <div className=" col-10">
           <div className="row">
             <div
@@ -292,7 +233,8 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* Home img slide */}
+      {/* End : Home SideBar */}
+      {/* Home img slide 4 ảnh */}
       <div className="row mb-2">
         <div className="Home_img-slide col-3">
           <Link to="products/abc">
@@ -334,86 +276,24 @@ const Home = () => {
       </div>
       {/* Home product */}
       {/* PC */}
-      <div className="Home_list-product-pc row mb-4">
-        <div className="Home_list-product-pc-title mb-2">
-          <div className="Home_list-product-pc_left">
-            <h4>PC bán chạy</h4>
-            <FontAwesomeIcon
-              icon={faTruck}
-              style={{ color: "#ee1111", fontSize: "18px" }}
-            />
-            <h5>Miễn phí giao hàng</h5>
-          </div>
-          <div className="Home_list-product-pc_right">
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Gaming
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Đồ họa
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Doanh nghiệp
-            </a>
-            <a href="" className="Home_list-product-pc_right-all">
-              Xem tất cả
-            </a>
-          </div>
-        </div>
-        {/* Home card slide */}
-        <div className="Home_list-product-pc-slide row">
-          <Carousel responsive={responsive}>
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-          </Carousel>
-        </div>
-      </div>
+      <SlideProduct
+        data={pcdata}
+        name="PC Bán Chạy"
+        namedetail1="PC GVN AWD"
+        namedetail2="PC GVN Intel"
+        namedetail3="PC GVN x ASUS"
+        Xemtatca="pc"
+      />
       {/* Laptop */}
-      <div className="Home_list-product-pc row mb-4">
-        <div className="Home_list-product-pc-title mb-2">
-          <div className="Home_list-product-pc_left">
-            <h4>Laptop gaming bán chạy</h4>
-            <FontAwesomeIcon
-              icon={faTruck}
-              style={{ color: "#ee1111", fontSize: "18px" }}
-            />
-            <h5>Miễn phí giao hàng</h5>
-          </div>
-          <div className="Home_list-product-pc_right">
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Gaming
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Đồ họa
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Doanh nghiệp
-            </a>
-            <a href="" className="Home_list-product-pc_right-all">
-              Xem tất cả
-            </a>
-          </div>
-        </div>
-        {/* Home card slide */}
-        <div className="Home_list-product-pc-slide row">
-          <Carousel responsive={responsive}>
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-          </Carousel>
-        </div>
-      </div>
-      {/* Banner */}
+      <SlideProduct
+        data={laptopdata}
+        name="Laptop Bán Chạy"
+        namedetail1="Laptop LENOVO"
+        namedetail2="Laptop MSI"
+        namedetail3="Laptop ASUS"
+        Xemtatca="laptop"
+      />
+      {/* Banner 1 ảnh to - 2 ảnh nhỏ */}
       <div className="home-banner row mb-4 mt-2">
         <div className="home-banner-8 col-8">
           <a href="">
@@ -434,45 +314,14 @@ const Home = () => {
         </div>
       </div>
       {/* Chuột */}
-      <div className="Home_list-product-pc row mb-4">
-        <div className="Home_list-product-pc-title mb-2">
-          <div className="Home_list-product-pc_left">
-            <h4>Chuột bán chạy</h4>
-            <FontAwesomeIcon
-              icon={faTruck}
-              style={{ color: "#ee1111", fontSize: "18px" }}
-            />
-            <h5>Miễn phí giao hàng</h5>
-          </div>
-          <div className="Home_list-product-pc_right">
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Gaming
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Đồ họa
-            </a>
-            <a href="" className="Home_list-product-pc_right-topic">
-              PC Doanh nghiệp
-            </a>
-            <a href="" className="Home_list-product-pc_right-all">
-              Xem tất cả
-            </a>
-          </div>
-        </div>
-        {/* Home card slide */}
-        <div className="Home_list-product-pc-slide row">
-          <Carousel responsive={responsive}>
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-            <CardItem />
-          </Carousel>
-        </div>
-      </div>
+      <SlideProduct
+        data={chuotdata}
+        name="Chuột Bán Chạy"
+        namedetail1="Chuột Logitech"
+        namedetail2="Chuột Microsoft"
+        namedetail3="Chuột Razor"
+        Xemtatca="chuot"
+      />
       {/* Home list product */}
       <div className="mb-4 Home_list-product row">
         <h4> Danh sách sản phẩm</h4>
@@ -480,7 +329,7 @@ const Home = () => {
         <div className="row">
           {listProduct.map((item) => (
             <div className="col-1">
-              <a href="/product">
+              <a href={item.link}>
                 <img src={item.imageUrl} />
                 <div>{item.name}</div>
               </a>

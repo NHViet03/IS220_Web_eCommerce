@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { GLOBAL_TYPES } from "../../redux/actions/globalTypes";
 import Carousel from "../../components/Carousel";
+import { getProductById } from "../../redux/actions/productsAction";
+import { data } from "jquery";
 
 const fakeProduct = {
   id: 4,
@@ -74,25 +76,25 @@ const fakeProduct = {
 function Products() {
   const [product, setProduct] = useState(false);
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
-
+  const { auth } = useSelector((state) => state);
+  const id = useParams().sub_page;
+  const productRedux = useSelector((state) => state.product);
   useEffect(() => {
-    setProduct(fakeProduct);
+    dispatch(getProductById({ id: id }));
+  }, [dispatch, id]);
+  const datathat = productRedux;
+  useEffect(() => {
+    setProduct(datathat);
   }, []);
-
-  const calculateDiscount = useCallback(() => {
-    const price = parseInt(product.price);
-    const sale_price = parseInt(product.sale_price);
-
-    return Math.floor(((sale_price - price) / price) * 100);
-  }, [product]);
+  const productgia = fakeProduct;
+  console.log(productgia);
 
   const renderProductAlert = useCallback(() => {
     return (
       <div>
         <div className="d-flex align-items-start justify-content-between gap-3 mb-2">
-          <img src={product.images[0]} alt="" style={{ width: "50px" }} />
-          <p>{product.name}</p>
+          <img src={datathat?.productImages[0].imageUrl} alt="" style={{ width: "50px" }} />
+          <p>{datathat?.name}</p>
         </div>
         <Link
           to="/cart"
@@ -105,7 +107,7 @@ function Products() {
         </Link>
       </div>
     );
-  }, [product]);
+  }, [productgia]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -127,20 +129,45 @@ function Products() {
     });
     dispatch({
       type: GLOBAL_TYPES.ADD_CART,
-      payload: product,
+      payload: productgia,
     });
   };
+  // Percent
+  function tinhPhanTramGiamGia(giaBan, giaGiam) {
+    // Kiểm tra tránh chia cho 0
+    if (giaBan === 0) {
+      return 0;
+    }
 
+    // Tính phần trăm giảm giá và lấy phần nguyên
+    var phanTramGiamGia = (((giaBan - giaGiam) / giaBan) * 100).toFixed(0);
+
+    return phanTramGiamGia;
+  }
+  // Chuyển đổi giá thành 3 số rồi chấm
+  function formatNumber(number) {
+    // Chuyển số thành chuỗi
+    let numberString = number?.toString();
+
+    // Tạo mảng chứa các nhóm 3 chữ số từ phải qua
+    let groups = [];
+    for (let i = numberString?.length; i > 0; i -= 3) {
+      groups.unshift(numberString?.slice(Math.max(0, i - 3), i));
+    }
+
+    // Kết hợp các nhóm bằng dấu chấm và trả về kết quả
+    return groups.join(".");
+  }
   return (
     <form className="products" onSubmit={handleSubmit}>
-      {product && (
+      {productgia && (
         <div className="product_container">
           <div className="row product_content ">
             <div className="col-4">
-              <Carousel images={product.images} id={product.id} />
+              <Carousel productImages={datathat.productImages} id={1} />
             </div>
             <div className="col-8 product_info">
-              <h4>{product.name}</h4>
+              <h4>{datathat.name}</h4>
               <div className="product_info_price">
                 <span
                   style={{
@@ -149,7 +176,7 @@ function Products() {
                     fontWeight: "600",
                   }}
                 >
-                  {product.sale_price}đ
+                  {formatNumber(datathat.price)}đ
                 </span>
                 <span
                   style={{
@@ -158,10 +185,10 @@ function Products() {
                     textDecoration: "line-through",
                   }}
                 >
-                  {product.price}đ
+                  {formatNumber(datathat.salePrice)}đ
                 </span>
-                <span className="btn btn_primary_outline">
-                  {calculateDiscount()}%
+                <span className="btn btn_primary_outline calculateDiscount">
+                  {tinhPhanTramGiamGia(datathat.price, datathat.salePrice)}%
                 </span>
               </div>
               <div className="mb-4 product_info_gift">
@@ -169,7 +196,7 @@ function Products() {
                   <i className="fa-solid fa-gift me-2" />
                   Quà tặng khuyến mãi
                 </h5>
-                {product.gifts.map((gift, index) => (
+                {productgia.gifts.map((gift, index) => (
                   <p key={index} className="product_info_item">
                     <span className="indicator">{index + 1}</span>{" "}
                     <span>{gift.name}</span>
@@ -202,25 +229,52 @@ function Products() {
           </div>
         </div>
       )}
-      {product && (
+      {productgia && (
         <div className="product_detail">
           <h4>Thông số kỹ thuật</h4>
           <table className="table table-bordered">
-            <tbody>
-              {product.description.map((item, index) => (
-                <tr key={index}>
-                  <th scope="row">{item.tech}</th>
-                  <td>{item.content}</td>
-                </tr>
-              ))}
+          <tbody>
+             <tr>
+                <th  scope="row" >CPU</th>
+                <td>{datathat.cpu}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >RAM</th>
+                <td>{datathat.ram}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >DISK</th>
+                <td>{datathat.disk}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >VGA</th>
+                <td>{datathat.vga}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >SCREEN</th>
+                <td>{datathat.screen}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >COLOR</th>
+                <td>{datathat.color}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >SIZE</th>
+                <td>{datathat.size}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >WEIGHT</th>
+                <td>{datathat.weight}</td>
+             </tr>
+             <tr>
+                <th  scope="row" >BATTERY</th>
+                <td>{datathat.battery}</td>
+             </tr>
             </tbody>
           </table>
-          <h4>Đánh giá chi tiết {product.name}</h4>
+          <h4>Đánh giá chi tiết {datathat.name}</h4>
           <p>
-            LG Gram Style 14Z90RS GAH54A5 khơi nguồn cảm hứng làm việc với thiết
-            kế tinh xảo, kiểu dáng thời thượng chuẩn laptop hiện đại năm nay.
-            Thu hút bởi ngoại hình sang trọng cùng hiệu năng hoạt động đỉnh cao
-            cho mọi yêu cầu học tập và làm việc hằng ngày của người dùng.
+         {datathat.description}
           </p>
         </div>
       )}

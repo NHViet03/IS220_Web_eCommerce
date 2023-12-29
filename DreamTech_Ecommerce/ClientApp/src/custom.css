@@ -1,0 +1,22 @@
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+code {
+  color: #E01A76;
+
+}
+#root > div{
+  background-color: #ececec;
+}
+#root > div > header {
+ background-color: #fff;
+}
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+/* Home css */
+@import url(./components/Home/Home.css);

@@ -127,12 +127,15 @@
     flex-direction: row;
     align-items: center;
     text-align: center;
+    margin-bottom: 10px;
 }
 .Home_list-product-pc_left > h4{
     padding-right: 15px;
     border-right: 1px solid #ccc;
     margin: 0;
     margin-right: 15px;
+    font-weight: 600;
+    font-size: 18px;
 }
 .Home_list-product-pc_left > h5{
     margin: 0;
@@ -170,6 +173,8 @@
     border-radius: 10px;
     border: 1px solid #ccc;
     width: 231px;
+    overflow: hidden;
+    height: 520px;
 }
 .Home_list-product-pc-slide_slide_product_header{
     display: flex;
@@ -239,6 +244,9 @@
     border-radius: 5px;
     gap: 10px;
     flex-wrap: wrap;
+    max-height: 70px;
+   overflow: auto;
+   align-items: center;
    
 }
 .Home_list-product-pc-slide_slide_product_detail_icon-name{

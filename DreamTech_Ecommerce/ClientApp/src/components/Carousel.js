@@ -1,6 +1,6 @@
 import React from "react";
 
-const Carousel = ({ images, id }) => {
+const Carousel = ({ productImages, id }) => {
   const isActive = (index) => {
     return index === 0 ? "active" : "";
   };
@@ -8,10 +8,10 @@ const Carousel = ({ images, id }) => {
   return (
     <div id={`image${id}`} className="carousel slide">
       <div className="carousel-indicators">
-        {images.map((img, index) => (
+        {productImages?.map((item, index) => (
           <img
             key={index}
-            src={img}
+            src={item.imageUrl}
             alt="Product"
             data-bs-target={`#image${id}`}
             data-bs-slide-to={index}
@@ -20,9 +20,9 @@ const Carousel = ({ images, id }) => {
         ))}
       </div>
       <div className="carousel-inner">
-        {images.map((img, index) => (
+        {productImages?.map((item, index) => (
           <div key={index} className={`carousel-item ${isActive(index)}`}>
-            <img src={img} className="d-block w-100 h-auto" alt="Post" />
+            <img src={item.imageUrl} className="d-block w-100 h-auto" alt="Post" />
           </div>
         ))}
       </div>

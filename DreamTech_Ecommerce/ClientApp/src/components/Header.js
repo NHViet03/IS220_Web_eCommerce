@@ -1,55 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { GLOBAL_TYPES } from "../redux/actions/globalTypes";
 import Logo from "../images/logo.png";
+import { getAllProducts } from "../redux/actions/productsAction";
 
-const fakeSearchResult = [
-  {
-    id: 1,
-    images: [
-      "https://product.hstatic.net/200000722513/product/82xv00qpvn_cb7cf3e1339a4fca857fc1b06d49d0f3_large_1240c22a67834dc4b2446439760ac870_medium.png",
-    ],
-    name: "Laptop gaming Lenovo LOQ 15IRH8 82XV00QPVN",
-    price: "21.990.000",
-    sale_price: "19.990.000",
-  },
-  {
-    id: 2,
-    images: [
-      "https://product.hstatic.net/200000722513/product/76kg_1433e407838944df88bd906b57729c0a_medium.png",
-    ],
-    name: "Laptop gaming Acer Predator Helios 300 PH315 55 76KG",
-    price: "48.490.000",
-    sale_price: "30.990.000",
-  },
-  {
-    id: 3,
-    images: [
-      "https://product.hstatic.net/200000722513/product/4a46d43e4b82391209328e195_large_7fa59a1a8ef14c37b78bc34161b45a87_large_3c00edfcc07d4928b682a0f675620c81_medium.png",
-    ],
-    name: "Laptop gaming ASUS TUF Gaming A15 FA507NU LP034W",
-    price: "29.490.000",
-    sale_price: "25.490.000",
-  },
-  {
-    id: 4,
-    images: [
-      "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_medium.png",
-    ],
-    name: "Laptop LG Gram Style 14Z90RS GAH54A5",
-    price: "38.990.000",
-    sale_price: "35.990.000",
-  },
-];
 
 function Header() {
   const user = useSelector((state) => state.auth.user);
+  const product = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [isShowDropdown, setIsShowDropdown] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
-
+  useEffect(() => {
+    dispatch(getAllProducts());
+  },[dispatch]);
+  useEffect(() => {
+   
+  },[]);
   const handleShowModalAuth = () => {
     dispatch({ type: GLOBAL_TYPES.MODAL_AUTH, payload: true });
   };
@@ -59,13 +28,17 @@ function Header() {
   };
 
   const handleSearch = (value) => {
+    console.log(value);
     setSearch(value);
 
     if (value.length === 0) {
       return setSearchResult([]);
     }
     // Fake API
-    setSearchResult(fakeSearchResult);
+    const productAfterSearch = product?.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSearchResult(productAfterSearch);
   };
 
   return (
@@ -89,6 +62,7 @@ function Header() {
           {searchResult.length > 0 && (
             <div className="search_result">
               <div className="search_result_list">
+              {/* Phần tìm kiếm */}
                 {searchResult.map((result) => (
                   <Link
                     to={`/products/${result.id}`}
@@ -105,7 +79,7 @@ function Header() {
                             marginRight: "8px",
                           }}
                         >
-                          {result.sale_price}
+                          {result.salePrice}
                         </span>
                         <span
                           style={{
@@ -118,11 +92,11 @@ function Header() {
                         </span>
                       </div>
                     </div>
-                    <img src={result.images[0]} alt="Product" />
+                    <img src={result.productImages[0].imageUrl} alt="Product" />
                   </Link>
                 ))}
               </div>
-              <Link>
+              <Link to={'collections/laptop'}>
                 <p
                   className="pt-2 text-center"
                   style={{
