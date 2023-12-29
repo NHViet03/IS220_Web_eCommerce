@@ -16,6 +16,11 @@ import ViewOrderDetail from "./pages/account/view_order_detail";
 import {useDispatch} from 'react-redux';
 import { refreshToken } from "./redux/actions/authAction";
 
+
+import moment from "moment";
+import "moment/locale/vi";
+moment.locale("vi");
+
 export default function App() {
   const modalAuth = useSelector(state => state.modalAuth);
   const modalLogout = useSelector(state => state.modalLogout);

@@ -78,16 +78,17 @@ function Products() {
   useEffect(() => {
     window.location.hash = `status=${filter.status}&dateFrom=${moment(
       filter.date[0]
-    ).format("l")}&${moment(filter.date[1]).format("l")}&page=${page}`;
+    ).format("l")}&dateTo=${moment(filter.date[1]).format("l")}&page=${page}`;
+
+    
   }, [page, filter.status, filter.date]);
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     window.location.hash = `search=${search}&page=1`;
     dispatch(
       getOrders({
         search,
-        dateFrom: filter.date[0],
-        dateTo: filter.date[1],
         auth,
       })
     );

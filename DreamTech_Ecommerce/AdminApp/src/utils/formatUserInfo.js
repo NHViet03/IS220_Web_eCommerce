@@ -15,9 +15,9 @@ const formatUserInfo = (data) => {
       data.phone.slice(0, 4) + data.phone.slice(4).replace(/./g, "*");
     newData.total = formatMoney(data.total);
 
-    if (data.total > 100000000) {
+    if (data.total > 2500000000) {
       newData.level = "Diamond";
-    } else if (data.total > 10000000) {
+    } else if (data.total > 1500000000) {
       newData.level = "Platinum";
     } else {
       newData.level = "Bronze";

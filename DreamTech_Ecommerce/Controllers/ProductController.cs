@@ -24,9 +24,8 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpGet("GetAll")]
-        public IActionResult Index([FromQuery] string? category = null, [FromQuery] string? search = null,[FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1)
+        public IActionResult Index([FromQuery] string? category = null, [FromQuery] string? search = null,[FromQuery] int? priceFrom = null, [FromQuery] int? priceTo = null, [FromQuery] int page = 1, [FromQuery] int pageSize  = 10)
         {
-            const int pageSize = 10;
 
             if (page < 1)
             {

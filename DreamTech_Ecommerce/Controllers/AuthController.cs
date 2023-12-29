@@ -67,7 +67,7 @@ namespace DreamTech_Ecommerce.Controllers
 
             var user = _context
                 .Users
-                .Where(e => e.Email == model.Email || e.Phone == model.Phone)
+                .Where(e => e.Email == model.Email)
                 .FirstOrDefault();
 
             if (user != null)

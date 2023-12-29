@@ -21,30 +21,34 @@ function OrderDetail() {
 
   useEffect(() => {
     const getOrderData = async () => {
-      const res = await getDataAPI(`Order/GetOrderById/${id}`, auth.token);
-      const order = {
-        ...res.data,
-        orderDetails: res.data.orderDetails.map((item) => ({
-          id: item.id,
-          productId: item.product.productId,
-          images: [item.product.productImages[0].imageUrl],
-          name: item.product.name,
-          price: item.product.price,
-          sale_price: item.product.salePrice,
-          quantity: item.qty,
-        })),
-        user: {
-          id: res.data.user.id,
-          name: res.data.user.firstName + " " + res.data.user.lastName,
-          email: res.data.user.email,
-          phone: res.data.user.phone,
-        },
-        notes: "Không có ghi chú",
-        payment: "Thanh toán khi nhận hàng",
-      };
-      console.log(order);
+      try {
+        const res = await getDataAPI(`Order/GetOrderById/${id}`, auth.token);
+        const order = {
+          ...res.data,
+          orderDetails: res.data.orderDetails.map((item) => ({
+            id: item.id,
+            productId: item.product.productId,
+            images: [item.product.productImages[0].imageUrl],
+            name: item.product.name,
+            price: item.product.price,
+            sale_price: item.product.salePrice,
+            quantity: item.qty,
+          })),
+          user: {
+            id: res.data.user.id,
+            name: res.data.user.firstName + " " + res.data.user.lastName,
+            email: res.data.user.email,
+            phone: res.data.user.phone,
+          },
+          notes: "Không có ghi chú",
+          payment:
+            res.data.orderStatus === 2
+              ? "Đã thanh toán"
+              : "Thanh toán khi nhận hàng",
+        };
 
-      setOrder(order);
+        setOrder(order);
+      } catch (error) {}
     };
 
     getOrderData();
@@ -172,7 +176,13 @@ function OrderDetail() {
                     borderRadius: "4px",
                     padding: "8px",
                   }}
-                  onClick={() => setOrder({ ...order, orderStatus: 2 })}
+                  onClick={() =>
+                    setOrder({
+                      ...order,
+                      orderStatus: 2,
+                      payment: "Đã thanh toán",
+                    })
+                  }
                 >
                   Xác nhận giao hàng
                 </button>
@@ -236,7 +246,13 @@ function OrderDetail() {
               </div>
               <div>
                 <p className="mb-2">Thanh toán</p>
-                <div className="order_state shipping">{order.payment}</div>
+                <div
+                  className={`order_state ${
+                    order.orderStatus === 2 ? "success" : "shipping"
+                  }`}
+                >
+                  {order.payment}
+                </div>
               </div>
             </div>
           </div>

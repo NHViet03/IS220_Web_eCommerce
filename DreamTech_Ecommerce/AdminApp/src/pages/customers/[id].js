@@ -63,33 +63,38 @@ function Customer() {
 
   useEffect(() => {
     const getCustomerData = async () => {
-      const res = await getDataAPI(`User/GetCustomerDetail/${id}`, auth.token);
-      const orderSuccess = res.data.orders.reduce(
-        (count, order) => (order.orderStatus === 2 ? count + 1 : count),
-        0
-      );
-      const orderCancel = res.data.orders.reduce(
-        (count, order) => (order.orderStatus === 1 ? count + 1 : count),
-        0
-      );
-      const total = res.data.orders.reduce(
-        (total, order) =>
-          order.orderStatus === 2 ? total + order.totalAmount : total,
-        0
-      );
+      try {
+        const res = await getDataAPI(
+          `User/GetCustomerDetail/${id}`,
+          auth.token
+        );
+        const orderSuccess = res.data.orders.reduce(
+          (count, order) => (order.orderStatus === 2 ? count + 1 : count),
+          0
+        );
+        const orderCancel = res.data.orders.reduce(
+          (count, order) => (order.orderStatus === 1 ? count + 1 : count),
+          0
+        );
+        const total = res.data.orders.reduce(
+          (total, order) =>
+            order.orderStatus === 2 ? total + order.totalAmount : total,
+          0
+        );
 
-      setCustomer({
-        id: res.data.id,
-        name: res.data.firstName + " " + res.data.lastName,
-        phone: res.data.phone,
-        email: res.data.email,
-        shippingAddress: "Quang Trung, Hà Đông, Hà Nội",
-        orders: res.data.orders,
-        orderSuccess,
-        orderCancel,
-        total,
-        createdDate: res.data.createdDate,
-      });
+        setCustomer({
+          id: res.data.id,
+          name: res.data.firstName + " " + res.data.lastName,
+          phone: res.data.phone,
+          email: res.data.email,
+          shippingAddress: "Quang Trung, Hà Đông, Hà Nội",
+          orders: res.data.orders,
+          orderSuccess,
+          orderCancel,
+          total,
+          createdDate: res.data.createdDate,
+        });
+      } catch (error) {}
     };
 
     getCustomerData();

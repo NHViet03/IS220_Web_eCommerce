@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 import { getDataAPIWithAuth } from "../../utils/fetchData";
 
 function ViewOrderDetail() {
@@ -39,7 +40,7 @@ function ViewOrderDetail() {
       case 1:
         return "Đã hủy";
       case 2:
-        return "Đã vận chuyển";
+        return "Đã nhận hàng";
       default:
         return "Mới";
     }
@@ -65,7 +66,10 @@ function ViewOrderDetail() {
                         </span>
                       </h2>
                       <div class="order-create">
-                        <span>Đặt lúc: {orderDetails.orderDate}</span>
+                        <span>
+                          Đặt lúc:{" "}
+                          {moment(orderDetails.orderDate).format("lll")}
+                        </span>
                       </div>
                       <a
                         href="javascript:void(0);"
@@ -155,11 +159,19 @@ function ViewOrderDetail() {
                               fill="#F25700"
                             ></path>
                           </svg>
-                          <h3>Hình thức thanh toán</h3>
+                          <h3>Tình trạng thanh toán</h3>
                         </div>
                         <div class="info-box--body">
-                          <div class="unpaid">
-                            <span>Đã thanh toán</span>
+                          <div
+                            class={`font-medium ${
+                              orderDetails.orderStatus === 2 ? "paid" : "unpaid"
+                            }`}
+                          >
+                            <span>
+                              {orderDetails.orderStatus === 2
+                                ? "Đã thanh toán"
+                                : "Thanh toán khi nhận hàng"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -277,26 +289,32 @@ function ViewOrderDetail() {
                         </div>
                         <div class="ac_line amount-paid">
                           <div class="ac_line--l">
-                            <svg
-                              viewBox="0 0 16 16"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <rect
-                                width="16"
-                                height="16"
-                                rx="8"
-                                fill="#24B400"
-                              ></rect>
-                              <path
-                                d="M5 7.86842L7.4 10.5L11 5.5"
-                                stroke="white"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              ></path>
-                            </svg>
-                            <span>Số tiền đã thanh toán:</span>
+                            {orderDetails.orderStatus === 2 && (
+                              <svg
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <rect
+                                  width="16"
+                                  height="16"
+                                  rx="8"
+                                  fill="#24B400"
+                                ></rect>
+                                <path
+                                  d="M5 7.86842L7.4 10.5L11 5.5"
+                                  stroke="white"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                ></path>
+                              </svg>
+                            )}
+                            <span>
+                              Số tiền{" "}
+                              {orderDetails.orderStatus === 2 ? "đã" : "cần"}{" "}
+                              thanh toán:
+                            </span>
                           </div>
                           <div class="ac_line--r">
                             <span>

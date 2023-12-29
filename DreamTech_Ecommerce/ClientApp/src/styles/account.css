@@ -469,6 +469,11 @@ svg {
   color: #FF7A00;
 }
 
+#order_payment .paid {
+  color: rgb(118, 168, 20);
+}
+
+
 .info-box .info-box--body > div:last-child {
   margin-bottom: 0;
 }

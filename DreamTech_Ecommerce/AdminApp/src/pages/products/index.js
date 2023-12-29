@@ -79,7 +79,8 @@ function Products() {
     setProducts(newProducts);
   }, [filter.sort]);
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     window.location.hash = `search=${search}&page=1`;
     dispatch(getProducts({ search, auth }));
   };

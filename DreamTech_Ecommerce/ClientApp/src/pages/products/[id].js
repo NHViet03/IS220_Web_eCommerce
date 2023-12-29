@@ -113,7 +113,7 @@ function Products() {
                     fontWeight: "600",
                   }}
                 >
-                  {formatNumber(product.price)}đ
+                  {formatNumber(product.salePrice)}đ
                 </span>
                 <span
                   style={{
@@ -122,7 +122,7 @@ function Products() {
                     textDecoration: "line-through",
                   }}
                 >
-                  {formatNumber(product.salePrice)}đ
+                  {formatNumber(product.price)}đ
                 </span>
                 <span className="btn btn_primary_outline calculateDiscount">
                   {tinhPhanTramGiamGia(product.price, product.salePrice)}%

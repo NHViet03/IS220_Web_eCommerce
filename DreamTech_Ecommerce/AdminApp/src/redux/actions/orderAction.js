@@ -21,10 +21,14 @@ export const getOrders =
         api = `Order/GetAllOrders?status=${status}`;
       }
 
+      if (dateFrom && dateTo) {
+        api = `${api}&dateFrom=${new Date(dateFrom).toJSON()}&dateTo=${new Date(
+          dateTo
+        ).toJSON()}`;
+      }
+
       const res = await getDataAPI(
-        `${api}&search=${search}&dateFrom=${moment(
-          dateFrom
-        ).toJSON()}&dateTo=${moment(dateTo).toJSON()}&page=${page}`,
+        `${api}&search=${search}&page=${page}`,
         auth.token
       );
 
@@ -79,10 +83,8 @@ export const updateOrder =
         auth.token
       );
     } catch (error) {
-      console.log(error);  
-      
+      console.log(error);
     }
   };
 
-
-  // Hoang Viet
+// Hoang Viet

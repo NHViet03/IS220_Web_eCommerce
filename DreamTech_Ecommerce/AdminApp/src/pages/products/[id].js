@@ -15,11 +15,16 @@ function EditProduct() {
 
   useEffect(() => {
     const getProduct = async () => {
-      const res = await getDataAPI(`Product/GetProductById/${id}`, auth.token);
-      setProduct({
-        ...res.data,
-        images: res.data.productImages.map((img) => img.imageUrl),
-      });
+      try {
+        const res = await getDataAPI(
+          `Product/GetProductById/${id}`,
+          auth.token
+        );
+        setProduct({
+          ...res.data,
+          images: res.data.productImages.map((img) => img.imageUrl),
+        });
+      } catch (error) {}
     };
 
     getProduct();
