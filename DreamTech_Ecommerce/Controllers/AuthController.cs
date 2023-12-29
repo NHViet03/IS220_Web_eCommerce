@@ -45,7 +45,7 @@ namespace DreamTech_Ecommerce.Controllers
 
             if (user != null && user.HashedPassword == PasswordHasher.HashPassword(model.Password, user.Salt))
             {
-                var resJson = new { Token = this.GenerateJwtToken(user) ,User=user};
+                var resJson = new { Token = this.GenerateJwtToken(user), User = user };
                 return Ok(resJson);
             }
 
@@ -54,7 +54,8 @@ namespace DreamTech_Ecommerce.Controllers
         }
 
         [HttpPost("LogOut")]
-        public IActionResult Logout() {
+        public IActionResult Logout()
+        {
             // Optional: Delete token or set it to expired
 
             return Ok(new { Message = "Đăng xuất thành công" });
@@ -82,12 +83,12 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
-                return Ok(new { Token = this.GenerateJwtToken(newUser),User=newUser}); ;
+                return Ok(new { Token = this.GenerateJwtToken(newUser), User = newUser }); ;
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
-            }            
+            }
         }
 
         private string GenerateJwtToken(User user)
@@ -108,10 +109,10 @@ namespace DreamTech_Ecommerce.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, userRole),
-                    
-                    
+
+
                 }),
-               
+
                 Expires = DateTime.UtcNow.AddMinutes(10000),
                 Issuer = issuer,
                 Audience = audience,
