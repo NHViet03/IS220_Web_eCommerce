@@ -9,7 +9,6 @@ namespace DreamTech_Ecommerce.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int Qty { get; set; }
-        public string ShippingAddress { get; set; }
 
         [Required]
         [ForeignKey("Product")]

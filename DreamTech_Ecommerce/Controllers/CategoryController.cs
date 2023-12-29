@@ -9,7 +9,6 @@ namespace DreamTech_Ecommerce.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -75,6 +74,30 @@ namespace DreamTech_Ecommerce.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPut("Edit/{Id}")]
+        public IActionResult Edit(string Id, [FromBody] Category model)
+        {
+            var category = _context.Categories.Find(Id);
+
+            if (category == null)
+            {
+                return NotFound(new { Message = "Không tìm thấy sản phẩm" });
+            }
+
+            try
+            {
+                category.Name = model.Name;
+                _context.Categories.Update(category);
+                _context.SaveChanges();
+                return Ok(new { Message = "Đã cập nhật danh mục thành công" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
+
 
         [HttpPost("AssignProductToCategory")]
         public IActionResult AssignedProductToCategory(string productId, string categoryId)

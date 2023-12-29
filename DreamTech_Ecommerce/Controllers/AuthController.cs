@@ -45,16 +45,17 @@ namespace DreamTech_Ecommerce.Controllers
 
             if (user != null && user.HashedPassword == PasswordHasher.HashPassword(model.Password, user.Salt))
             {
-                var resJson = new { Token = this.GenerateJwtToken(user) };
+                var resJson = new { Token = this.GenerateJwtToken(user), User = user };
                 return Ok(resJson);
             }
 
-            var errorJson = new { Error = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
+            var errorJson = new { ErrorMessage = "Email hoặc mật khẩu không hợp lệ", StatusCode = 401 };
             return BadRequest(errorJson);
         }
 
         [HttpPost("LogOut")]
-        public IActionResult Logout() {
+        public IActionResult Logout()
+        {
             // Optional: Delete token or set it to expired
 
             return Ok(new { Message = "Đăng xuất thành công" });
@@ -67,7 +68,7 @@ namespace DreamTech_Ecommerce.Controllers
 
             var user = _context
                 .Users
-                .Where(e => e.Email == model.Email || e.Phone == model.Phone)
+                .Where(e => e.Email == model.Email)
                 .FirstOrDefault();
 
             if (user != null)
@@ -82,12 +83,12 @@ namespace DreamTech_Ecommerce.Controllers
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
-                return Ok(new { Token = this.GenerateJwtToken(newUser) }); ;
+                return Ok(new { Token = this.GenerateJwtToken(newUser), User = newUser }); ;
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
-            }            
+            }
         }
 
         private string GenerateJwtToken(User user)
@@ -101,13 +102,17 @@ namespace DreamTech_Ecommerce.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim("Id", user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Name, user.FirstName + " "+user.LastName),
                     new Claim(JwtRegisteredClaimNames.Jti,
                     Guid.NewGuid().ToString()),
                     new Claim(ClaimTypes.Role, userRole),
+
+
                 }),
+
                 Expires = DateTime.UtcNow.AddMinutes(10000),
                 Issuer = issuer,
                 Audience = audience,
