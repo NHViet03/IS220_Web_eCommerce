@@ -61,13 +61,13 @@ export const putDataAPIWithAuth = async (url, data, token) => {
     return res;
 }
 
-export const deleteDataAPIWithAuth = async (url, data, token) => {
+export const deleteDataAPIWithAuth = async (url, token) => {
     const headers = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
     };
 
-    const res = await axios.delete(`${target}/${url}`, data, { headers });
+    const res = await axios.delete(`${target}/${url}`, { headers });
 
     return res;
 }

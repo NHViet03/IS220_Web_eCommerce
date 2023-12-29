@@ -16,10 +16,10 @@ namespace DreamTech_Ecommerce.Utils
         }
 
         // Generate a random datetime from min and max range
-        public static DateTime GenerateRandomDateTime(int fromYear = 2017, int toYear = 2023)
+        public static DateTime GenerateRandomDateTime(int fromYear = 2019, int toYear = 2023)
         {
             DateTime minDateTime = new DateTime(2019, 12, 23);
-            DateTime maxDateTime = new DateTime(2023, 12, 23, 23, 59, 59);
+            DateTime maxDateTime = new DateTime(2023, 12, 30, 23, 59, 59);
 
             long range = maxDateTime.Ticks - minDateTime.Ticks;
             long randomTicks = (long)(new Random().NextDouble() * range);

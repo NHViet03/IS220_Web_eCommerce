@@ -6,35 +6,82 @@ import CartItem from '../components/cart/CartItem';
 import CartCustomerInfo from '../components/cart/CartCustomerInfo';
 import CartPayment from '../components/cart/CartPayment';
 import CartLastStep from '../components/cart/CartLastStep';
+import Loading from '../components/Loading';
+import { getDataAPIWithAuth, postDataAPIWithAuth } from '../utils/fetchData';
 import '../styles/cart.css';
-import { getDataAPIWithAuth } from '../utils/fetchData';
 
 function Cart() {
-   const [step, setStep] = useState(1);
-   const [inputName, setInputName] = useState('');
-   const [inputPhone, setInputPhone] = useState('');
-   const [inputEmail, setInputEmail] = useState('');
-    const [inputNote, setInputNote] = useState('');
-    const [items, setItems] = useState([]);
-    const [total, setTotal] = useState(0);
 
-    const token = useSelector(state => state.auth.token);
+    const [loading, setLoading] = useState(false);
+    const [step, setStep] = useState(1);
+    const [inputName, setInputName] = useState('');
+    const [inputPhone, setInputPhone] = useState('');
+    const [inputEmail, setInputEmail] = useState('');
+    const [inputNote, setInputNote] = useState('');
+    const [inputAddress, setInputAddress] = useState('');
+    const [total, setTotal] = useState(0);
+    const [items, setItems] = useState([]);
+
+    const auth = useSelector(state => state.auth);
 
     const fetchCartData = async () => {
-        const res = await getDataAPIWithAuth('Cart/GetByUser', token);
+        setLoading(true);
+        if (auth) {
+            const res = await getDataAPIWithAuth(`Cart/GetByUser/${auth.user.id}`, auth.token);
 
-        if (res.data && res.data.length > 0) {
-            setItems(res.data)
+            if (res.data && res.data.length > 0) {
+                setItems(res.data)
+            }
+        }
+        setLoading(false);
+    } 
+
+    const calculateCartTotal = (cartItems) => {
+        if (cartItems && cartItems.length > 0) {
+            return cartItems.reduce((total, item) => {
+                const itemTotal = item.qty * item.product.salePrice;
+                return total + itemTotal;
+            }, 0);
+        }
+        return 0;
+    };
+
+    const makeOrder = async (order) => {
+        try {
+            const res = await postDataAPIWithAuth(`Order/CustomerMakeOrder/${auth.user.id}`, order, auth.token);
+            if (res) {
+                console.log(res);
+                setStep(step + 1);
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
-    const calculateCartTotal = (cartItems) => {
-        return cartItems.reduce((total, item) => {
-            const itemTotal = item.qty * item.product.salePrice;
-            return total + itemTotal;
-        }, 0);
-    };
+    const handleClickSubmit = () => {
+        if (step == 2 && (!inputName || !inputAddress || !inputPhone)) {
+            return alert("Please điền đủ thông tin giùm em :'(");
+        }
 
+        if (step == 3) {
+                setLoading(true);
+
+                const orderBody = {
+                    address: inputAddress,
+                    note: inputNote !== "" ? inputNote : "Không note gì thêm"
+                }
+
+                makeOrder(orderBody);
+                return;
+        }
+
+        setStep(step + 1)
+
+    }
 
     const formatNumberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -42,11 +89,16 @@ function Cart() {
 
     useEffect(() => {
         fetchCartData();
+    }, []);
+
+    useEffect(() => {
         setTotal(calculateCartTotal(items));
     }, [items]);
 
+
    return (
-      <div className='flex justify-center'>
+      <div className='flex justify-center relative'>
+         {loading && <Loading />}
          <div className='cart-wrapper'>
             <div className='breadcrumb-wrapper my-3'>
                {step > 1 ? (
@@ -186,51 +238,63 @@ function Cart() {
 
                {/* Cart Items*/}
                <div className='items-container mt-4'>
-                       {step === 1 && items.map(item => <CartItem item={item} setItems={setItems} />)}
-                  {step === 2 && <CartCustomerInfo
+                    {step === 1 && items.length > 0 && items.map(item => <CartItem items={items} item={item} setItems={setItems} setLoading={setLoading} />)}
+                    {items.length < 1 && (<div className="flex justify-center">
+                                   <img className src="https://phongkhamdongxuan.com/assets/images/no-cart.png" />
+                              </div>)}
+                    {step === 2 && <CartCustomerInfo
                                     inputName={inputName}
                                     inputEmail={inputEmail}
                                     inputPhone={inputPhone}
                                     inputNote={inputNote}
+                                    inputAddress={inputAddress}
                                     setInputEmail={setInputEmail}
                                     setInputName={setInputName}
-                                    setInputNote={setInputNote}
-                                    setInputPhone={setInputPhone}/>
-                   }
-                  {step === 3 && <CartPayment
+                                   setInputNote={setInputNote}
+                                    setInputAddress={setInputAddress}
+                                    setInputPhone={setInputPhone}/>}
+                    {step === 3 && <CartPayment
+                                    total={`${formatNumberWithCommas(total)}₫`}
                                     inputName={inputName}
                                     inputEmail={inputEmail}
                                     inputPhone={inputPhone}
+                                    inputAddress={inputAddress }
                                     inputNote={inputNote}/>}
                     {step === 4 && <CartLastStep />}
                </div>
 
                {/* Cart Summary */}
                <div className='summary py-3'>
-                  {step < 3 && (
-                    <>
-                        <div className='w-full border-zinc-200 border-b'></div>
-                        <div className='shipping-fee flex justify-between items-center font-semibold pt-3'>
-                            <div className='text-sm'>Phí vận chuyển: </div>
-                            <div className='text-xs'>Miễn phí</div>
-                        </div>
-                    </>
-                  )}
-                  <div className={`total-amount flex justify-between items-center font-semibold pt-1  ${step === 4 && 'd-none'}`}>
+                       {step < 3 && items.length > 0 && (
+                           <>
+                               <div className='w-full border-zinc-200 border-b'></div>
+                               <div className='shipping-fee flex justify-between items-center font-semibold pt-3'>
+                                   <div className='text-sm'>Phí vận chuyển: </div>
+                                   <div className='text-xs'>Miễn phí</div>
+                               </div>
+                           </>
+                       )}
+                       {step == 1 && items.length < 1 && (
+                            <div className="flex justify-center items-center flex-col">
+                                <h3 className="mb-4">Chưa có sản phẩm trong giỏ hàng</h3>
+                                <Link className="action-button" to="/">Mua ngay</Link>
+                            </div>
+                        )}
+                  {items.length > 0 && <div className={`total-amount flex justify-between items-center font-semibold pt-1  ${step === 4 && 'd-none'}`}>
                      <div className='text-normal'>Tổng tiền: </div>
                            <div className='text text-xl'>{formatNumberWithCommas(total) }₫</div>
-                  </div>
+                  </div>}
                </div>
                {/* Submit Button */}
-               <div className='action-section'>
-                  <button
-                     className={`block text-center action-button uppercase w-full ${step === 4 && 'd-none'}`}
-                     onClick={() => setStep(step + 1)}
-                  >
-                     {(step === 1 || step === 2) && "Đặt hàng ngay"}
-                     {(step === 3) && "Thanh toán"}
-                  </button>
-               </div>
+                {items.length > 0 && <div className='action-section'>
+                    <button
+                        className={`block text-center action-button uppercase w-full ${step === 4 && 'd-none'}`}
+                        onClick={handleClickSubmit}
+                    >
+                        {(step === 1 || step === 2) && "Đặt hàng ngay"}
+                        {(step === 3) && "Thanh toán"}
+                    </button>
+                </div>}
             </div>
          </div>
       </div>

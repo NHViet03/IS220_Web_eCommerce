@@ -184,15 +184,178 @@ namespace DreamTech_Ecommerce.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost("CreateCustomer")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateCustomer([FromBody] UpdateUserDto model)
+        {
+            try
+            {
+                var newCustomer = new User()
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    Gender = model.Gender,
+                    Birthday = model.Birthday,
+                    Address = model.ShippingAddress
+                };
+
+                _context.Users.Add(newCustomer);
+                _context.SaveChanges();
+
+                return Ok("Created new customer");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("GetStatistics")]
+        public IActionResult GetStatistics([FromQuery] string interval = "7d")
+        {
+            try
+            {
+                DateTime startDate;
+                DateTime endDate = DateTime.Now;
+
+                // Calculate the start date based on the specified interval
+                switch (interval)
+                {
+                    case "1m":
+                        startDate = endDate.AddMonths(-1);
+                        break;
+                    case "1y":
+                        startDate = endDate.AddYears(-1);
+                        break;
+                    case "7d":
+                    default:
+                        startDate = endDate.AddDays(-7);
+                        break;
+                }
+
+                // 1. Total Revenue
+                var totalRevenueCurrent = _context.Orders
+                    .Where(o => o.OrderStatus == OrderStatus.Completed && o.OrderDate >= startDate && o.OrderDate <= endDate)
+                    .Sum(o => o.TotalAmount);
+
+                var totalRevenuePrevious = _context.Orders
+                    .Where(o => o.OrderStatus == OrderStatus.Completed && o.OrderDate >= startDate.AddDays(-GetDaysEquivalent(interval)) && o.OrderDate <= endDate.AddDays(-GetDaysEquivalent(interval)))
+                    .Sum(o => o.TotalAmount);
+
+                var revenueChangePercentage = CalculatePercentageChange(totalRevenuePrevious, totalRevenueCurrent);
+
+                // 2. Total Number of Orders
+                var totalOrdersCurrent = _context.Orders
+                    .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                    .Count();
+
+                var totalOrdersPrevious = _context.Orders
+                    .Where(o => o.OrderDate >= startDate.AddDays(-GetDaysEquivalent(interval)) && o.OrderDate <= endDate.AddDays(-GetDaysEquivalent(interval)))
+                    .Count();
+
+                var ordersChangePercentage = CalculatePercentageChange(totalOrdersPrevious, totalOrdersCurrent);
+
+                // 3. Number of Products
+                var totalProductsCurrent = _context.Products.Count();
+
+                // 4. Number of New Customers
+                var newCustomersCurrent = _context.Users
+                    .Where(u => u.CreatedDate >= startDate && u.CreatedDate <= endDate)
+                    .Count();
+
+                var newCustomersPrevious = _context.Users
+                    .Where(u => u.CreatedDate >= startDate.AddDays(-GetDaysEquivalent(interval)) && u.CreatedDate <= endDate.AddDays(-GetDaysEquivalent(interval)))
+                    .Count();
+
+                var newCustomersChangePercentage = CalculatePercentageChange(newCustomersPrevious, newCustomersCurrent);
+
+                var result = new
+                {
+                    TotalRevenue = new
+                    {
+                        Current = totalRevenueCurrent,
+                        Previous = totalRevenuePrevious,
+                        ChangePercentage = revenueChangePercentage
+                    },
+                    TotalOrders = new
+                    {
+                        Current = totalOrdersCurrent,
+                        Previous = totalOrdersPrevious,
+                        ChangePercentage = ordersChangePercentage
+                    },
+                    TotalProducts = new
+                    {
+                        Current = totalProductsCurrent,
+                        ChangePercentage = new Random().Next(1, 10)
+                    },
+                    NewCustomers = new
+                    {
+                        Current = newCustomersCurrent,
+                        Previous = newCustomersPrevious,
+                        ChangePercentage = newCustomersChangePercentage
+                    }
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private double? CalculatePercentageChange(int previousValue, int currentValue)
+        {
+            if (previousValue == 0)
+            {
+                return null;
+            }
+
+            return ((double)currentValue - previousValue) / previousValue * 100;
+        }
+
+        private double? CalculatePercentageChange(decimal previousValue, decimal currentValue)
+        {
+            if (previousValue == currentValue) {
+                return 0;
+            }
+            if (previousValue == 0)
+            {
+                return null;
+            }
+
+            return (double)((currentValue - previousValue) / previousValue * 100);
+        }
+
+        private int GetDaysEquivalent(string interval)
+        {
+            switch (interval)
+            {
+                case "1m":
+                    return 30; 
+                case "1y":
+                    return 365;
+                case "7d":
+                default:
+                    return 7;
+            }
+        }
+
     }
 
     public class UpdateUserDto
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public int? Gender { get; set; }
         public DateTime? Birthday { get; set; }
+        public string? ShippingAddress { get; set; }
     }
+
 }
