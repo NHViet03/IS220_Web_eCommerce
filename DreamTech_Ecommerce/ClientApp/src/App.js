@@ -11,6 +11,7 @@ import Alert from "./components/Alert";
 import AccountPage from "./pages/account";
 import Addresses from "./pages/account/address";
 import OrdersHistory from "./pages/account/orders_history";
+import ViewOrderDetail from "./pages/account/view_order_detail";
 
 import {useDispatch} from 'react-redux';
 import { refreshToken } from "./redux/actions/authAction";
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/account/addresses" element={<Addresses />} />
           <Route path="/account/orders-history" element={<OrdersHistory />} />
+          <Route path="/account/view-order-detail/:orderId" element={<ViewOrderDetail />} />
         </Routes>
       </div>
       <Footer />
