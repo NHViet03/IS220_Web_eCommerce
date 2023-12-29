@@ -11,10 +11,22 @@ export const login = (data) => async (dispatch) => {
       token: res.data.token,
       user: res.data.user,
     };
+
+    const carts = await getDataAPIWithAuth(
+      `Cart/GetByUser/${res.data.user.id}`,
+      res.data.token
+    );
+
     dispatch({
       type: GLOBAL_TYPES.AUTH,
       payload: auth,
     });
+
+    dispatch({
+      type: GLOBAL_TYPES.GET_CARTS,
+      payload: carts.data,
+    });
+
     dispatch({
       type: GLOBAL_TYPES.ALERT,
       payload: {
@@ -87,12 +99,23 @@ export const refreshToken = () => async (dispatch) => {
         `User/GetCustomerDetail/${account.Id}`,
         firstLogin
       );
+
       dispatch({
         type: GLOBAL_TYPES.AUTH,
         payload: {
           token: firstLogin,
           user: res.data,
         },
+      });
+
+      const carts = await getDataAPIWithAuth(
+        `Cart/GetByUser/${account.Id}`,
+        firstLogin
+      );
+
+      dispatch({
+        type: GLOBAL_TYPES.GET_CARTS,
+        payload: carts.data,
       });
     }
   } catch (error) {}

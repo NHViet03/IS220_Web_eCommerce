@@ -1,9 +1,11 @@
 import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import formatMoney from "../../utils/formatMoney";
 import ExportCSV from "../ExportCSV";
 import formatUserInfo from "../../utils/formatUserInfo";
 
 function Customers({ customers }) {
+  const navigate = useNavigate();
 
   const renderStar = (level) => {
     const res = [];
@@ -29,7 +31,7 @@ function Customers({ customers }) {
     return customers.map((customer) => ({
       "Mã khách hàng": customer.id,
       "Tên khách hàng": customer.name,
-      "Email": customer.email,
+      Email: customer.email,
       "Số điện thoại": customer.phone,
       "Doanh số": customer.total,
     }));
@@ -68,7 +70,10 @@ function Customers({ customers }) {
             const newData = formatUserInfo(customer);
 
             return (
-              <tr key={index}>
+              <tr
+                key={index}
+                onClick={() => navigate(`/customers/${customer.id}`)}
+              >
                 <td>
                   <i className="fa-solid fa-user me-1" />
                   {newData.id}

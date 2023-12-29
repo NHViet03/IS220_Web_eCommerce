@@ -7,6 +7,7 @@ import Invoice from "../../components/Order/Invoice";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getDataAPI } from "../../utils/fetchData";
+import { updateOrder } from "../../redux/actions/orderAction";
 
 function OrderDetail() {
   const [order, setOrder] = useState({});
@@ -49,8 +50,9 @@ function OrderDetail() {
     getOrderData();
   }, [auth.token, id]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await dispatch(updateOrder({ order, auth }));
     navigate("/orders");
   };
 
@@ -170,7 +172,7 @@ function OrderDetail() {
                     borderRadius: "4px",
                     padding: "8px",
                   }}
-                  onClick={() => setOrder({ ...order, orderStatus: "Đã giao hàng" })}
+                  onClick={() => setOrder({ ...order, orderStatus: 2 })}
                 >
                   Xác nhận giao hàng
                 </button>
@@ -181,7 +183,7 @@ function OrderDetail() {
                     borderRadius: "4px",
                     padding: "8px",
                   }}
-                  onClick={() => setOrder({ ...order, orderStatus: "Đã hủy đơn" })}
+                  onClick={() => setOrder({ ...order, orderStatus: 1 })}
                 >
                   Huỷ đơn hàng
                 </button>
@@ -225,11 +227,11 @@ function OrderDetail() {
                       : "cancel"
                   }`}
                 >
-                  { order.orderStatus === 0
-                      ? "Đang giao hàng"
-                      : order.orderStatus === 2
-                      ? "Đã giao hàng"
-                      : "Đã hủy đơn"}
+                  {order.orderStatus === 0
+                    ? "Đang giao hàng"
+                    : order.orderStatus === 2
+                    ? "Đã giao hàng"
+                    : "Đã hủy đơn"}
                 </div>
               </div>
               <div>

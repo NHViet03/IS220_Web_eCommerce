@@ -33,7 +33,7 @@ namespace DreamTech_Ecommerce.Controllers
                         user.Phone,
                         Total = _context.Orders
                         .Where(o => o.UserId == user.Id && o.OrderStatus == OrderStatus.Completed)
-                        .Sum(o => (int?)o.TotalAmount) ?? 0
+                        .Sum(o => (long?)o.TotalAmount) ?? 0
                     });
 
                 const int pageSize = 10;
@@ -89,7 +89,7 @@ namespace DreamTech_Ecommerce.Controllers
                 user.Phone,
                 Total = _context.Orders
                     .Where(o => o.UserId == user.Id && o.OrderStatus == OrderStatus.Completed)
-                    .Sum(o => (int?)o.TotalAmount) ?? 0
+                    .Sum(o => (long?)o.TotalAmount) ?? 0
             })
             .OrderByDescending(result => result.Total)
             .Take(count)
@@ -197,9 +197,10 @@ namespace DreamTech_Ecommerce.Controllers
                     LastName = model.LastName,
                     Email = model.Email,
                     Phone = model.Phone,
-                    Gender = model.Gender,
-                    Birthday = model.Birthday,
-                    Address = model.ShippingAddress
+                    Address = model.ShippingAddress,
+                    HashedPassword="",
+                    Salt=new byte[0],
+                    Role=Role.Customer
                 };
 
                 _context.Users.Add(newCustomer);
@@ -238,13 +239,13 @@ namespace DreamTech_Ecommerce.Controllers
                 }
 
                 // 1. Total Revenue
-                var totalRevenueCurrent = _context.Orders
+                long totalRevenueCurrent = _context.Orders
                     .Where(o => o.OrderStatus == OrderStatus.Completed && o.OrderDate >= startDate && o.OrderDate <= endDate)
-                    .Sum(o => o.TotalAmount);
+                    .Sum(o => (long)o.TotalAmount);
 
-                var totalRevenuePrevious = _context.Orders
+                long totalRevenuePrevious = _context.Orders
                     .Where(o => o.OrderStatus == OrderStatus.Completed && o.OrderDate >= startDate.AddDays(-GetDaysEquivalent(interval)) && o.OrderDate <= endDate.AddDays(-GetDaysEquivalent(interval)))
-                    .Sum(o => o.TotalAmount);
+                    .Sum(o => (long)o.TotalAmount);
 
                 var revenueChangePercentage = CalculatePercentageChange(totalRevenuePrevious, totalRevenueCurrent);
 
@@ -308,7 +309,7 @@ namespace DreamTech_Ecommerce.Controllers
             }
         }
 
-        private double? CalculatePercentageChange(int previousValue, int currentValue)
+        private double? CalculatePercentageChange(long previousValue, long currentValue)
         {
             if (previousValue == 0)
             {

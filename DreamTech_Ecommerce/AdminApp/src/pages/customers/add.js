@@ -2,9 +2,12 @@ import React, { useInsertionEffect, useState, useTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalUpdateAddress from "../../components/ModalUpdateAddress";
 
+import { useSelector, useDispatch } from "react-redux";
+import { createCustomer } from "../../redux/actions/customerAction";
+
 const AddCustomer = () => {
   const [customer, setCustomer] = useState({
-    id: "KH09",
+    id: "KH101",
     name: "",
     email: "",
     phone: "",
@@ -13,6 +16,8 @@ const AddCustomer = () => {
   const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,9 +27,10 @@ const AddCustomer = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
-    console.log(customer);
+    await dispatch(createCustomer({ data: customer, auth }));
+    navigate("/customers");
   };
 
   return (
@@ -91,19 +97,19 @@ const AddCustomer = () => {
           </div>
         </div>
         <div className="d-flex justify-content-center gap-3">
-        <button className="btn btn_normal btn_accept " type="submit">
-          Thêm
-        </button>
-        <button
-          type="button"
-          className="btn btn_normal"
-          onClick={() => navigate("/customer")}
-        >
-          Hủy
-        </button>
+          <button className="btn btn_normal btn_accept " type="submit">
+            Thêm
+          </button>
+          <button
+            type="button"
+            className="btn btn_normal"
+            onClick={() => navigate("/customer")}
+          >
+            Hủy
+          </button>
+        </div>
       </div>
-      </div>
-     
+
       {showModal && (
         <ModalUpdateAddress
           setShowModal={setShowModal}

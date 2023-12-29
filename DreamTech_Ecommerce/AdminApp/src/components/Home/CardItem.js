@@ -29,7 +29,11 @@ function CardItem({ card }) {
           >
             <span>
               {"( "}
-              {card.percent + "% "}
+              {card.percent
+                ? `${card.percent}% `
+                : card.increase
+                ? `Tăng ${card.gap} `
+                : `Giảm ${card.gap} `}
               <i
                 className={`fa-solid ${
                   card.increase ? "fa-arrow-up-long" : "fa-arrow-down-long"

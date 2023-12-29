@@ -23,7 +23,7 @@ namespace DreamTech_Ecommerce.Models
         public string Phone { get; set; }
         public string? Address { get; set; }
         public int? Gender { get; set; }
-        public string HashedPassword { get; set; }
+        public string? HashedPassword { get; set; }
         public DateTime? Birthday { get; set; }
         public DateTime? CreatedDate { get; set; }
 

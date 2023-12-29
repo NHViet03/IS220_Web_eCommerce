@@ -21,7 +21,7 @@ namespace DreamTech_Ecommerce.Controllers
 
         [HttpGet("GetAllOrders")]
         [Authorize(Roles = "Admin")]
-        public IActionResult GetAllOrders([FromQuery] OrderStatus? status = null, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, [FromQuery] int page = 1)
+        public IActionResult GetAllOrders([FromQuery] OrderStatus? status = null, [FromQuery] string? search = null,[FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, [FromQuery] int page = 1)
         {
             const int pageSize = 10;
 
@@ -32,6 +32,11 @@ namespace DreamTech_Ecommerce.Controllers
 
             var query = _context.Orders
                 .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(p => p.Id.ToString().Contains(search));
+            }
 
             if (status.HasValue)
             {
@@ -211,11 +216,61 @@ namespace DreamTech_Ecommerce.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+
+       
+        [HttpPut("UpdateOrder/{orderId}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateOrder(int orderId, [FromBody] UpdateOrderModel model)
+        {
+            try
+            {
+               
+
+
+                var orderToUpdate = _context.Orders.FirstOrDefault(o=>o.Id == orderId);
+
+                if (orderToUpdate == null)
+                {
+                    return NotFound("Order not found.");
+                }
+
+                switch (model.OrderStatus)
+                {
+                    case 1:
+                        orderToUpdate.OrderStatus = OrderStatus.Failed;
+                        break;
+
+                    case 2:
+                        orderToUpdate.OrderStatus = OrderStatus.Completed;
+                        break;
+                }
+
+                if (!string.IsNullOrEmpty(model.ShippingAddress))
+                {
+                    orderToUpdate.ShippingAddress = model.ShippingAddress;
+                }
+              
+
+                _context.SaveChanges();
+
+                return Ok("Order information updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
     public class CreateOrderModel
     {
         public string Address { get; set; }
         public string? Note { get; set; }
+    }
+
+    public class UpdateOrderModel
+    {
+        public string? ShippingAddress { get; set; }
+        public int OrderStatus { get; set; }
     }
 
     public class CreateOrderForAdminModel : CreateOrderModel

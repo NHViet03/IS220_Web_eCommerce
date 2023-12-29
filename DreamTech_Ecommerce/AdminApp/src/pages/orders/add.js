@@ -5,56 +5,9 @@ import ModalUpdateAddress from "../../components/ModalUpdateAddress";
 import formatMoney from "../../utils/formatMoney";
 import Invoice from "../../components/Order/Invoice";
 
-const fakeSearchUserList = [
-  {
-    id: "KH03",
-    name: "Lê Văn An",
-    email: "An789@gmail.com",
-    phone: "0833333333",
-  },
-  {
-    id: "KH05",
-    name: "Trần Văn Tú",
-    email: "Tu567@gmail.com",
-    phone: "0866666666",
-  },
-  {
-    id: "KH01",
-    name: "Nguyễn Hoàng Việt",
-    email: "Viet123@gmail.com",
-    phone: "0848044777",
-  },
-];
-
-const fakeSearchProductList = [
-  {
-    id: "laptop-gaming-msi-gf63-12ucx-841vn",
-    name: "Laptop LG Gram Style 14Z90RS GAH54A5",
-    images: [
-      "https://product.hstatic.net/200000722513/product/lg-gram-style-fix_4013ad0ecc9c449f9611fb4f31069a92_1024x1024.png",
-    ],
-    price: 38990000,
-    sale_price: 35990000,
-  },
-  {
-    id: "chuot-logitech-g102-lightsync-black",
-    images: [
-      "https://product.hstatic.net/200000722513/product/thumbchuot_a405fadb92a34c429c3eed4d11a84fb5_medium.jpg",
-    ],
-    name: "Chuột Logitech G102 LightSync Black",
-    price: 599000,
-    sale_price: 399000,
-  },
-  {
-    id: "pc-gvn-intel-i3-12100f-vga-gtx-1650",
-    images: [
-      "https://product.hstatic.net/200000722513/product/5000d_white_aero_61797e20d29a47ff9f7589071a5099da_medium.png",
-    ],
-    name: "PC GVN Intel i3-12100F/ VGA GTX 1650",
-    price: 11590000,
-    sale_price: 10890000,
-  },
-];
+import { useSelector, useDispatch } from "react-redux";
+import { getDataAPI } from "../../utils/fetchData";
+import { createOrder } from "../../redux/actions/orderAction";
 
 const AddOrder = () => {
   const [order, setOrder] = useState({
@@ -81,23 +34,42 @@ const AddOrder = () => {
   const [exportPDF, setExportPDF] = useState(false);
 
   const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const totalAmount = handleUpdateOrder();
-    console.log({
-      ...order,
-      totalAmount: totalAmount,
-    });
+    if (!order.user.id) return;
+
+    await dispatch(
+      createOrder({
+        order: {
+          user: {
+            ...order.user,
+            userId: order.user.id,
+          },
+          address: order.shippingAddress,
+          orderItems: order.orderDetails.map((item) => ({
+            productId: item.id,
+            qty: parseInt(item.quantity),
+          })),
+        },
+        auth,
+      })
+    );
+    navigate(-1);
   };
 
   const handleExportPDF = () => {
     setExportPDF(true);
   };
 
-  const handleSearchUser = (value) => {
+  const handleSearchUser = async (value) => {
     setSearchUser(value);
-    setSearchUserList(fakeSearchUserList);
+
+    const res = await getDataAPI(`User/GetAllUsers?name=${value}`, auth.token);
+
+    setSearchUserList(res.data);
   };
 
   const handleClickUser = (user) => {
@@ -109,9 +81,19 @@ const AddOrder = () => {
     });
   };
 
-  const handleSearchProduct = (value) => {
+  const handleSearchProduct = async (value) => {
     setSearchProduct(value);
-    setSearchProductList(fakeSearchProductList);
+
+    const res = await getDataAPI(`Product/GetAll?search=${value}`, auth.token);
+    setSearchProductList(
+      res.data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        images: [item.productImages[0].imageUrl],
+        price: item.price,
+        sale_price: item.salePrice,
+      }))
+    );
   };
 
   const handleClickProduct = (product) => {
@@ -320,14 +302,13 @@ const AddOrder = () => {
                     />
                     <div className="order_add_search_product">
                       {searchProductList.map((product, index) => (
-                        <div 
-                        className="d-flex align-items-center"
+                        <div
+                          className="d-flex align-items-center"
                           key={index}
                           onClick={() => handleClickProduct(product)}
                         >
-                          <img src={product.images[0]} alt="Product"/>
+                          <img src={product.images[0]} alt="Product" />
                           <p>{product.name}</p>
-
                         </div>
                       ))}
                     </div>
@@ -340,6 +321,7 @@ const AddOrder = () => {
             <button
               className="btn btn_normal px-2 rounded"
               onClick={handleUpdateOrder}
+              type="button"
             >
               Cập nhật
             </button>

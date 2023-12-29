@@ -8,7 +8,7 @@ import LineChart from "../components/Home/LineChart";
 import Customers from "../components/Home/Customers";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getTopCustomers } from "../redux/actions/homeAction";
+import { getTopCustomers, getStatistic } from "../redux/actions/homeAction";
 
 Chart.register(Tooltip, Legend);
 
@@ -87,38 +87,6 @@ const cusData = [
   },
 ];
 
-const fakeCardData = [
-  {
-    title: "Doanh thu trong ngày",
-    value: 120000,
-    percent: 12,
-    icon: "fa-solid fa-coins",
-    increase: true,
-    type: "money",
-  },
-  {
-    title: "Đơn hàng trong ngày",
-    value: 2300,
-    percent: 3,
-    icon: "fa-solid fa-clipboard-list",
-    increase: true,
-  },
-  {
-    title: "Số lượng sản phẩm",
-    value: 124,
-    percent: -3,
-    icon: "fa-solid fa-basket-shopping",
-    increase: false,
-  },
-  {
-    title: "Khách hàng mới",
-    value: 30,
-    percent: -2,
-    icon: "fa-solid fa-users",
-    increase: false,
-  },
-];
-
 function Home() {
   const [cardsData, setCardsData] = useState([]);
   const [chartLeftData, setChartLeftData] = useState({
@@ -158,7 +126,7 @@ function Home() {
   });
   const [customers, setCustomers] = useState([]);
   const [filter, setFilter] = useState({
-    interval: "7days",
+    interval: "7d",
   });
 
   const auth = useSelector((state) => state.auth);
@@ -166,13 +134,16 @@ function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Fake API
-    setCardsData(fakeCardData);
-  }, []);
+    setCardsData(home.cardsData);
+  }, [home.cardsData]);
 
   useEffect(() => {
     dispatch(getTopCustomers(auth.token));
   }, [auth.token, dispatch]);
+
+  useEffect(() => {
+    dispatch(getStatistic({ interval: filter.interval, token: auth.token }));
+  }, [auth.token, dispatch, filter.interval]);
 
   useEffect(() => {
     setCustomers(home.customers);
@@ -191,9 +162,9 @@ function Home() {
         value={filter.interval}
         onChange={handleChangeInterval}
       >
-        <option value="7days">Trong 7 ngày gần nhất</option>
-        <option value="30days">Trong 30 ngày gần nhất</option>
-        <option value="365days">Trong năm nay</option>
+        <option value="7d">Trong 7 ngày gần nhất</option>
+        <option value="1m">Trong 30 ngày gần nhất</option>
+        <option value="1y">Trong năm nay</option>
       </select>
       <div className="mb-5 home_cards">
         {cardsData.map((card, index) => (

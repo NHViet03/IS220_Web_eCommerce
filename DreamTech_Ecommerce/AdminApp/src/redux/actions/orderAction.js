@@ -1,5 +1,5 @@
 import { GLOBAL_TYPES } from "./globalTypes";
-import { getDataAPI } from "../../utils/fetchData";
+import { getDataAPI, postDataAPI, putDataAPI } from "../../utils/fetchData";
 import moment from "moment";
 
 export const ORDER_TYPES = {
@@ -7,7 +7,7 @@ export const ORDER_TYPES = {
 };
 
 export const getOrders =
-  ({ status = "all", dateFrom, dateTo, page = 1, auth }) =>
+  ({ status = "all", search = "", dateFrom, dateTo, page = 1, auth }) =>
   async (dispatch) => {
     try {
       dispatch({
@@ -22,9 +22,9 @@ export const getOrders =
       }
 
       const res = await getDataAPI(
-        `${api}&dateFrom=${moment(dateFrom).toJSON()}&dateTo=${moment(
-          dateTo
-        ).toJSON()}&page=${page}`,
+        `${api}&search=${search}&dateFrom=${moment(
+          dateFrom
+        ).toJSON()}&dateTo=${moment(dateTo).toJSON()}&page=${page}`,
         auth.token
       );
 
@@ -43,6 +43,42 @@ export const getOrders =
         payload: false,
       });
 
+      console.log(error);
+    }
+  };
+
+export const createOrder =
+  ({ order, auth }) =>
+  async (dispatch) => {
+    try {
+      await postDataAPI("Order/CreateOrder", order, auth.token);
+
+      dispatch({
+        type: GLOBAL_TYPES.ALERT,
+        payload: {
+          type: "success",
+          title: "Tạo đơn hàng mới thành công.",
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const updateOrder =
+  ({ order, auth }) =>
+  async (dispatch) => {
+    try {
+      console.log(order);
+      await putDataAPI(
+        `Order/UpdateOrder/${order.id}`,
+        {
+          orderStatus: order.orderStatus,
+          shippingAddress: order.shippingAddress,
+        },
+        auth.token
+      );
+    } catch (error) {
       console.log(error);
     }
   };

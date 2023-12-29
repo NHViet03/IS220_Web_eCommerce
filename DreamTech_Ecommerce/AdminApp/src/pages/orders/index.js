@@ -16,7 +16,7 @@ function Products() {
   const [filter, setFilter] = useState({
     sort: "default",
     status: "all",
-    date: [new Date(new Date().getFullYear()-2, 0, 1), new Date()],
+    date: [new Date(new Date().getFullYear() - 2, 0, 1), new Date()],
   });
 
   const pages = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -81,6 +81,18 @@ function Products() {
     ).format("l")}&${moment(filter.date[1]).format("l")}&page=${page}`;
   }, [page, filter.status, filter.date]);
 
+  const handleSearch = () => {
+    window.location.hash = `search=${search}&page=1`;
+    dispatch(
+      getOrders({
+        search,
+        dateFrom: filter.date[0],
+        dateTo: filter.date[1],
+        auth,
+      })
+    );
+  };
+
   return (
     <div className="mb-3 table">
       <div className="box_shadow mb-3 table_container">
@@ -88,7 +100,10 @@ function Products() {
           <div className="d-flex justify-content-between align-items-center mb-3 ">
             <h5>Danh sách Đơn hàng</h5>
             <div className="d-flex align-items-center gap-4">
-              <div className="d-flex justify-content-between align-items-center table_search">
+              <form
+                className="d-flex justify-content-between align-items-center table_search"
+                onSubmit={handleSearch}
+              >
                 <input
                   type="text"
                   placeholder="Tìm kiếm đơn hàng..."
@@ -97,7 +112,7 @@ function Products() {
                   onChange={(e) => setSearch(e.target.value)}
                 />
                 <i class="fa-solid fa-magnifying-glass" />
-              </div>
+              </form>
               <Link
                 to={{
                   pathname: "/orders/add",
